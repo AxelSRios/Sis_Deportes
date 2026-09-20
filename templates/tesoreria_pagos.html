@@ -1,0 +1,917 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="es">
+<!-- Sistema de Gestion Deportiva AFO · Oruro — pantalla unificada.
+     Estilos compartidos: styles.css + tailwind-config.js -->
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tesorería y Pagos | AFO Oruro</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="{% static 'js/tailwind-config.js' %}"></script>
+</head>
+<body class="bg-surface text-on-surface antialiased" data-page="tesoreria" data-shell="true"><div><main class="w-full bg-surface"><div class="flex flex-col w-full">
+<div class="p-space-lg flex flex-col gap-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs text-secondary font-label-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">account_balance_wallet</span>
+<span>Gestión Contable Centralizada</span>
+<span class="text-outline mx-1">•</span>
+<span class="text-on-surface-variant font-medium">Temporada Oficial 2024</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight mt-0.5">
+          Tesorería, Finanzas y Registro de Pagos
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Control federativo de ingresos arancelarios, pases, carnetización y multas reglamentarias de la Asociación de Fútbol Oruro.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm self-start lg:self-auto">
+<button class="bg-surface-container hover:bg-surface-container-high text-primary px-space-md py-2 rounded-lg font-title-md text-title-md transition-all flex items-center gap-space-xs shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">account_tree</span>
+<span>Libro Diario</span>
+</button>
+<button class="bg-primary hover:bg-primary-container text-on-primary px-space-md py-2 rounded-lg font-title-md text-title-md transition-all flex items-center gap-space-xs shadow-md" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>Cierre de Caja Diario</span>
+</button>
+</div>
+</div>
+<!-- KPI Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter">
+<!-- Total Ingresos -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-primary/5 rounded-full pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline font-semibold">Total Ingresos Mes</span>
+<span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">monetization_on</span>
+</span>
+</div>
+<div class="my-space-sm">
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tight">Bs. 84.620,00</span>
+<div class="flex items-center gap-space-xs mt-1 text-on-secondary-container">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span class="font-label-sm text-label-sm font-semibold">+14.2% vs. mes anterior</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 78%;"></div>
+</div>
+</div>
+<!-- Fichajes y Pases -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-secondary/5 rounded-full pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline font-semibold">Fichajes y Pases</span>
+<span class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">transfer_within_a_station</span>
+</span>
+</div>
+<div class="my-space-sm">
+<span class="font-headline-md text-headline-md text-secondary font-bold tracking-tight">Bs. 32.400,00</span>
+<div class="flex items-center gap-space-xs mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">sync_alt</span>
+<span class="font-label-sm text-label-sm font-semibold">142 trámites federativos</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 62%;"></div>
+</div>
+</div>
+<!-- Afiliación Clubes -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-tertiary/5 rounded-full pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline font-semibold">Cuotas Afiliación</span>
+<span class="w-8 h-8 rounded-lg bg-tertiary-container/20 text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+</span>
+</div>
+<div class="my-space-sm">
+<span class="font-headline-md text-headline-md text-tertiary font-bold tracking-tight">Bs. 26.500,00</span>
+<div class="flex items-center gap-space-xs mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span class="font-label-sm text-label-sm font-semibold">28 clubes al día (85%)</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 85%;"></div>
+</div>
+</div>
+<!-- Aranceles y Multas -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-error/5 rounded-full pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline font-semibold">Aranceles y Multas</span>
+<span class="w-8 h-8 rounded-lg bg-error-container/40 text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+</span>
+</div>
+<div class="my-space-sm">
+<span class="font-headline-md text-headline-md text-error font-bold tracking-tight">Bs. 25.720,00</span>
+<div class="flex items-center gap-space-xs mt-1 text-error">
+<span class="material-symbols-outlined text-[16px]">warning</span>
+<span class="font-label-sm text-label-sm font-semibold">Tribunal de Penas y Canchas</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 45%;"></div>
+</div>
+</div>
+</div>
+<!-- Main Section: Split Layout (Registro Form + Live Telemetry / Graphic) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter items-start">
+<!-- Formulario de Registro de Nuevo Pago (7 Cols) -->
+<div class="xl:col-span-7 bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md relative overflow-hidden">
+<div class="flex items-center justify-between pb-space-sm bg-surface-container-low -mx-space-lg -mt-space-lg p-space-md mb-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="w-9 h-9 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">point_of_sale</span>
+</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-title-lg text-primary tracking-tight font-bold">Registro de Nuevo Pago Oficial</span>
+<span class="font-label-sm text-label-sm text-outline">Modelo Pago • Asociación de Fútbol Oruro</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full text-secondary font-label-sm bg-secondary-fixed/30 font-bold">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+            Caja Abierta #02
+          </span>
+</div>
+<form class="grid grid-cols-1 md:grid-cols-2 gap-space-md" id="form-registro-pago" onsubmit="return false;">
+<!-- Selector de Modo: Deportista o Club -->
+<div class="md:col-span-2 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md font-semibold text-on-surface">Tipo de Beneficiario / Deudor</label>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">ForeignKeys: Deportista | Club</span>
+</div>
+<div class="grid grid-cols-2 gap-space-sm bg-surface-container-low p-1 rounded-lg">
+<button class="py-2 px-space-md rounded-lg font-title-md text-label-lg font-semibold bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center justify-center gap-space-xs" id="btn-tab-deportista" type="button">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span>Deportista Individual</span>
+</button>
+<button class="py-2 px-space-md rounded-lg font-title-md text-label-lg font-semibold text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-space-xs" id="btn-tab-club" type="button">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+<span>Club / Equipo Afiliado</span>
+</button>
+</div>
+</div>
+<!-- Selector Dinamico (Deportista) -->
+<div class="md:col-span-2 flex flex-col gap-1" id="wrapper-deportista">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="select-deportista">
+              Deportista (Ficha COMET / Carnet) <span class="text-error">*</span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined text-outline absolute left-3 top-2.5 text-[20px]">badge</span>
+<select class="w-full h-10 pl-10 pr-8 bg-surface-container-lowest text-on-surface rounded-lg font-body-md text-body-md outline-none focus:bg-surface-container-low transition-all" id="select-deportista">
+<option value="DEP-8842">DEP-8842 • Juan Carlos Mamani Flores (Club San José - Primera A)</option>
+<option value="DEP-9011">DEP-9011 • Álvaro Rodrigo Torrico (Club Oruro Royal - Sub-19)</option>
+<option value="DEP-7734">DEP-7734 • Gabriel Santos Mendoza (CD Sur-Car - Primera A)</option>
+<option value="DEP-5120">DEP-5120 • Mateo Villarroel Huanca (Ingenieros - Primera B)</option>
+<option value="DEP-9921">DEP-9921 • Lucas Sebastián Paredes (E.M. Huanuni - Ascenso)</option>
+</select>
+</div>
+</div>
+<!-- Selector Dinamico (Club - Oculto inicialmente) -->
+<div class="md:col-span-2 hidden flex flex-col gap-1" id="wrapper-club">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="select-club">
+              Club Afiliado <span class="text-error">*</span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined text-outline absolute left-3 top-2.5 text-[20px]">sports_soccer</span>
+<select class="w-full h-10 pl-10 pr-8 bg-surface-container-lowest text-on-surface rounded-lg font-body-md text-body-md outline-none focus:bg-surface-container-low transition-all" id="select-club">
+<option value="CLUB-001">Club San José de Oruro (Matrícula Fed. AFO-001)</option>
+<option value="CLUB-002">Oruro Royal Club (Decano Nacional - AFO-002)</option>
+<option value="CLUB-003">Club Deportivo Sur-Car (AFO-014)</option>
+<option value="CLUB-004">Club Deportivo Totora Real Oruro (AFO-021)</option>
+<option value="CLUB-005">Empresa Minera Huanuni (AFO-008)</option>
+<option value="CLUB-006">Club Ingenieros (AFO-005)</option>
+</select>
+</div>
+</div>
+<!-- Monto en Bolivianos -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="input-monto">
+              Monto en Bolivianos (Bs) <span class="text-error">*</span>
+</label>
+<div class="relative">
+<span class="absolute left-3 top-2.5 font-bold text-primary font-label-md">Bs.</span>
+<input class="w-full h-10 pl-11 pr-3 bg-surface-container-lowest text-on-surface rounded-lg font-headline-sm text-headline-sm font-bold outline-none focus:bg-surface-container-low transition-all text-primary" id="input-monto" min="5" placeholder="0.00" required="" step="0.50" type="number" value="350.00"/>
+</div>
+</div>
+<!-- Fecha y Hora del Pago -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="input-fecha">
+              Fecha y Hora (DateTimeField) <span class="text-error">*</span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined text-outline absolute left-3 top-2.5 text-[20px]">calendar_today</span>
+<input class="w-full h-10 pl-10 pr-3 bg-surface-container-lowest text-on-surface rounded-lg font-body-md text-body-md outline-none focus:bg-surface-container-low transition-all" id="input-fecha" required="" type="datetime-local" value="2024-11-20T10:45"/>
+</div>
+</div>
+<!-- Tipo de Pago -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="select-tipo">
+              Concepto / Tipo de Pago <span class="text-error">*</span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined text-outline absolute left-3 top-2.5 text-[20px]">category</span>
+<select class="w-full h-10 pl-10 pr-8 bg-surface-container-lowest text-on-surface rounded-lg font-body-md text-body-md outline-none focus:bg-surface-container-low transition-all" id="select-tipo">
+<option value="Derecho de Fichaje">Derecho de Fichaje</option>
+<option value="Pase Interdepartamental">Pase Interdepartamental</option>
+<option value="Arancel de Cancha">Arancel de Cancha / Estadio</option>
+<option value="Multa Disciplinaria">Multa Disciplinaria (Tribunal)</option>
+<option value="Carnet Oficial">Carnet Oficial de Jugador</option>
+<option value="Cuota de Afiliación">Cuota de Afiliación / Revalidación</option>
+</select>
+</div>
+</div>
+<!-- Método de Pago -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="select-metodo">
+              Método de Pago Oficial <span class="text-error">*</span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined text-outline absolute left-3 top-2.5 text-[20px]">credit_card</span>
+<select class="w-full h-10 pl-10 pr-8 bg-surface-container-lowest text-on-surface rounded-lg font-body-md text-body-md outline-none focus:bg-surface-container-low transition-all" id="select-metodo">
+<option value="Efectivo en Caja">Efectivo en Ventanilla Caja Central</option>
+<option value="Transferencia QR Simple">Transferencia Inmediata QR Simple</option>
+<option value="Depósito Banco Unión">Depósito Cta. Cte. Banco Unión S.A.</option>
+</select>
+</div>
+</div>
+<!-- Operador de Caja y Glosa -->
+<div class="md:col-span-2 flex flex-col gap-1">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="input-glosa">
+              Glosa Contable / Detalle de la Transacción
+            </label>
+<input class="w-full h-10 px-3 bg-surface-container-lowest text-on-surface rounded-lg font-body-md text-body-md outline-none focus:bg-surface-container-low transition-all" id="input-glosa" placeholder="Ej: Pago de sanción por expulsión 2 fechas o cuota mensual de club..." type="text" value="Pago correspondiente a habilitación de ficha y pase interdepartamental temporada 2024."/>
+</div>
+<!-- Submission and Voucher Trigger Button in #1D428A with #75D1F0 details -->
+<div class="md:col-span-2 pt-space-sm flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">verified_user</span>
+<span>Operador: Lic. Marco Antonio Z. (Cajero Habilitado)</span>
+</div>
+<button class="w-full sm:w-auto bg-[#1D428A] hover:bg-[#15326A] text-on-primary px-space-lg py-3 rounded-lg font-title-md text-title-md transition-all flex items-center justify-center gap-space-sm shadow-md group" id="btn-generar-comprobante" type="button">
+<span class="material-symbols-outlined text-[#75D1F0] group-hover:scale-110 transition-transform">receipt</span>
+<span>Generar Comprobante Oficial de Caja</span>
+<span class="bg-[#75D1F0] text-[#001f28] font-bold text-label-sm px-2 py-0.5 rounded ml-1">AFO-2024</span>
+</button>
+</div>
+</form>
+<!-- Feedback Alert Overlay (Hidden by Default) -->
+<div class="hidden p-space-md bg-secondary-fixed/40 text-on-secondary-fixed rounded-lg flex items-center justify-between mt-space-sm animate-fadeIn" id="alert-pago-exito">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[24px]">check_circle</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md font-bold">¡Pago Registrado Exitosamente!</span>
+<span class="font-body-sm text-body-sm text-on-secondary-fixed-variant">Recibo N° 2024-00891 emitido en línea. Asiento ingresado al Libro de Caja General.</span>
+</div>
+</div>
+<button class="text-on-secondary-fixed hover:text-primary" onclick="document.getElementById('alert-pago-exito').classList.add('hidden')" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+</div>
+<!-- Financial Distribution Telemetry & Live Banking Integration (5 Cols) -->
+<div class="xl:col-span-5 flex flex-col gap-space-md">
+<!-- Sede & Recaudaciones Banner Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-sm relative overflow-hidden">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">stadium</span>
+<span class="font-title-md text-title-md font-bold text-primary">Sede Central y Canchas</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded text-outline font-semibold">Oruro, Bolivia</span>
+</div>
+<div class="relative h-36 w-full rounded-lg overflow-hidden my-1">
+<img class="w-full h-full object-cover" alt="Panoramic architectural photography of Estadio Jesus Bermudez in Oruro Bolivia under bright high-altitude Andean sunlight with lush green pitch and associations administration offices in clean modern sports architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmjdKQjSaBkPfgzBUCiGgKqvO9z0D2bJIm8HHVY1wxYURxKXZTChRQT6qum6TZfVsDrYqWH6V1Jl4Ta6z0klzUTl1T0R5dWUtnsDpd_UlIKzMI6xTh4YqpjG85U3KISVvE-rrDLz6bsUV-3AvREmMuXbGtLbcjbCmlGffxW10IpGAQKuLlVAmEGPb1GiapCquK9g11itfk0l3wNvryOhVmk4X5g1uYPNgfY-w_m_YdR8zlaAwn3Bi9Hg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent flex items-end p-space-md">
+<div class="flex flex-col text-on-primary">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed">Caja Recaudadora</span>
+<span class="font-title-md text-title-md font-bold">Estadio Jesús Bermúdez &amp; Canchas Auxiliares</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-sm pt-1">
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Boveda de Caja</span>
+<span class="font-headline-sm text-title-lg font-bold text-primary mt-0.5">Bs. 18.940,00</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Efectivo Físico</span>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Banco Unión Cta. Cte.</span>
+<span class="font-headline-sm text-title-lg font-bold text-primary mt-0.5">Bs. 65.680,00</span>
+<span class="font-label-sm text-label-sm text-on-secondary-container font-medium">Conciliado QR/Dep.</span>
+</div>
+</div>
+</div>
+<!-- Breakdown Chart of Income Distribution -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md font-bold text-primary">Composición de Ingresos</span>
+<span class="font-label-sm text-label-sm text-outline">Noviembre 2024</span>
+</div>
+<!-- Inline SVG Donut Chart with Metrics -->
+<div class="flex items-center gap-space-md py-space-xs">
+<div class="relative w-28 h-28 shrink-0">
+<svg class="w-28 h-28 transform -rotate-90" viewbox="0 0 36 36">
+<!-- Background track -->
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4.5"></path>
+<!-- Segment 1: Fichajes (38%) -->
+<path class="text-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="38, 100" stroke-width="4.5"></path>
+<!-- Segment 2: Afiliaciones (31%) -->
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="31, 100" stroke-dashoffset="-38" stroke-width="4.5"></path>
+<!-- Segment 3: Canchas & Multas (31%) -->
+<path class="text-error" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="31, 100" stroke-dashoffset="-69" stroke-width="4.5"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+<span class="font-headline-sm text-headline-sm font-bold text-primary leading-none">100%</span>
+<span class="font-label-sm text-[10px] text-outline uppercase font-semibold">AFO</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 w-full">
+<div class="flex items-center justify-between text-body-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-secondary"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Pases y Fichajes</span>
+</div>
+<span class="font-bold text-primary">38.2%</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-primary"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Cuotas Afiliación</span>
+</div>
+<span class="font-bold text-primary">31.3%</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-error"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Canchas y Multas</span>
+</div>
+<span class="font-bold text-primary">30.5%</span>
+</div>
+</div>
+</div>
+<!-- Sello de Auditoria y Control Interno -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center gap-space-sm mt-1">
+<span class="material-symbols-outlined text-secondary text-[22px]">gavel</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Control Gubernamental y FBF</span>
+<span class="font-body-sm text-[11px] text-outline leading-tight">Auditoría contable conforme a los Estatutos Orgánicos de la A.F.O. y normas tributarias.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tabla Histórica de Pagos Registrados -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col gap-0">
+<!-- Table Header Bar -->
+<div class="p-space-md bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-tertiary-container/30 text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">history_edu</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<h2 class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">Libro de Recibos y Comprobantes</h2>
+<span class="bg-surface-container-highest text-primary font-bold text-label-sm px-2 py-0.5 rounded-full">5 Registros Recientes</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Historial de transacciones validadas con firma digital y folio contable</span>
+</div>
+</div>
+<!-- Filtros y Exportación -->
+<div class="flex items-center gap-space-xs flex-wrap">
+<div class="flex items-center gap-1 bg-surface-container-lowest px-space-sm py-1 rounded-lg">
+<span class="material-symbols-outlined text-outline text-[18px]">filter_list</span>
+<select class="bg-transparent text-on-surface font-label-sm text-label-sm outline-none">
+<option>Todos los conceptos</option>
+<option>Derecho de Fichaje</option>
+<option>Pases Interdepartamentales</option>
+<option>Multas y Cancha</option>
+</select>
+</div>
+<button class="bg-surface-container-lowest hover:bg-surface-container text-on-surface px-space-sm py-1.5 rounded-lg font-label-sm text-label-sm font-semibold flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Exportar Excel</span>
+</button>
+<button class="bg-primary text-on-primary hover:bg-primary-container px-space-sm py-1.5 rounded-lg font-label-sm text-label-sm font-semibold flex items-center gap-1 transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">print</span>
+<span>Planilla General</span>
+</button>
+</div>
+</div>
+<!-- Table Content -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-tertiary text-on-tertiary">
+<th class="py-3 px-space-md font-label-sm text-label-sm font-semibold uppercase tracking-wider">N° de Recibo</th>
+<th class="py-3 px-space-md font-label-sm text-label-sm font-semibold uppercase tracking-wider">Fecha &amp; Hora</th>
+<th class="py-3 px-space-md font-label-sm text-label-sm font-semibold uppercase tracking-wider">Deportista / Club</th>
+<th class="py-3 px-space-md font-label-sm text-label-sm font-semibold uppercase tracking-wider">Concepto / Tipo</th>
+<th class="py-3 px-space-md font-label-sm text-label-sm font-semibold uppercase tracking-wider">Método</th>
+<th class="py-3 px-space-md font-label-sm text-label-sm font-semibold uppercase tracking-wider text-right">Monto (Bs)</th>
+<th class="py-3 px-space-md font-label-sm text-label-sm font-semibold uppercase tracking-wider">Operador (Usuario)</th>
+<th class="py-3 px-space-md font-label-sm text-label-sm font-semibold uppercase tracking-wider text-center">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-1.5 font-bold font-title-md text-primary">
+<span class="material-symbols-outlined text-secondary text-[18px]">receipt</span>
+<span>REC-2024-00890</span>
+</div>
+<span class="font-label-sm text-[10px] text-outline">Folio Digital #AFO-9912</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-title-md text-label-lg text-on-surface">20 Nov, 2024</span>
+<span class="block font-label-sm text-label-sm text-outline">10:15 AM</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-secondary font-bold text-label-sm shrink-0">
+                    JM
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-label-lg text-on-surface font-semibold truncate">Juan Carlos Mamani</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Club San José • CI 7329104 Or.</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-semibold bg-secondary-fixed/40 text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[14px]">badge</span>
+                  Derecho de Fichaje
+                </span>
+<span class="block font-label-sm text-[11px] text-outline mt-0.5">Primera Categoría A</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">qr_code_2</span>
+<span>QR Simple</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap">
+<span class="font-headline-sm text-title-lg font-bold text-primary">Bs. 350,00</span>
+<span class="block font-label-sm text-[10px] text-on-secondary-container">Comprobante emitido</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-label-md text-label-md text-on-surface font-medium">Lic. Marco A. Z.</span>
+<span class="block font-label-sm text-[11px] text-outline">Tesorería Central</span>
+</td>
+<td class="py-3 px-space-md text-center whitespace-nowrap">
+<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00890', 'Juan Carlos Mamani (San José)', 'Derecho de Fichaje', '350.00', 'QR Simple', '20/11/2024 10:15')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
+<span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest/50 hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-1.5 font-bold font-title-md text-primary">
+<span class="material-symbols-outlined text-secondary text-[18px]">receipt</span>
+<span>REC-2024-00889</span>
+</div>
+<span class="font-label-sm text-[10px] text-outline">Folio Digital #AFO-9911</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-title-md text-label-lg text-on-surface">20 Nov, 2024</span>
+<span class="block font-label-sm text-label-sm text-outline">09:40 AM</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-label-sm shrink-0">
+                    OR
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-label-lg text-on-surface font-semibold truncate">Oruro Royal Club</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Presidente / Delegado AFO</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-semibold bg-surface-container-high text-primary">
+<span class="material-symbols-outlined text-[14px]">shield</span>
+                  Cuota de Afiliación
+                </span>
+<span class="block font-label-sm text-[11px] text-outline mt-0.5">Mensualidad Noviembre</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined text-primary text-[16px]">account_balance</span>
+<span>Banco Unión Cta.</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap">
+<span class="font-headline-sm text-title-lg font-bold text-primary">Bs. 1.200,00</span>
+<span class="block font-label-sm text-[10px] text-on-secondary-container">Depósito Verificado</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-label-md text-label-md text-on-surface font-medium">Lic. Marco A. Z.</span>
+<span class="block font-label-sm text-[11px] text-outline">Tesorería Central</span>
+</td>
+<td class="py-3 px-space-md text-center whitespace-nowrap">
+<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00889', 'Oruro Royal Club', 'Cuota de Afiliación', '1200.00', 'Depósito Banco Unión', '20/11/2024 09:40')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
+<span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-1.5 font-bold font-title-md text-primary">
+<span class="material-symbols-outlined text-secondary text-[18px]">receipt</span>
+<span>REC-2024-00888</span>
+</div>
+<span class="font-label-sm text-[10px] text-outline">Folio Digital #AFO-9910</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-title-md text-label-lg text-on-surface">19 Nov, 2024</span>
+<span class="block font-label-sm text-label-sm text-outline">16:30 PM</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-error/10 flex items-center justify-center text-error font-bold text-label-sm shrink-0">
+                    SC
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-label-lg text-on-surface font-semibold truncate">Club Dep. Sur-Car</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Jugador: R. Calisaya (Roja Directa)</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-semibold bg-error-container text-on-error-container">
+<span class="material-symbols-outlined text-[14px]">gavel</span>
+                  Multa Disciplinaria
+                </span>
+<span class="block font-label-sm text-[11px] text-outline mt-0.5">Res. Tribunal N° 44/2024</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined text-outline text-[16px]">payments</span>
+<span>Efectivo en Caja</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap">
+<span class="font-headline-sm text-title-lg font-bold text-error">Bs. 500,00</span>
+<span class="block font-label-sm text-[10px] text-outline">Cancelado en Ventanilla</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-label-md text-label-md text-on-surface font-medium">Dra. Claudia V.</span>
+<span class="block font-label-sm text-[11px] text-outline">Auxiliar de Caja</span>
+</td>
+<td class="py-3 px-space-md text-center whitespace-nowrap">
+<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00888', 'Club Deportivo Sur-Car', 'Multa Disciplinaria', '500.00', 'Efectivo en Caja', '19/11/2024 16:30')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
+<span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-lowest/50 hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-1.5 font-bold font-title-md text-primary">
+<span class="material-symbols-outlined text-secondary text-[18px]">receipt</span>
+<span>REC-2024-00887</span>
+</div>
+<span class="font-label-sm text-[10px] text-outline">Folio Digital #AFO-9909</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-title-md text-label-lg text-on-surface">19 Nov, 2024</span>
+<span class="block font-label-sm text-label-sm text-outline">14:10 PM</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-secondary font-bold text-label-sm shrink-0">
+                    AT
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-label-lg text-on-surface font-semibold truncate">Álvaro Torrico</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Pase: Cochabamba a Oruro Royal</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-semibold bg-secondary-container text-on-secondary-container">
+<span class="material-symbols-outlined text-[14px]">sync_alt</span>
+                  Pase Interdepartamental
+                </span>
+<span class="block font-label-sm text-[11px] text-outline mt-0.5">Federación Boliviana de Fútbol</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined text-primary text-[16px]">account_balance</span>
+<span>Banco Unión Cta.</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap">
+<span class="font-headline-sm text-title-lg font-bold text-primary">Bs. 850,00</span>
+<span class="block font-label-sm text-[10px] text-on-secondary-container">Aprobación COMET</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-label-md text-label-md text-on-surface font-medium">Lic. Marco A. Z.</span>
+<span class="block font-label-sm text-[11px] text-outline">Tesorería Central</span>
+</td>
+<td class="py-3 px-space-md text-center whitespace-nowrap">
+<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00887', 'Álvaro Rodrigo Torrico', 'Pase Interdepartamental', '850.00', 'Depósito Banco Unión', '19/11/2024 14:10')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
+<span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-1.5 font-bold font-title-md text-primary">
+<span class="material-symbols-outlined text-secondary text-[18px]">receipt</span>
+<span>REC-2024-00886</span>
+</div>
+<span class="font-label-sm text-[10px] text-outline">Folio Digital #AFO-9908</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-title-md text-label-lg text-on-surface">18 Nov, 2024</span>
+<span class="block font-label-sm text-label-sm text-outline">17:45 PM</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-tertiary-container/40 flex items-center justify-center text-tertiary font-bold text-label-sm shrink-0">
+                    TR
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-label-lg text-on-surface font-semibold truncate">Club Real Oruro</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Fecha 14 • Torneo Clausura</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-semibold bg-surface-container-highest text-primary">
+<span class="material-symbols-outlined text-[14px]">sports</span>
+                  Arancel de Cancha
+                </span>
+<span class="block font-label-sm text-[11px] text-outline mt-0.5">Uso Estadio Jesús Bermúdez</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">qr_code_2</span>
+<span>QR Simple</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap">
+<span class="font-headline-sm text-title-lg font-bold text-primary">Bs. 600,00</span>
+<span class="block font-label-sm text-[10px] text-outline">Luz y Marcado</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="font-label-md text-label-md text-on-surface font-medium">Dra. Claudia V.</span>
+<span class="block font-label-sm text-[11px] text-outline">Auxiliar de Caja</span>
+</td>
+<td class="py-3 px-space-md text-center whitespace-nowrap">
+<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00886', 'Club Real Oruro', 'Arancel de Cancha', '600.00', 'Transferencia QR Simple', '18/11/2024 17:45')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
+<span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination and Registry Stats -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant">
+          Mostrando 1 a 5 de 482 recibos federativos registrados en la vigencia 2024
+        </span>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<span class="w-8 h-8 rounded-lg bg-primary text-on-primary font-bold text-label-sm flex items-center justify-center">1</span>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high font-bold text-label-sm flex items-center justify-center transition-colors" type="button">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high font-bold text-label-sm flex items-center justify-center transition-colors" type="button">3</button>
+<span class="px-1 text-outline">...</span>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high font-bold text-label-sm flex items-center justify-center transition-colors" type="button">97</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Audited Footer Strip -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col md:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[22px]">policy</span>
+<div class="flex flex-col">
+<span class="font-title-md text-label-lg font-bold text-primary">Historial Operación y Registro Inmutable</span>
+<span class="font-label-sm text-label-sm text-outline">Cada comprobante de ingreso genera un Hash SHA-256 inalterable para auditorías de la Federación Boliviana de Fútbol.</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container-lowest px-space-sm py-1 rounded text-primary font-bold">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+          Certificado AFO-SSL v2.4 Activo
+        </span>
+</div>
+</div>
+</div>
+<!-- Modal Comprobante Oficial de Pago Homologado (Interactive View) -->
+<div class="fixed inset-0 z-50 bg-[#0F2654]/60 backdrop-blur-sm hidden flex items-center justify-center p-space-md" id="modal-comprobante">
+<div class="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-scaleUp">
+<!-- Modal Top Bar -->
+<div class="bg-[#1D428A] text-on-primary p-space-md flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-on-primary/10 flex items-center justify-center text-[#75D1F0]">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-title-lg font-bold">Comprobante Oficial de Ingreso a Caja</span>
+<span class="font-label-sm text-label-sm text-on-primary-container">Asociación de Fútbol Oruro • Personería Jurídica N° 1921</span>
+</div>
+</div>
+<button class="text-on-primary/80 hover:text-on-primary p-1 rounded-lg" onclick="cerrarModalComprobante()" type="button">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+</div>
+<!-- Voucher Document Body -->
+<div class="p-space-lg flex flex-col gap-space-md bg-surface-container-lowest">
+<!-- Recibo Header Strip -->
+<div class="flex items-start justify-between border-b pb-space-sm border-surface-container">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight">ASOCIACIÓN DE FÚTBOL ORURO</span>
+<span class="font-label-sm text-label-sm text-outline">NIT: 1028475029 • La Paz esq. Rodríguez, Oruro</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Departamento de Finanzas y Tesorería</span>
+</div>
+<div class="flex flex-col text-right bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm uppercase font-bold text-outline">N° DE RECIBO OFICIAL</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary" id="modal-recibo-numero">REC-2024-00890</span>
+<span class="font-label-sm text-[11px] text-secondary font-semibold">ORIGINAL - INTERESADO</span>
+</div>
+</div>
+<!-- Meta Details Grid -->
+<div class="grid grid-cols-2 gap-space-md bg-surface-container-low p-space-md rounded-xl">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-outline uppercase">Deportista / Razón Social:</span>
+<span class="font-title-md text-title-md font-bold text-on-surface" id="modal-beneficiario">Juan Carlos Mamani (San José)</span>
+<span class="font-body-sm text-[12px] text-on-surface-variant">Ficha Federativa COMET AFO</span>
+</div>
+<div class="flex flex-col gap-1 text-right">
+<span class="font-label-sm text-label-sm text-outline uppercase">Fecha de Emisión:</span>
+<span class="font-title-md text-title-md font-bold text-on-surface" id="modal-fecha">20/11/2024 10:15</span>
+<span class="font-body-sm text-[12px] text-on-surface-variant">Lugar: Oruro, Bolivia</span>
+</div>
+</div>
+<!-- Line Item Concept -->
+<div class="bg-surface-container p-space-md rounded-xl flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Concepto Habilitado</span>
+<span class="font-title-md text-headline-sm font-bold text-primary" id="modal-concepto">Derecho de Fichaje</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5" id="modal-metodo">Forma de Pago: QR Simple</span>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Total Cancelado</span>
+<span class="font-headline-lg text-display-sm text-primary font-bold block" id="modal-monto">Bs. 350,00</span>
+</div>
+</div>
+<!-- Digital Signature and Stamp Simulation -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md pt-space-xs items-center">
+<div class="flex items-center gap-space-sm bg-surface-container-low p-space-sm rounded-lg">
+<!-- Simulated QR Validation Code -->
+<div class="w-14 h-14 bg-surface-container-lowest p-1 rounded border border-surface-container shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[38px]">qr_code</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm font-bold text-primary truncate">Firma Digital Homologada</span>
+<span class="font-label-sm text-[10px] text-outline truncate">Hash: 8b7d91e...34cf8a</span>
+<span class="font-label-sm text-[10px] text-on-secondary-container font-semibold">Verificado por Tesorero Gral.</span>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center p-space-sm bg-secondary-fixed/20 rounded-lg">
+<div class="flex items-center gap-1 text-primary font-bold font-label-md">
+<span class="material-symbols-outlined text-secondary text-[20px]">verified</span>
+<span>SELLO OFICIAL A.F.O.</span>
+</div>
+<span class="font-label-sm text-[11px] text-on-secondary-fixed text-center">Registrado en Base Central de Datos</span>
+</div>
+</div>
+</div>
+<!-- Modal Actions -->
+<div class="p-space-md bg-surface-container-low flex items-center justify-end gap-space-sm">
+<button class="px-space-md py-2 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-title-md text-label-lg font-semibold transition-colors" onclick="cerrarModalComprobante()" type="button">
+          Cerrar
+        </button>
+<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary px-space-lg py-2 rounded-lg font-title-md text-label-lg font-bold transition-all flex items-center gap-space-xs shadow-md" onclick="imprimirReciboSimulado()" type="button">
+<span class="material-symbols-outlined text-[#75D1F0] text-[18px]">print</span>
+<span>Imprimir Recibo Térmico / Carta</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+    // Tab switching for Deportista vs Club ForeignKey selector
+    const btnTabDep = document.getElementById('btn-tab-deportista');
+    const btnTabClub = document.getElementById('btn-tab-club');
+    const wrapperDep = document.getElementById('wrapper-deportista');
+    const wrapperClub = document.getElementById('wrapper-club');
+
+    if (btnTabDep && btnTabClub) {
+      btnTabDep.addEventListener('click', () => {
+        btnTabDep.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        btnTabDep.classList.remove('text-on-surface-variant');
+        btnTabClub.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        btnTabClub.classList.add('text-on-surface-variant');
+
+        wrapperDep.classList.remove('hidden');
+        wrapperClub.classList.add('hidden');
+      });
+
+      btnTabClub.addEventListener('click', () => {
+        btnTabClub.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        btnTabClub.classList.remove('text-on-surface-variant');
+        btnTabDep.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        btnTabDep.classList.add('text-on-surface-variant');
+
+        wrapperClub.classList.remove('hidden');
+        wrapperDep.classList.add('hidden');
+      });
+    }
+
+    // Generator handler for Official Voucher
+    const btnGenerar = document.getElementById('btn-generar-comprobante');
+    const alertExito = document.getElementById('alert-pago-exito');
+
+    if (btnGenerar) {
+      btnGenerar.addEventListener('click', () => {
+        const monto = document.getElementById('input-monto').value || '350.00';
+        const tipo = document.getElementById('select-tipo').value;
+        const metodo = document.getElementById('select-metodo').value;
+        const fecha = new Date().toLocaleString('es-BO');
+
+        const esDeportista = !wrapperDep.classList.contains('hidden');
+        let beneficiario = 'Juan Carlos Mamani';
+        if (esDeportista) {
+          const sel = document.getElementById('select-deportista');
+          beneficiario = sel.options[sel.selectedIndex].text.split('•')[1] || sel.options[sel.selectedIndex].text;
+        } else {
+          const sel = document.getElementById('select-club');
+          beneficiario = sel.options[sel.selectedIndex].text;
+        }
+
+        if (alertExito) {
+          alertExito.classList.remove('hidden');
+        }
+
+        // Open Voucher Preview Modal
+        mostrarModalComprobante('REC-2024-00891', beneficiario, tipo, monto, metodo, fecha);
+      });
+    }
+
+    // Modal Control Functions
+    function mostrarModalComprobante(recibo, beneficiario, concepto, monto, metodo, fecha) {
+      const modal = document.getElementById('modal-comprobante');
+      document.getElementById('modal-recibo-numero').innerText = recibo;
+      document.getElementById('modal-beneficiario').innerText = beneficiario;
+      document.getElementById('modal-concepto').innerText = concepto;
+      document.getElementById('modal-monto').innerText = 'Bs. ' + parseFloat(monto).toFixed(2).replace('.', ',');
+      document.getElementById('modal-metodo').innerText = 'Forma de Pago: ' + metodo;
+      document.getElementById('modal-fecha').innerText = fecha;
+      
+      modal.classList.remove('hidden');
+    }
+
+    function cerrarModalComprobante() {
+      const modal = document.getElementById('modal-comprobante');
+      modal.classList.add('hidden');
+    }
+
+    function imprimirReciboSimulado() {
+      window.print();
+    }
+  </script>
+</div></main></div><script>
+  window.AFO_URLS = {
+    panel: "{% url 'panel' %}",
+    clubes: "{% url 'clubes' %}",
+    campeonatos: "{% url 'campeonatos' %}",
+    arbitraje: "{% url 'arbitraje' %}",
+    deportistas: "{% url 'deportistas' %}",
+    tesoreria: "{% url 'tesoreria' %}",
+    auditoria: "{% url 'auditoria' %}",
+    logout: "{% url 'logout' %}",
+    username: "{{ request.user.get_full_name|default:request.user.username }}",
+    role: "{{ rol_label|default:request.session.rol }}"
+  };
+</script>
+<script src="{% static 'js/shell.js' %}"></script></body></html>
