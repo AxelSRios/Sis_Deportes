@@ -1,3 +1,176 @@
-from django.db import models
 
-# Create your models here.
+from django.db import models
+from django.conf import settings
+
+
+class Club(models.Model):
+    nombre = models.CharField(max_length=150)
+    direccion = models.TextField(null=True, blank=True)
+    telefono = models.CharField(max_length=30, null=True, blank=True)
+
+    class Meta:
+        db_table = 'clubes'
+
+    def __str__(self):
+        return self.nombre
+
+
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'categorias'
+
+    def __str__(self):
+        return self.nombre
+
+
+class Campeonato(models.Model):
+    nombre = models.CharField(max_length=150)
+    categoria = models.ForeignKey(
+        Categoria, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+
+    class Meta:
+        db_table = 'campeonatos'
+
+    def __str__(self):
+        return self.nombre
+
+
+class Equipo(models.Model):
+    nombre = models.CharField(max_length=150)
+    club = models.ForeignKey(
+        Club, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+
+    class Meta:
+        db_table = 'equipos'
+
+    def __str__(self):
+        return self.nombre
+
+
+class Deportista(models.Model):
+    nombre = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    genero = models.CharField(max_length=30, null=True, blank=True)
+    club = models.ForeignKey(
+        Club, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+
+    class Meta:
+        db_table = 'deportistas'
+
+    def __str__(self):
+        return self.nombre + ' ' + self.apellido
+
+
+class Arbitro(models.Model):
+    nombre = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'arbitros'
+
+    def __str__(self):
+        return self.nombre + ' ' + self.apellido
+
+
+class Partido(models.Model):
+    campeonato = models.ForeignKey(
+        Campeonato, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    equipo_local = models.ForeignKey(
+        Equipo, on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='partidos_locales'
+    )
+    equipo_visitante = models.ForeignKey(
+        Equipo, on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='partidos_visitantes'
+    )
+    fecha = models.DateTimeField(null=True, blank=True)
+    resultado = models.TextField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'partidos'
+
+
+class AsignacionArbitro(models.Model):
+    partido = models.ForeignKey(
+        Partido, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    arbitro = models.ForeignKey(
+        Arbitro, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+
+    class Meta:
+        db_table = 'asignaciones_arbitros'
+
+
+class Inscripcion(models.Model):
+    deportista = models.ForeignKey(
+        Deportista, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    equipo = models.ForeignKey(
+        Equipo, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    campeonato = models.ForeignKey(
+        Campeonato, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+
+    class Meta:
+        db_table = 'inscripciones'
+
+
+class Sancion(models.Model):
+    deportista = models.ForeignKey(
+        Deportista, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    descripcion = models.TextField(null=True, blank=True)
+    fecha = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'sanciones'
+
+
+class Pago(models.Model):
+    deportista = models.ForeignKey(
+        Deportista, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    monto = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        null=True, blank=True
+    )
+    fecha = models.DateTimeField(null=True, blank=True)
+    tipo = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        db_table = 'pagos'
+
+
+class HistorialOperacion(models.Model):
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    operacion = models.TextField(null=True, blank=True)
+    fecha = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'historial_operaciones'
