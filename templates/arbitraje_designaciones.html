@@ -49,7 +49,7 @@
 <div class="flex flex-col">
 <span class="font-label-sm text-label-sm uppercase text-outline tracking-wider font-bold">Padrón Oficial Activo</span>
 <div class="flex items-baseline gap-2 mt-1">
-<span class="font-display-lg text-headline-lg text-primary font-bold">64</span>
+<span class="font-display-lg text-headline-lg text-primary font-bold">{{ total_arbitros }}</span>
 <span class="font-label-sm text-label-sm text-secondary font-semibold">Árbitros Colegiados</span>
 </div>
 <span class="font-body-sm text-body-sm text-on-surface-variant mt-1">100% cuotas federativas al día</span>
@@ -120,7 +120,7 @@
 <button class="flex items-center gap-2 px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-md text-title-md transition-all" id="btn-tab-directorio" onclick="switchTab('directorio')" type="button">
 <span class="material-symbols-outlined text-[20px]">badge</span>
 <span>Padrón y Directorio de Oficiales</span>
-<span class="px-2 py-0.2 rounded-full bg-surface-container text-outline text-label-sm font-bold">64 Total</span>
+<span class="px-2 py-0.2 rounded-full bg-surface-container text-outline text-label-sm font-bold">{{ total_arbitros }} Total</span>
 </button>
 </div>
 <div class="flex items-center gap-space-xs pr-2 text-on-surface-variant font-label-sm text-label-sm">
@@ -623,227 +623,85 @@
 <th class="py-3.5 px-space-md font-bold text-right">Acciones</th>
 </tr>
 </thead>
-<tbody class="font-body-md text-body-md text-on-surface divide-y-0">
-<!-- ROW 1 -->
-<tr class="hover:bg-surface-container-low transition-colors">
-<td class="py-3 px-space-md">
-<div class="flex items-center gap-3">
-<img class="w-11 h-11 rounded-full object-cover shadow-sm" alt="Close-up professional portrait of a confident Bolivian football referee in official black athletic referee uniform, high altitude daylight background with subtle athletic stadium elements, professional sports headshot photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2yk_13B9AsZVTZqQ0YMqkzbHKmyfQkt3T_UGZUdcTi7OygZKBW9UlSkVSV52ZmR6SQSi4Y359hrA0U8W3s8FWag3KXfsMAOmKMXwJek_9mleYjCEVwYG9eCAt4WdVvRqj7F-_iV4R1JPNZgzLMsf7SItUQU-TiIdk2pSWhf5Tui3ViXcVeQeafszujo3nMgP0o4RpKfEpIxOlNdRwckC1XEIfxZjat6EvyULNCjqBsI6hp6JLpHqj6Q"/>
-<div class="flex flex-col">
-<span class="font-title-md text-title-md text-primary font-bold">Gery Vargas Carreño</span>
-<span class="font-label-sm text-label-sm text-outline">Colegiado: CDAO-014 • CI: 4059281 OR</span>
-</div>
-</div>
-</td>
-<td class="py-3 px-space-md">
-<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold inline-flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">stars</span>
-                    FIFA Internacional
-                  </span>
-</td>
-<td class="py-3 px-space-md text-center font-bold text-primary">
-                  18 Partidos
-                </td>
-<td class="py-3 px-space-md text-center">
-<div class="inline-flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded text-primary font-bold text-label-md">
-<span class="material-symbols-outlined text-[16px] text-secondary">star</span>
-                    9.6 / 10
-                  </div>
-</td>
-<td class="py-3 px-space-md text-center">
-<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
-                    Designado (F-14)
-                  </span>
-</td>
-<td class="py-3 px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg text-primary hover:bg-surface-container transition-all" title="Ver Expediente" type="button">
-<span class="material-symbols-outlined text-[20px]">badge</span>
-</button>
-<button class="p-1.5 rounded-lg text-secondary hover:bg-surface-container transition-all" title="Historial COMET" type="button">
-<span class="material-symbols-outlined text-[20px]">feed</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- ROW 2 -->
-<tr class="bg-surface-container-low/30 hover:bg-surface-container-low transition-colors">
-<td class="py-3 px-space-md">
-<div class="flex items-center gap-3">
-<img class="w-11 h-11 rounded-full object-cover shadow-sm" alt="Headshot of a senior South American soccer referee in navy blue athletic collar shirt, looking focused and authoritative, neutral grey sports facility background, warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtRP8wflEa1817aMoMVsPkE6KE9ZYWK0O4rz9ujUuX07kNyfPf8QFf_lLzvXH2FUkzYvQG7YChwk9QSeB-p_lsNNMX2n_Yb4ktyzI3ZS3-ngevDZes9C8pZIxuQm4w4KQLZpdKB0mifa6ecEUHa62nErmZ9o2k6NRJIbERiCZE_L3tPimRP9FJHFN9PmqCv-7JKGP2gaKM35giYigIn5mSsS1QilRNj0XgOelp6AGBRUbymr-JiWz7Bw"/>
-<div class="flex flex-col">
-<span class="font-title-md text-title-md text-primary font-bold">Javier Revollo Choque</span>
-<span class="font-label-sm text-label-sm text-outline">Colegiado: CDAO-028 • CI: 3512903 OR</span>
-</div>
-</div>
-</td>
-<td class="py-3 px-space-md">
-<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold inline-flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">shield</span>
-                    Nacional FBF
-                  </span>
-</td>
-<td class="py-3 px-space-md text-center font-bold text-primary">
-                  14 Partidos
-                </td>
-<td class="py-3 px-space-md text-center">
-<div class="inline-flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded text-primary font-bold text-label-md">
-<span class="material-symbols-outlined text-[16px] text-secondary">star</span>
-                    9.1 / 10
-                  </div>
-</td>
-<td class="py-3 px-space-md text-center">
-<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
-                    Designado (F-14)
-                  </span>
-</td>
-<td class="py-3 px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg text-primary hover:bg-surface-container transition-all" title="Ver Expediente" type="button">
-<span class="material-symbols-outlined text-[20px]">badge</span>
-</button>
-<button class="p-1.5 rounded-lg text-secondary hover:bg-surface-container transition-all" title="Historial COMET" type="button">
-<span class="material-symbols-outlined text-[20px]">feed</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- ROW 3 -->
-<tr class="hover:bg-surface-container-low transition-colors">
-<td class="py-3 px-space-md">
-<div class="flex items-center gap-3">
-<img class="w-11 h-11 rounded-full object-cover shadow-sm" alt="Portrait of a professional female Bolivian football assistant referee in modern athletic kit, smiling with determination, professional sports headshot, crisp daylight lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpHPts8cUbLloU7mAdlCEgN9yf9ptHI7Rsq25e1D022rxpRt08_Z1xtYhhB9XK5TVC66VJTFO4bE5t11tGFVgg3c0NB3q3j3kQSmeTABh3WhKa45i3Hg_JzlBDimYNW4WaexxonX_nUw4qzK4aipCMCHNXLUU2cCqeWkZ0esDOvOAuVc4KH1URi0WGo3r45v2OOGXUjLs-4MEkk2R4J05b9nlIqJhNAXkdRB2QanKytcVaiBODwaycWQ"/>
-<div class="flex flex-col">
-<span class="font-title-md text-title-md text-primary font-bold">Daniela Cruz Soliz</span>
-<span class="font-label-sm text-label-sm text-outline">Colegiado: CDAO-052 • CI: 5782910 OR</span>
-</div>
-</div>
-</td>
-<td class="py-3 px-space-md">
-<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold inline-flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">flag</span>
-                    Nacional Asistente
-                  </span>
-</td>
-<td class="py-3 px-space-md text-center font-bold text-primary">
-                  16 Partidos
-                </td>
-<td class="py-3 px-space-md text-center">
-<div class="inline-flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded text-primary font-bold text-label-md">
-<span class="material-symbols-outlined text-[16px] text-secondary">star</span>
-                    9.4 / 10
-                  </div>
-</td>
-<td class="py-3 px-space-md text-center">
-<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
-                    Designado (F-14)
-                  </span>
-</td>
-<td class="py-3 px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg text-primary hover:bg-surface-container transition-all" title="Ver Expediente" type="button">
-<span class="material-symbols-outlined text-[20px]">badge</span>
-</button>
-<button class="p-1.5 rounded-lg text-secondary hover:bg-surface-container transition-all" title="Historial COMET" type="button">
-<span class="material-symbols-outlined text-[20px]">feed</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- ROW 4 (Disponible) -->
-<tr class="bg-surface-container-low/30 hover:bg-surface-container-low transition-colors">
-<td class="py-3 px-space-md">
-<div class="flex items-center gap-3">
-<div class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold text-title-md">
-                      FT
-                    </div>
-<div class="flex flex-col">
-<span class="font-title-md text-title-md text-primary font-bold">Fernando Toledo Mamani</span>
-<span class="font-label-sm text-label-sm text-outline">Colegiado: CDAO-033 • CI: 4892019 OR</span>
-</div>
-</div>
-</td>
-<td class="py-3 px-space-md">
-<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold inline-flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">shield</span>
-                    Nacional FBF
-                  </span>
-</td>
-<td class="py-3 px-space-md text-center font-bold text-primary">
-                  11 Partidos
-                </td>
-<td class="py-3 px-space-md text-center">
-<div class="inline-flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded text-primary font-bold text-label-md">
-<span class="material-symbols-outlined text-[16px] text-secondary">star</span>
-                    8.8 / 10
-                  </div>
-</td>
-<td class="py-3 px-space-md text-center">
-<span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary font-label-sm text-label-sm font-bold">
+<tbody>
+    {% for arbitro in arbitros %}
+    <tr class="hover:bg-surface-container-low transition-colors">
+
+        <!-- Nombre y datos personales -->
+        <td class="py-3 px-space-md">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold text-title-md">
+                    {{ arbitro.nombre|slice:":1" }}{{ arbitro.apellido|slice:":1" }}
+                </div>
+
+                <div class="flex flex-col">
+                    <span class="font-title-md text-title-md text-primary font-bold">
+                        {{ arbitro.nombre }} {{ arbitro.apellido }}
+                    </span>
+
+                    <span class="font-label-sm text-label-sm text-outline">
+                        Colegiado: {{ arbitro.codigo|default:"Sin código" }}
+                        • CI: {{ arbitro.ci|default:"Sin CI" }}
+                    </span>
+                </div>
+            </div>
+        </td>
+
+        <!-- Categoría -->
+        <td class="py-3 px-space-md">
+            <span class="px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold">
+                {{ arbitro.get_categoria_display }}
+            </span>
+        </td>
+
+        <!-- Partidos -->
+        <td class="py-3 px-space-md text-center font-bold text-primary">
+            -
+        </td>
+
+        <!-- Calificación -->
+        <td class="py-3 px-space-md text-center">
+            -
+        </td>
+
+        <!-- Estado -->
+        <td class="py-3 px-space-md text-center">
+            {% if arbitro.estado == 'ACTIVO' %}
+                <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
                     Disponible
-                  </span>
-</td>
-<td class="py-3 px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg text-primary hover:bg-surface-container transition-all" title="Ver Expediente" type="button">
-<span class="material-symbols-outlined text-[20px]">badge</span>
-</button>
-<button class="p-1.5 rounded-lg text-secondary hover:bg-surface-container transition-all" title="Historial COMET" type="button">
-<span class="material-symbols-outlined text-[20px]">feed</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- ROW 5 (Sancionado / Baja) -->
-<tr class="hover:bg-surface-container-low transition-colors">
-<td class="py-3 px-space-md">
-<div class="flex items-center gap-3">
-<div class="w-11 h-11 rounded-full bg-error-container text-on-error-container flex items-center justify-center font-bold text-title-md">
-                      RC
-                    </div>
-<div class="flex flex-col">
-<span class="font-title-md text-title-md text-on-surface font-bold">Rolando Choque Tarqui</span>
-<span class="font-label-sm text-label-sm text-outline">Colegiado: CDAO-041 • CI: 3991204 OR</span>
-</div>
-</div>
-</td>
-<td class="py-3 px-space-md">
-<span class="px-2.5 py-1 rounded-full bg-surface-container text-outline font-label-sm text-label-sm font-bold inline-flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">sports</span>
-                    Departamental A
-                  </span>
-</td>
-<td class="py-3 px-space-md text-center font-bold text-on-surface-variant">
-                  7 Partidos
-                </td>
-<td class="py-3 px-space-md text-center">
-<div class="inline-flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded text-outline font-bold text-label-md">
-<span class="material-symbols-outlined text-[16px] text-outline">star_half</span>
-                    6.9 / 10
-                  </div>
-</td>
-<td class="py-3 px-space-md text-center">
-<span class="px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
-                    Baja Médica (15 días)
-                  </span>
-</td>
-<td class="py-3 px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg text-primary hover:bg-surface-container transition-all" title="Ver Expediente" type="button">
-<span class="material-symbols-outlined text-[20px]">badge</span>
-</button>
-<button class="p-1.5 rounded-lg text-secondary hover:bg-surface-container transition-all" title="Historial COMET" type="button">
-<span class="material-symbols-outlined text-[20px]">feed</span>
-</button>
-</div>
-</td>
-</tr>
+                </span>
+            {% else %}
+                <span class="px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                    Inactivo
+                </span>
+            {% endif %}
+        </td>
+
+        <!-- Acciones -->
+        <td class="py-3 px-space-md text-right">
+            <div class="flex items-center justify-end gap-1">
+                <button class="p-1.5 rounded-lg text-primary hover:bg-surface-container transition-all"
+                        title="Ver Expediente" type="button">
+                    <span class="material-symbols-outlined text-[20px]">badge</span>
+                </button>
+            </div>
+        </td>
+
+    </tr>
+
+    {% empty %}
+    <tr>
+        <td colspan="6" class="py-8 text-center text-outline">
+            No hay árbitros registrados.
+        </td>
+    </tr>
+    {% endfor %}
 </tbody>
 </table>
 </div>
 <!-- Table Footer / Pagination -->
 <div class="p-space-md bg-surface-container-low flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
-<span>Mostrando 5 de 64 oficiales federados</span>
+<span>Mostrando {{ arbitros|length }} árbitros registrados</span>
 <div class="flex items-center gap-1">
 <button class="px-2.5 py-1 rounded bg-surface-container-lowest hover:bg-surface-container text-primary font-bold shadow-sm" type="button">1</button>
 <button class="px-2.5 py-1 rounded hover:bg-surface-container-high" type="button">2</button>
@@ -964,65 +822,90 @@
 <span class="material-symbols-outlined">close</span>
 </button>
 </div>
-<form class="p-space-lg flex flex-col gap-space-md" onsubmit="event.preventDefault(); document.getElementById('modal-nuevo-arbitro').classList.add('hidden'); alert('Árbitro registrado exitosamente en el Colegio Departamental de Árbitros de Oruro.');">
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
-<div class="flex flex-col gap-1">
-<label class="font-label-md text-label-md font-semibold text-on-surface">Nombres:</label>
-<input class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md" placeholder="Ej. Carlos Marcelo" required="" type="text"/>
-</div>
-<div class="flex flex-col gap-1">
-<label class="font-label-md text-label-md font-semibold text-on-surface">Apellidos:</label>
-<input class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md" placeholder="Ej. Mamani Colque" required="" type="text"/>
-</div>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md">
-<div class="flex flex-col gap-1">
-<label class="font-label-md text-label-md font-semibold text-on-surface">Cédula de Identidad:</label>
-<input class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md" placeholder="Ej. 4059281 OR" required="" type="text"/>
-</div>
-<div class="flex flex-col gap-1">
-<label class="font-label-md text-label-md font-semibold text-on-surface">Código Colegiado:</label>
-<input class="p-2.5 rounded-lg bg-surface-container text-primary font-bold focus:outline-none font-body-md text-body-md" readonly="" type="text" value="CDAO-065"/>
-</div>
-<div class="flex flex-col gap-1">
-<label class="font-label-md text-label-md font-semibold text-on-surface">Categoría Federativa:</label>
-<select class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md font-semibold">
-<option>Departamental B</option>
-<option>Departamental A</option>
-<option>Nacional Aspirante</option>
-<option>Nacional FBF</option>
-<option>FIFA Internacional</option>
-</select>
-</div>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
-<div class="flex flex-col gap-1">
-<label class="font-label-md text-label-md font-semibold text-on-surface">Teléfono / WhatsApp Móvil:</label>
-<input class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md" placeholder="+591 7XXXXXXX" required="" type="tel"/>
-</div>
-<div class="flex flex-col gap-1">
-<label class="font-label-md text-label-md font-semibold text-on-surface">Especialidad Principal:</label>
-<select class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md font-semibold">
-<option>Árbitro Central</option>
-<option>Árbitro Asistente (Línea)</option>
-<option>Asesor Técnico / Delegado</option>
-<option>Futsal / Fútbol Playa</option>
-</select>
-</div>
-</div>
-<div class="p-3 bg-secondary-fixed/30 rounded-lg flex items-center gap-2 text-on-secondary-fixed font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-secondary text-[20px]">info</span>
-<span>El registro creará automáticamente el perfil en la nómina COMET y enviará el carnet digital de afiliado.</span>
-</div>
-<div class="flex items-center justify-end gap-space-sm pt-space-sm">
-<button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md" onclick="document.getElementById('modal-nuevo-arbitro').classList.add('hidden')" type="button">
-            Cancelar
-          </button>
-<button class="px-5 py-2 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-bold shadow-sm" type="submit">
-            Guardar y Registrar
-          </button>
-</div>
+
+<form class="p-space-lg flex flex-col gap-space-md"
+      method="POST"
+      action="{% url 'arbitraje' %}">
+
+  {% csrf_token %}
+  <input type="hidden" name="accion" value="registrar_arbitro">
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+    <div class="flex flex-col gap-1">
+      <label class="font-label-md text-label-md font-semibold text-on-surface">Nombres:</label>
+      <input name="nombre" class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md"
+             placeholder="Ej. Carlos Marcelo" required type="text"/>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="font-label-md text-label-md font-semibold text-on-surface">Apellidos:</label>
+      <input name="apellido" class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md"
+             placeholder="Ej. Mamani Colque" required type="text"/>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md">
+    <div class="flex flex-col gap-1">
+      <label class="font-label-md text-label-md font-semibold text-on-surface">Cédula de Identidad:</label>
+      <input name="ci" class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md"
+             placeholder="Ej. 4059281 OR" required type="text"/>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="font-label-md text-label-md font-semibold text-on-surface">Código Colegiado:</label>
+      <input class="p-2.5 rounded-lg bg-surface-container text-primary font-bold focus:outline-none font-body-md text-body-md"
+             readonly type="text" value="Se genera automáticamente"/>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="font-label-md text-label-md font-semibold text-on-surface">Categoría Federativa:</label>
+      <select name="categoria" class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md font-semibold">
+        <option value="DEPARTAMENTAL">Departamental B</option>
+        <option value="DEPARTAMENTAL">Departamental A</option>
+        <option value="NACIONAL">Nacional Aspirante</option>
+        <option value="NACIONAL">Nacional FBF</option>
+        <option value="FIFA">FIFA Internacional</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+    <div class="flex flex-col gap-1">
+      <label class="font-label-md text-label-md font-semibold text-on-surface">Teléfono / WhatsApp Móvil:</label>
+      <input name="telefono" class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md"
+             placeholder="+591 7XXXXXXX" required type="tel"/>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="font-label-md text-label-md font-semibold text-on-surface">Especialidad Principal:</label>
+      <select name="especialidad" class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md font-semibold">
+        <option value="CENTRAL">Árbitro Central</option>
+        <option value="ASISTENTE">Árbitro Asistente (Línea)</option>
+        <option value="OTRO">Asesor Técnico / Delegado</option>
+        <option value="OTRO">Futsal / Fútbol Playa</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="p-3 bg-secondary-fixed/30 rounded-lg flex items-center gap-2 text-on-secondary-fixed font-body-sm text-body-sm">
+    <span class="material-symbols-outlined text-secondary text-[20px]">info</span>
+    <span>El código del árbitro se generará automáticamente al guardar el registro.</span>
+  </div>
+
+  <div class="flex items-center justify-end gap-space-sm pt-space-sm">
+    <button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md"
+            onclick="document.getElementById('modal-nuevo-arbitro').classList.add('hidden')"
+            type="button">
+      Cancelar
+    </button>
+
+    <button class="px-5 py-2 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-bold shadow-sm"
+            type="submit">
+      Guardar y Registrar
+    </button>
+  </div>
 </form>
+
 </div>
 </div>
 <!-- SLIDE-OVER DRAWER: REGISTRO ACTA COMET / CONFIRMACIÓN DE ASIGNACIÓN -->

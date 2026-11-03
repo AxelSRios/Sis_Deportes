@@ -28,7 +28,9 @@
 </span>
 </div>
 <div class="mt-space-sm z-10 flex items-baseline justify-between">
-<span class="font-headline-lg text-headline-lg text-primary tracking-tight">4,892</span>
+<span class="font-headline-lg text-headline-lg text-primary tracking-tight">
+    {{ total_deportistas }}
+</span>
 <span class="font-label-sm text-label-sm text-secondary flex items-center gap-0.5 font-semibold">
 <span class="material-symbols-outlined text-[14px]">trending_up</span> +142 este mes
         </span>
@@ -46,7 +48,7 @@
 </span>
 </div>
 <div class="mt-space-sm z-10 flex items-baseline justify-between">
-<span class="font-headline-lg text-headline-lg text-on-surface tracking-tight">4,520</span>
+<span class="font-headline-lg text-headline-lg text-on-surface tracking-tight">{{ total_deportistas }}</span>
 <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">92.4% aptos</span>
 </div>
 <div class="mt-space-xs w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
@@ -62,7 +64,7 @@
 </span>
 </div>
 <div class="mt-space-sm z-10 flex items-baseline justify-between">
-<span class="font-headline-lg text-headline-lg text-error tracking-tight">38</span>
+<span class="font-headline-lg text-headline-lg text-error tracking-tight">{{ total_sancionados|default:0 }}</span>
 <span class="font-label-sm text-label-sm text-error flex items-center gap-0.5">
 <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span> Tribunal Penas
         </span>
@@ -80,7 +82,7 @@
 </span>
 </div>
 <div class="mt-space-sm z-10 flex items-baseline justify-between">
-<span class="font-headline-lg text-headline-lg text-primary tracking-tight">114</span>
+<span class="font-headline-lg text-headline-lg text-primary tracking-tight">{{ total_transferencias|default:0 }}</span>
 <span class="font-label-sm text-label-sm text-secondary flex items-center gap-0.5 font-semibold">Libro de Pases Activo</span>
 </div>
 <div class="mt-space-xs w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
@@ -106,9 +108,11 @@
 <span class="material-symbols-outlined text-[18px]">gavel</span>
 <span>Aplicar Sanción</span>
 </button>
-<button class="h-10 px-space-md bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg rounded-lg flex items-center gap-space-xs shadow-sm transition-colors" type="button">
-<span class="material-symbols-outlined text-[18px]">person_add</span>
-<span>Nuevo Fichaje / Pase</span>
+<button type="button"
+    id="btn-nuevo-fichaje"
+    class="h-10 px-space-md bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg rounded-lg flex items-center gap-space-xs shadow-sm transition-colors">
+    <span class="material-symbols-outlined text-[18px]">person_add</span>
+    <span>Nuevo Fichaje / Pase</span>
 </button>
 </div>
 </section>
@@ -128,11 +132,9 @@
 <label class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Club de Origen / Matriz</label>
 <select class="h-10 px-space-sm bg-surface-container-lowest rounded-lg font-body-sm text-body-sm text-on-surface outline-none focus:ring-2 focus:ring-secondary-fixed">
 <option value="">Todos los Clubes</option>
-<option selected="" value="oruro-royal">Oruro Royal Club (1896)</option>
-<option value="san-jose">San José de Oruro</option>
-<option value="deportivo-cala">Club Deportivo Cala Cala</option>
-<option value="sur-car">Deportivo Sur-Car</option>
-<option value="ingenieros">Club Ingenieros</option>
+{% for club in clubes %}
+    <option value="{{ club.id }}">{{ club.nombre }}</option>
+{% endfor %}
 </select>
 </div>
 <div class="flex flex-col gap-1">
@@ -180,339 +182,190 @@
 </div>
 </div>
 </section>
-<!-- Main Content Layout: Table & Side Preview (Bento structure) -->
+
+
+<!-- Main Content Layout: Table & Side Preview -->
 <div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter items-start">
-<!-- Comprehensive Deportistas Table (8 cols on XL) -->
-<div class="xl:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
-<div class="p-space-md bg-surface-container-low flex items-center justify-between">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[20px]">badge</span>
-<span class="font-title-lg text-title-lg text-primary tracking-tight">Registro de Jugadores Inscritos</span>
-<span class="font-label-sm text-label-sm bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">5 Registros mostrados</span>
+
+    <!-- TABLA DE DEPORTISTAS -->
+    <div class="xl:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+
+        <!-- ENCABEZADO -->
+        <div class="p-space-md bg-surface-container-low flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-space-xs">
+                <span class="material-symbols-outlined text-primary text-[22px]">badge</span>
+
+                <span class="font-title-lg text-title-lg text-primary tracking-tight">
+                    Registro de Jugadores Inscritos
+                </span>
+
+                <span class="font-label-sm text-label-sm bg-primary/10 text-primary px-2 py-1 rounded-full font-bold">
+                    {{ deportistas|length }} Registros mostrados
+                </span>
+            </div>
+
+            <div class="flex items-center gap-space-xs">
+                <button class="p-2 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-primary transition-colors"
+                        title="Vista de tabla" type="button">
+                    <span class="material-symbols-outlined text-[20px]">table_rows</span>
+                </button>
+
+                <button onclick="window.print()"
+                        class="p-2 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-primary transition-colors"
+                        title="Imprimir registros" type="button">
+                    <span class="material-symbols-outlined text-[20px]">print</span>
+                </button>
+
+                <!-- Este botón abre el modal sin duplicar el ID -->
+                <button onclick="document.getElementById('modal-nuevo-fichaje').classList.remove('hidden')"
+                        class="h-9 px-3 rounded-lg bg-primary text-on-primary hover:bg-primary-container flex items-center gap-1 font-label-sm text-label-sm transition-colors"
+                        type="button">
+                    <span class="material-symbols-outlined text-[18px]">person_add</span>
+                    Registrar
+                </button>
+            </div>
+        </div>
+
+        <!-- TABLA -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+
+                <thead>
+                    <tr class="bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-wider">
+                        <th class="py-4 px-space-md">Deportista & Documento</th>
+                        <th class="py-4 px-space-sm">Edad / Género</th>
+                        <th class="py-4 px-space-sm">Club & Equipo</th>
+                        <th class="py-4 px-space-sm">Campeonato</th>
+                        <th class="py-4 px-space-sm text-center">Estado</th>
+                        <th class="py-4 px-space-md text-right">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-surface-container">
+
+                    {% for deportista in deportistas %}
+                    <tr class="hover:bg-surface-container-low transition-colors">
+
+                        <!-- DEPORTISTA -->
+                        <td class="py-3 px-space-md">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                                    <span class="material-symbols-outlined">person</span>
+                                </div>
+
+                                <div class="flex flex-col min-w-0">
+                                    <span class="font-label-md text-label-md text-primary font-bold">
+                                        {{ deportista.nombre }} {{ deportista.apellido }}
+                                    </span>
+                                    <span class="font-body-sm text-body-sm text-on-surface-variant">
+                                        Documento: No registrado
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- GÉNERO Y FECHA -->
+                        <td class="py-3 px-space-sm">
+                            <div class="flex flex-col gap-1">
+                                <span class="font-label-md text-label-md text-on-surface font-semibold">
+                                    {{ deportista.genero|default:"No especificado" }}
+                                </span>
+                                <span class="font-body-sm text-body-sm text-on-surface-variant">
+                                    {% if deportista.fecha_nacimiento %}
+                                        {{ deportista.fecha_nacimiento|date:"d/m/Y" }}
+                                    {% else %}
+                                        Sin fecha registrada
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </td>
+
+                        <!-- CLUB -->
+                        <td class="py-3 px-space-sm">
+                            {% if deportista.club %}
+                                <span class="font-label-md text-label-md text-on-surface font-semibold">
+                                    {{ deportista.club.nombre }}
+                                </span>
+                            {% else %}
+                                <span class="font-body-sm text-body-sm text-on-surface-variant">
+                                    Sin club asignado
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <!-- CAMPEONATO -->
+                        <td class="py-3 px-space-sm">
+                            <span class="font-body-sm text-body-sm text-on-surface-variant">
+                                Registro AFO
+                            </span>
+                        </td>
+
+                        <!-- ESTADO -->
+                        <td class="py-3 px-space-sm text-center">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                Registrado
+                            </span>
+                        </td>
+
+                        <!-- ACCIONES -->
+                        <td class="py-3 px-space-md text-right">
+                            <button type="button"
+                                    class="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-primary hover:bg-primary/10 font-label-sm text-label-sm font-semibold transition-colors"
+                                    onclick="openCardPreview(
+                                        '{{ deportista.nombre|escapejs }} {{ deportista.apellido|escapejs }}',
+                                        'Registro AFO',
+                                        '{% if deportista.club %}{{ deportista.club.nombre|escapejs }}{% else %}Sin club asignado{% endif %}',
+                                        'Sin posición registrada',
+                                        'Registrado',
+                                        'Sin CI registrado'
+                                    )">
+
+                                <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                Ver ficha
+                            </button>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="py-12 px-5 text-center">
+                            <span class="material-symbols-outlined text-5xl text-outline">
+                                person_search
+                            </span>
+
+                            <p class="mt-2 font-title-md text-title-md text-on-surface font-bold">
+                                No hay deportistas registrados
+                            </p>
+
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">
+                                Los nuevos jugadores aparecerán en este listado.
+                            </p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PIE DE TABLA -->
+        <div class="p-space-md bg-surface-container-low flex flex-wrap items-center justify-between gap-2">
+            <span class="font-body-sm text-body-sm text-on-surface-variant">
+                Mostrando {{ deportistas|length }} deportistas registrados
+            </span>
+
+            <span class="font-label-sm text-label-sm text-secondary flex items-center gap-1">
+                <span class="material-symbols-outlined text-[17px]">verified</span>
+                Sistema de Gestión Deportiva A.F.O.
+            </span>
+        </div>
+
+    </div>
 </div>
-<div class="flex items-center gap-space-xs">
-<button class="p-1.5 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-primary" title="Vista compacta" type="button">
-<span class="material-symbols-outlined text-[18px]">table_rows</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-primary" title="Imprimir carnets seleccionados" type="button">
-<span class="material-symbols-outlined text-[18px]">print</span>
-</button>
-</div>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-surface-container text-on-surface font-label-md text-label-md uppercase tracking-wider">
-<th class="py-space-sm px-space-md">Deportista &amp; Documento</th>
-<th class="py-space-sm px-space-sm">Edad / Género</th>
-<th class="py-space-sm px-space-sm">Club &amp; Equipo</th>
-<th class="py-space-sm px-space-sm">Campeonato</th>
-<th class="py-space-sm px-space-sm">Estado</th>
-<th class="py-space-sm px-space-md text-right">Acciones</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-surface-container">
-<!-- Row 1: Oruro Royal Club Star Player -->
-<tr class="hover:bg-secondary-fixed/20 transition-colors group">
-<td class="py-space-sm px-space-md">
-<div class="flex items-center gap-space-sm">
-<img class="w-10 h-10 rounded-full object-cover shadow-sm ring-2 ring-primary/20" alt="Close up athletic headshot portrait of a young Bolivian football striker wearing a royal blue and black striped kit, high altitude lighting, official association photo style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEk2Kwu-RS0DmSgGpYYXW53X0pl5ztYjId13MY9g-5xKKGcPH2icMZD5NAgHbNBX31SG5op-PNhtCHAnjpCK3NKgFKbUvwwGFgVCpNn-yafvNIbHPXL6vjuX4Cvd4_JTNw7WEVrZH3MSlcRdc5cEgfFlUagUP95q9BTY4oxMHKAFNTRMq3Jj3Amt53d4u5TDXpx1jM0RZnEMvO5nHnM3TCpuiM7X2cL2KUz6AzneLROuDVsupxvVMGyw"/>
-<div class="flex flex-col min-w-0">
-<span class="font-title-md text-title-md text-primary font-bold group-hover:text-secondary-fixed-variant leading-tight">Mauricio Quispe Flores</span>
-<div class="flex items-center gap-1.5 mt-0.5">
-<span class="font-label-sm text-label-sm text-on-surface-variant">CI: 7392182-OR</span>
-<span class="w-1 h-1 rounded-full bg-outline"></span>
-<span class="font-label-sm text-label-sm text-secondary font-semibold">AFO-2024-8841</span>
-</div>
-</div>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-body-md text-body-md text-on-surface font-semibold">22 años</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">14/05/2002 • Masc.</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<div class="flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-primary"></span>
-<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Oruro Royal Club</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Primera "A" de Honor</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm bg-surface-container-high px-2 py-0.5 rounded-lg text-primary font-medium truncate inline-block max-w-[140px]">Torneo Oficial AFO</span>
-<span class="font-label-sm text-label-sm text-secondary mt-0.5">Inscripción #0921</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
-<span class="material-symbols-outlined text-[14px]">check_circle</span>
-<span>Habilitado</span>
-</span>
-</td>
-<td class="py-space-sm px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors" onclick="openCardPreview('Mauricio Quispe Flores', 'AFO-2024-8841', 'Oruro Royal Club', 'Delantero', 'Habilitado', '7392182-OR')" title="Ver Carnet QR Digital" type="button">
-<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Registrar Pase/Transferencia" type="button">
-<span class="material-symbols-outlined text-[18px]">swap_horiz</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-error-container text-error transition-colors" onclick="document.getElementById('modal-sancion').classList.remove('hidden')" title="Aplicar Sanción" type="button">
-<span class="material-symbols-outlined text-[18px]">gavel</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- Row 2: Sancionado Player (San José) -->
-<tr class="hover:bg-secondary-fixed/20 transition-colors group bg-error-container/10">
-<td class="py-space-sm px-space-md">
-<div class="flex items-center gap-space-sm">
-<img class="w-10 h-10 rounded-full object-cover shadow-sm ring-2 ring-error/30" alt="Sports portrait profile photo of a focused Bolivian midfielder in a white jersey with blue V stripe, athletic studio lightning, serious expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaaN0UB2v5F3y2ups-AzADyLAdNtLgTvRdJuWnrkjBfsceBMZMt7XCbbasnOcXZ3SgTK4hVC0l1qXJcKruKCzJwYcnUdED28JumD4PyVbzoaKQpohQjU-kIgyLewn8Jvra3xRwqYNET9cDkmBU-avohnVMgfiGe09oN7o6P1q0aEwZAgHPExjR24JNjCDEv3-Piw6C0h5Oei1dqTP6UiWd13OitJHjAJOiK9m9RaSlJTrJ-a4kkYDsGQ"/>
-<div class="flex flex-col min-w-0">
-<span class="font-title-md text-title-md text-primary font-bold group-hover:text-secondary-fixed-variant leading-tight">Jhonny Carlos Mamani</span>
-<div class="flex items-center gap-1.5 mt-0.5">
-<span class="font-label-sm text-label-sm text-on-surface-variant">CI: 5928190-OR</span>
-<span class="w-1 h-1 rounded-full bg-outline"></span>
-<span class="font-label-sm text-label-sm text-secondary font-semibold">AFO-2024-5102</span>
-</div>
-</div>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-body-md text-body-md text-on-surface font-semibold">27 años</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">29/11/1996 • Masc.</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<div class="flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-secondary"></span>
-<span class="font-body-md text-body-md text-on-surface font-semibold truncate">C.D. San José</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Primera "A" de Honor</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm bg-surface-container-high px-2 py-0.5 rounded-lg text-primary font-medium truncate inline-block max-w-[140px]">Torneo Oficial AFO</span>
-<span class="font-label-sm text-label-sm text-secondary mt-0.5">Inscripción #0884</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-error-container text-error font-label-sm text-label-sm font-bold animate-pulse">
-<span class="material-symbols-outlined text-[14px]">block</span>
-<span>Sanción: 2 Fechas</span>
-</span>
-</td>
-<td class="py-space-sm px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg bg-error-container text-error hover:bg-error hover:text-on-error transition-colors" onclick="document.getElementById('modal-sancion').classList.remove('hidden')" title="Ver Historial Sanciones" type="button">
-<span class="material-symbols-outlined text-[18px]">history_edu</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors" onclick="openCardPreview('Jhonny Carlos Mamani', 'AFO-2024-5102', 'C.D. San José', 'Centrocampista', 'Sancionado (2 Fechas)', '5928190-OR')" title="Ver Carnet QR Digital" type="button">
-<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Registrar Pago Multa" type="button">
-<span class="material-symbols-outlined text-[18px]">payments</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- Row 3: Female Athlete (Deportivo Kala) -->
-<tr class="hover:bg-secondary-fixed/20 transition-colors group">
-<td class="py-space-sm px-space-md">
-<div class="flex items-center gap-space-sm">
-<img class="w-10 h-10 rounded-full object-cover shadow-sm ring-2 ring-primary/20" alt="Official football player registration portrait of a young Bolivian female athlete smiling confidently with hair tied back, wearing red and white training kit, crisp lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWItogl_eKei_4rkvaT336kSP2PbUFbT_Go2lMIJ0uPfEO4eXeEi_CHMr-Lci3rWEIRwNXaPB0ClTE5d7x4c3NiltepjlLFtE2ry2jWqccJuU0IwqWPriUquQp98vOVj0E6FE-enGIUIUNpt6nWVroPNQGEgKKiLmK8Wn5UJbs36lh2e_z-N_6xv3Vc9RGzsnu5xCsEu9XRLsQ9q-SNy6ITcDnYfFFiRIGsGkMTCyDfm02TPV-FydDNA"/>
-<div class="flex flex-col min-w-0">
-<span class="font-title-md text-title-md text-primary font-bold group-hover:text-secondary-fixed-variant leading-tight">Valeria Nicole Choque</span>
-<div class="flex items-center gap-1.5 mt-0.5">
-<span class="font-label-sm text-label-sm text-on-surface-variant">CI: 8109341-OR</span>
-<span class="w-1 h-1 rounded-full bg-outline"></span>
-<span class="font-label-sm text-label-sm text-secondary font-semibold">AFO-2024-3329</span>
-</div>
-</div>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-body-md text-body-md text-on-surface font-semibold">19 años</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">08/02/2005 • Fem.</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<div class="flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-tertiary"></span>
-<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Deportivo Cala Cala</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Primera Femenina AFO</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm bg-surface-container-high px-2 py-0.5 rounded-lg text-primary font-medium truncate inline-block max-w-[140px]">Torneo Damas de Honor</span>
-<span class="font-label-sm text-label-sm text-secondary mt-0.5">Inscripción #0112</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
-<span class="material-symbols-outlined text-[14px]">check_circle</span>
-<span>Habilitada</span>
-</span>
-</td>
-<td class="py-space-sm px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors" onclick="openCardPreview('Valeria Nicole Choque', 'AFO-2024-3329', 'Deportivo Cala Cala', 'Extrema', 'Habilitada', '8109341-OR')" title="Ver Carnet QR Digital" type="button">
-<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Registrar Pase/Transferencia" type="button">
-<span class="material-symbols-outlined text-[18px]">swap_horiz</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-error-container text-error transition-colors" onclick="document.getElementById('modal-sancion').classList.remove('hidden')" title="Aplicar Sanción" type="button">
-<span class="material-symbols-outlined text-[18px]">gavel</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- Row 4: Sur-Car Goalkeeper -->
-<tr class="hover:bg-secondary-fixed/20 transition-colors group">
-<td class="py-space-sm px-space-md">
-<div class="flex items-center gap-space-sm">
-<img class="w-10 h-10 rounded-full object-cover shadow-sm ring-2 ring-primary/20" alt="Portrait photo of a tall athletic goalkeeper in yellow technical sports jersey with Association badge, high-contrast Bolivian stadium in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlEOyBVCRQYhN0jl-aPKyu294u0GYDncDFk5wXPK9kWVgLu3x7vlUR-V8u7DKlXBdomQF8HjQEUScMLsNW_czHtLDOgKwCxcbpNUGu2cri4XNHXcqiifI43fF_n14RBdVEERoht5Vqn8I88XX5G7x58UIz3RdKw4TI4NpNBuhO98kebUDYXkoWSd3Wj2tevObWd8tap2u8AXlZwAEnJCs7jMhU3A99TEJxnoWT7nvz5mbE8nZWYh5Itg"/>
-<div class="flex flex-col min-w-0">
-<span class="font-title-md text-title-md text-primary font-bold group-hover:text-secondary-fixed-variant leading-tight">Rodrigo Alex Montaño</span>
-<div class="flex items-center gap-1.5 mt-0.5">
-<span class="font-label-sm text-label-sm text-on-surface-variant">CI: 4901239-LP</span>
-<span class="w-1 h-1 rounded-full bg-outline"></span>
-<span class="font-label-sm text-label-sm text-secondary font-semibold">AFO-2024-1194</span>
-</div>
-</div>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-body-md text-body-md text-on-surface font-semibold">25 años</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">17/08/1999 • Masc.</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<div class="flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-secondary-fixed-dim"></span>
-<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Deportivo Sur-Car</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Primera "A" de Honor</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm bg-surface-container-high px-2 py-0.5 rounded-lg text-primary font-medium truncate inline-block max-w-[140px]">Copa Simón Bolívar</span>
-<span class="font-label-sm text-label-sm text-secondary mt-0.5">Inscripción #0640</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
-<span class="material-symbols-outlined text-[14px]">check_circle</span>
-<span>Habilitado</span>
-</span>
-</td>
-<td class="py-space-sm px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors" onclick="openCardPreview('Rodrigo Alex Montaño', 'AFO-2024-1194', 'Deportivo Sur-Car', 'Arquero', 'Habilitado', '4901239-LP')" title="Ver Carnet QR Digital" type="button">
-<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Registrar Pase/Transferencia" type="button">
-<span class="material-symbols-outlined text-[18px]">swap_horiz</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-error-container text-error transition-colors" onclick="document.getElementById('modal-sancion').classList.remove('hidden')" title="Aplicar Sanción" type="button">
-<span class="material-symbols-outlined text-[18px]">gavel</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- Row 5: Young talent Sub-19 (Ingenieros) -->
-<tr class="hover:bg-secondary-fixed/20 transition-colors group">
-<td class="py-space-sm px-space-md">
-<div class="flex items-center gap-space-sm">
-<img class="w-10 h-10 rounded-full object-cover shadow-sm ring-2 ring-primary/20" alt="Portrait of a determined 17 year old youth soccer player in navy jersey with white collar, high altitude sunlight, authentic sports passport photo style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdVACrWmIqzQRmk-GZfCkbrBNUidocpG4rxQxNucsUg-jXqrJcRY8SfoUFu8Mhqoq7ZgAXw7rFN_yR0nJuVGhCHTXfoVgnwb8jKEF13PK8Id07n6zHvej7DmC2BNJl2EkT-haGQEyynz5u7xm3Gy7LWM1GK_N_VLbqzoAhhcYsXab8o8joLFHrB1KXml_xqHo3ynDdeKGyJ3Gc4-4r3CT-Ij0-KSYQ5nQ43vXVbvb11Sd4jWIiDaDT3g"/>
-<div class="flex flex-col min-w-0">
-<span class="font-title-md text-title-md text-primary font-bold group-hover:text-secondary-fixed-variant leading-tight">Esteban Pinto Torrico</span>
-<div class="flex items-center gap-1.5 mt-0.5">
-<span class="font-label-sm text-label-sm text-on-surface-variant">CI: 9812401-OR</span>
-<span class="w-1 h-1 rounded-full bg-outline"></span>
-<span class="font-label-sm text-label-sm text-secondary font-semibold">AFO-2024-7023</span>
-</div>
-</div>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-body-md text-body-md text-on-surface font-semibold">17 años</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">03/04/2007 • Masc.</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<div class="flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-primary-container"></span>
-<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Club Ingenieros</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">División Sub-19 Juvenil</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm bg-surface-container-high px-2 py-0.5 rounded-lg text-primary font-medium truncate inline-block max-w-[140px]">Torneo Juvenil AFO</span>
-<span class="font-label-sm text-label-sm text-secondary mt-0.5">Inscripción #0431</span>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">
-<span class="material-symbols-outlined text-[14px]">pending</span>
-<span>Cert. Médico Pend.</span>
-</span>
-</td>
-<td class="py-space-sm px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors" onclick="openCardPreview('Esteban Pinto Torrico', 'AFO-2024-7023', 'Club Ingenieros', 'Defensor Lateral', 'Observado Médico', '9812401-OR')" title="Ver Carnet QR Digital" type="button">
-<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Registrar Pase/Transferencia" type="button">
-<span class="material-symbols-outlined text-[18px]">swap_horiz</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container hover:bg-error-container text-error transition-colors" onclick="document.getElementById('modal-sancion').classList.remove('hidden')" title="Aplicar Sanción" type="button">
-<span class="material-symbols-outlined text-[18px]">gavel</span>
-</button>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<!-- Pagination & Row Metrics -->
-<div class="p-space-md bg-surface-container-low flex items-center justify-between">
-<span class="font-body-sm text-body-sm text-on-surface-variant">Mostrando registros 1 a 5 de 4,892 futbolistas registrados</span>
-<div class="flex items-center gap-1">
-<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-primary hover:text-on-primary flex items-center justify-center transition-colors" type="button">
-<span class="material-symbols-outlined text-[16px]">chevron_left</span>
-</button>
-<span class="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center font-bold">1</span>
-<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-primary hover:text-on-primary flex items-center justify-center transition-colors" type="button">2</button>
-<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-primary hover:text-on-primary flex items-center justify-center transition-colors" type="button">3</button>
-<span class="px-1 text-outline">...</span>
-<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-primary hover:text-on-primary flex items-center justify-center transition-colors" type="button">978</button>
-<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-primary hover:text-on-primary flex items-center justify-center transition-colors" type="button">
-<span class="material-symbols-outlined text-[16px]">chevron_right</span>
-</button>
-</div>
-</div>
-</div>
+
+
 <!-- Right Side: Carnet Deportivo Digital Oficial + Active Sanciones Log (4 cols on XL) -->
 <div class="xl:col-span-4 flex flex-col gap-space-md">
 <!-- Interactive Official Digital Card (Carnet de Habilitación Oficial AFO) -->
@@ -737,29 +590,193 @@
 </div>
 </div>
 </div>
+
+<!-- MODAL: REGISTRO DE NUEVO FICHAJE / PASE -->
+<div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4"
+     id="modal-nuevo-fichaje">
+
+    <div class="bg-surface-container-lowest rounded-xl shadow-xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+
+        <!-- ENCABEZADO -->
+        <div class="p-space-md bg-primary text-on-primary flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[24px]">person_add</span>
+                <span class="font-headline-sm text-headline-sm font-bold">
+                    Registro de Nuevo Deportista
+                </span>
+            </div>
+
+            <button class="text-on-primary/80 hover:text-on-primary"
+                    onclick="document.getElementById('modal-nuevo-fichaje').classList.add('hidden')"
+                    type="button">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <!-- FORMULARIO -->
+        <form class="p-space-lg flex flex-col gap-space-md"
+              method="POST"
+              action="{% url 'deportistas' %}">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="accion" value="registrar_deportista">
+
+            <!-- DATOS PERSONALES -->
+            <div class="flex items-center gap-2 text-primary">
+                <span class="material-symbols-outlined">badge</span>
+                <span class="font-title-md text-title-md font-bold">
+                    Datos personales
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-md text-label-md font-semibold text-on-surface">
+                        Nombres:
+                    </label>
+                    <input name="nombre"
+                           class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md"
+                           placeholder="Ej. Carlos Marcelo"
+                           required
+                           type="text"/>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-md text-label-md font-semibold text-on-surface">
+                        Apellidos:
+                    </label>
+                    <input name="apellido"
+                           class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md"
+                           placeholder="Ej. Mamani Colque"
+                           required
+                           type="text"/>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-md text-label-md font-semibold text-on-surface">
+                        Fecha de nacimiento:
+                    </label>
+                    <input name="fecha_nacimiento"
+                           class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md"
+                           required
+                           type="date"/>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-md text-label-md font-semibold text-on-surface">
+                        Género:
+                    </label>
+                    <select name="genero"
+                            class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md font-semibold"
+                            required>
+                        <option value="">Seleccionar género</option>
+                        <option value="MASCULINO">Masculino</option>
+                        <option value="FEMENINO">Femenino</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- DATOS DEPORTIVOS -->
+            <div class="flex items-center gap-2 text-primary pt-1">
+                <span class="material-symbols-outlined">sports_soccer</span>
+                <span class="font-title-md text-title-md font-bold">
+                    Datos deportivos
+                </span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="font-label-md text-label-md font-semibold text-on-surface">
+                    Club al que pertenece:
+                </label>
+
+                <select name="club"
+                        class="p-2.5 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container font-body-md text-body-md font-semibold">
+                    <option value="">Sin club asignado</option>
+
+                    {% for club in clubes %}
+                        <option value="{{ club.id }}">
+                            {{ club.nombre }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <!-- INFORMACIÓN -->
+            <div class="p-3 bg-secondary-fixed/30 rounded-lg flex items-center gap-2 text-on-secondary-fixed font-body-sm text-body-sm">
+                <span class="material-symbols-outlined text-secondary text-[20px]">
+                    info
+                </span>
+                <span>
+                    Verifica los datos personales y el club antes de registrar al deportista.
+                </span>
+            </div>
+
+            <!-- BOTONES -->
+            <div class="flex items-center justify-end gap-space-sm pt-space-sm">
+
+                <button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md"
+                        onclick="document.getElementById('modal-nuevo-fichaje').classList.add('hidden')"
+                        type="button">
+                    Cancelar
+                </button>
+
+                <button class="px-5 py-2 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-bold shadow-sm"
+                        type="submit">
+                    Guardar y Registrar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<!-- FIN MODAL NUEVO FICHAJE -->
+
+
 <script>
     function openCardPreview(nombre, reg, club, posicion, estado, ci) {
-      const nameEl = document.getElementById('card-name');
-      const posEl = document.getElementById('card-pos');
-      const clubEl = document.getElementById('card-club');
-      const regEl = document.getElementById('card-reg');
-      const ciEl = document.getElementById('card-ci');
-      
-      if (nameEl) nameEl.textContent = nombre;
-      if (posEl) posEl.textContent = posicion + ' • Titular';
-      if (clubEl) clubEl.textContent = club;
-      if (regEl) regEl.textContent = reg;
-      if (ciEl) ciEl.textContent = 'CI: ' + ci;
+        const nameEl = document.getElementById('card-name');
+        const posEl = document.getElementById('card-pos');
+        const clubEl = document.getElementById('card-club');
+        const regEl = document.getElementById('card-reg');
+        const ciEl = document.getElementById('card-ci');
+
+        if (nameEl) nameEl.textContent = nombre;
+        if (posEl) posEl.textContent = posicion + ' • Titular';
+        if (clubEl) clubEl.textContent = club;
+        if (regEl) regEl.textContent = reg;
+        if (ciEl) ciEl.textContent = 'CI: ' + ci;
     }
 
     function guardarSancion() {
-      const modal = document.getElementById('modal-sancion');
-      if (modal) {
-        modal.classList.add('hidden');
-      }
+        const modal = document.getElementById('modal-sancion');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
     }
-  </script>
-</div></main></div><script>
+
+    // ABRIR MODAL NUEVO FICHAJE
+const botonNuevo = document.getElementById('btn-nuevo-fichaje');
+const modalNuevo = document.getElementById('modal-nuevo-fichaje');
+
+if (botonNuevo && modalNuevo) {
+    botonNuevo.onclick = function () {
+        modalNuevo.classList.remove('hidden');
+    };
+}
+</script>
+
+</div></main></div>
+<script>
   window.AFO_URLS = {
     panel: "{% url 'panel' %}",
     clubes: "{% url 'clubes' %}",

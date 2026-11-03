@@ -7,11 +7,11 @@ por Django, integrando autenticación real sobre django.contrib.auth.
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.utils import timezone
 from django.utils.dateparse import parse_date, parse_datetime
 from django.utils.timezone import make_aware, is_naive
-from .models import Categoria
+from .models import Categoria, Club, Deportista
 from django.db import transaction
 
 from .models import (
@@ -399,14 +399,140 @@ def campeonatos(request):
     return _shell(request, 'campeonatos_fixture.html', contexto)
 
 
+
 @login_required
 def arbitraje(request):
-    return _shell(request, 'arbitraje_designaciones.html')
+    error = None
+    exito = None
+
+    if request.method == 'POST':
+        print("=== FORMULARIO DE ARBITRAJE RECIBIDO ===")
+        print("DATOS RECIBIDOS:", request.POST)
+
+        accion = request.POST.get('accion')
+        print("ACCION:", accion)
+
+        if accion == 'registrar_arbitro':
+            nombre = request.POST.get('nombre', '').strip()
+            apellido = request.POST.get('apellido', '').strip()
+            ci = request.POST.get('ci', '').strip()
+
+            if not nombre or not apellido or not ci:
+                error = 'Completa los nombres, apellidos y carnet de identidad.'
+
+            elif Arbitro.objects.filter(ci=ci).exists():
+                error = 'Ya existe un árbitro registrado con ese carnet.'
+
+            else:
+                Arbitro.objects.create(
+                    nombre=nombre,
+                    apellido=apellido,
+                    ci=ci,
+                    fecha_nacimiento=parse_date(
+                        request.POST.get('fecha_nacimiento', '')
+                    ),
+                    telefono=request.POST.get('telefono', '').strip(),
+                    correo=request.POST.get('correo', '').strip(),
+                    categoria=request.POST.get('categoria', 'DEPARTAMENTAL'),
+                    especialidad=request.POST.get('especialidad', 'CENTRAL'),
+                    estado='ACTIVO'
+                )
+
+                return redirect('arbitraje')
+
+    busqueda = request.GET.get('buscar', '').strip()
+    categoria = request.GET.get('categoria', '').strip()
+    estado = request.GET.get('estado', '').strip()
+
+    arbitros = Arbitro.objects.all().order_by('apellido', 'nombre')
+
+    if busqueda:
+        arbitros = arbitros.filter(
+            Q(nombre__icontains=busqueda) |
+            Q(apellido__icontains=busqueda) |
+            Q(ci__icontains=busqueda) |
+            Q(codigo__icontains=busqueda)
+        )
+
+    if categoria:
+        arbitros = arbitros.filter(categoria=categoria)
+
+    if estado:
+        arbitros = arbitros.filter(estado=estado)
+
+    contexto = {
+        'arbitros': arbitros,
+        'total_arbitros': Arbitro.objects.count(),
+        'total_fifa': Arbitro.objects.filter(categoria='FIFA').count(),
+        'total_nacionales': Arbitro.objects.filter(categoria='NACIONAL').count(),
+        'total_departamentales': Arbitro.objects.filter(categoria='DEPARTAMENTAL').count(),
+        'total_activos': Arbitro.objects.filter(estado='ACTIVO').count(),
+        'busqueda': busqueda,
+        'categoria_actual': categoria,
+        'estado_actual': estado,
+        'error': error,
+        'exito': exito,
+    }
+
+    return _shell(request, 'arbitraje_designaciones.html', contexto)
+
 
 
 @login_required
 def deportistas(request):
-    return _shell(request, 'deportistas_fichajes.html')
+    error = None
+
+    # REGISTRAR NUEVO DEPORTISTA
+    if request.method == 'POST':
+        accion = request.POST.get('accion')
+
+        if accion == 'registrar_deportista':
+            nombre = request.POST.get('nombre', '').strip()
+            apellido = request.POST.get('apellido', '').strip()
+            fecha_nacimiento = request.POST.get('fecha_nacimiento', '').strip()
+            genero = request.POST.get('genero', '').strip()
+            club_id = request.POST.get('club', '').strip()
+
+            if not nombre or not apellido:
+                error = 'El nombre y apellido son obligatorios.'
+
+            elif not fecha_nacimiento:
+                error = 'La fecha de nacimiento es obligatoria.'
+
+            else:
+                club = None
+
+                if club_id:
+                    club = Club.objects.filter(pk=club_id).first()
+
+                    if club is None:
+                        error = 'El club seleccionado no existe.'
+
+                if error is None:
+                    Deportista.objects.create(
+                        nombre=nombre,
+                        apellido=apellido,
+                        fecha_nacimiento=parse_date(fecha_nacimiento),
+                        genero=genero or None,
+                        club=club
+                    )
+
+                    return redirect('deportistas')
+
+    # CONSULTAR DATOS DE POSTGRESQL
+    deportistas_registrados = Deportista.objects.select_related(
+        'club'
+    ).order_by('apellido', 'nombre')
+
+    contexto = {
+        'clubes': Club.objects.all().order_by('nombre'),
+        'deportistas': deportistas_registrados,
+        'total_deportistas': Deportista.objects.count(),
+        'error': error,
+    }
+
+    return _shell(request, 'deportistas_fichajes.html', contexto)
+
 
 
 @login_required

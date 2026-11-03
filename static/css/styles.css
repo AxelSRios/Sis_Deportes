@@ -303,6 +303,20 @@ body[data-shell="true"] {
   border: none;
   cursor: pointer;
   pointer-events: auto;
+  z-index: 40;
+}
+
+/* Orden correcto de las capas */
+.app-shell-sidebar {
+  z-index: 42;
+}
+
+.app-shell-topbar {
+  z-index: 41;
+}
+
+.app-sidebar-backdrop {
+  z-index: 40;
 }
 
 /* ---------- Responsive ---------- */
@@ -345,4 +359,49 @@ body[data-shell="true"] {
   }
 
   body.app-shell-open .app-sidebar-backdrop { display: block; }
+}
+/* ===== CORRECCIÓN DEFINITIVA DE CAPAS DEL MENÚ AFO ===== */
+
+.app-shell {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9990 !important;
+    pointer-events: none;
+}
+
+.app-shell-sidebar {
+    position: fixed !important;
+    z-index: 9993 !important;
+    pointer-events: auto !important;
+    background: #ffffff !important;
+}
+
+.app-shell-topbar {
+    z-index: 9992 !important;
+    pointer-events: auto !important;
+}
+
+.app-sidebar-backdrop {
+    position: fixed !important;
+    z-index: 9991 !important;
+    pointer-events: auto !important;
+}
+
+.app-shell-sidebar a,
+.app-shell-sidebar nav,
+.app-shell-sidebar button {
+    position: relative;
+    z-index: 9994;
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+@media (max-width: 1023px) {
+    body.app-shell-open .app-shell-sidebar {
+        transform: translateX(0) !important;
+    }
+
+    body.app-shell-open .app-sidebar-backdrop {
+        display: block !important;
+    }
 }

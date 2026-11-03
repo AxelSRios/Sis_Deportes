@@ -79,8 +79,69 @@ class Deportista(models.Model):
 
 
 class Arbitro(models.Model):
+
+    CATEGORIAS = [
+        ('FIFA', 'FIFA'),
+        ('NACIONAL', 'Nacional'),
+        ('DEPARTAMENTAL', 'Departamental'),
+    ]
+
+    ESPECIALIDADES = [
+        ('CENTRAL', 'Árbitro central'),
+        ('ASISTENTE', 'Árbitro asistente'),
+        ('CUARTO', 'Cuarto árbitro'),
+        ('OTRO', 'Otro'),
+    ]
+
+    ESTADOS = [
+        ('ACTIVO', 'Activo'),
+        ('INACTIVO', 'Inactivo'),
+    ]
+
+    codigo = models.CharField(
+        max_length=20,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
+
+    ci = models.CharField(
+        max_length=30,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    telefono = models.CharField(max_length=30, blank=True)
+    correo = models.EmailField(max_length=150, blank=True)
+
+    categoria = models.CharField(
+        max_length=20,
+        choices=CATEGORIAS,
+        default='DEPARTAMENTAL'
+    )
+
+    especialidad = models.CharField(
+        max_length=20,
+        choices=ESPECIALIDADES,
+        default='CENTRAL'
+    )
+
+    estado = models.CharField(
+        max_length=20,
+        choices=ESTADOS,
+        default='ACTIVO'
+    )
+
+    fecha_registro = models.DateField(
+    auto_now_add=True,
+    null=True,
+    blank=True
+)
 
     class Meta:
         db_table = 'arbitros'
@@ -88,6 +149,12 @@ class Arbitro(models.Model):
     def __str__(self):
         return self.nombre + ' ' + self.apellido
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if not self.codigo:
+            self.codigo = f'ARB-{self.pk:05d}'
+            super().save(update_fields=['codigo'])
 
 
 class Partido(models.Model):

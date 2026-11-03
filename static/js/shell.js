@@ -68,13 +68,13 @@
         '</div>' +
         '<nav class="app-sidebar-nav">' + navHtml + '</nav>' +
         '<div class="app-sidebar-foot">' +
-          '<a class="app-nav-item" href="' + (AFO.logout || '/logout/') + '">' +
-            '<span class="material-symbols-outlined app-nav-icon">logout</span>' +
-            '<span>Cerrar sesión</span>' +
-          '</a>' +
-        '</div>' +
-        '<button class="app-sidebar-backdrop" id="app-backdrop" aria-label="Cerrar menú"></button>' +
-      '</aside>' +
+  '<a class="app-nav-item" href="' + (AFO.logout || '/logout/') + '">' +
+    '<span class="material-symbols-outlined app-nav-icon">logout</span>' +
+    '<span>Cerrar sesión</span>' +
+  '</a>' +
+'</div>' +
+'</aside>' +
+'<button class="app-sidebar-backdrop" id="app-backdrop" aria-label="Cerrar menú"></button>' +
       '<header class="app-shell-topbar">' +
         '<button class="app-topbar-burger" id="app-menu-toggle" aria-label="Abrir menú">' +
           '<span class="material-symbols-outlined">menu</span>' +

@@ -29,14 +29,19 @@
 </div>
 <!-- Quick Action Launchers -->
 <div class="flex flex-wrap items-center gap-space-xs">
-<button class="h-10 px-space-md bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg rounded-lg shadow-sm transition-all flex items-center gap-space-xs group" type="button">
-<span class="material-symbols-outlined text-[18px] transition-transform group-hover:scale-110">person_add</span>
-<span>Nuevo Fichaje</span>
-</button>
-<button class="h-10 px-space-md bg-surface-container-highest hover:bg-surface-container text-primary font-label-lg text-label-lg rounded-lg transition-all flex items-center gap-space-xs" type="button">
-<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
-<span>Programar Partido</span>
-</button>
+<!-- Nuevo Fichaje: ir al módulo de Deportistas -->
+<a href="{% url 'deportistas' %}"
+   class="h-10 px-space-md bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg rounded-lg shadow-sm transition-all flex items-center gap-space-xs group">
+    <span class="material-symbols-outlined text-[18px] transition-transform group-hover:scale-110">person_add</span>
+    <span>Nuevo Fichaje</span>
+</a>
+
+<!-- Programar Partido: ir al módulo de Campeonatos y Fixture -->
+<a href="{% url 'campeonatos' %}"
+   class="h-10 px-space-md bg-surface-container-highest hover:bg-surface-container text-primary font-label-lg text-label-lg rounded-lg transition-all flex items-center gap-space-xs">
+    <span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+    <span>Programar Partido</span>
+</a>
 <button class="h-10 px-space-md bg-surface-container-highest hover:bg-surface-container text-primary font-label-lg text-label-lg rounded-lg transition-all flex items-center gap-space-xs" type="button">
 <span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
 <span>Registrar Pago</span>
