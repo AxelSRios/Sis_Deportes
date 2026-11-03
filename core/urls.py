@@ -11,6 +11,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('panel-general/', views.panel, name='panel'),
     path('clubes-equipos/', views.clubes, name='clubes'),
+    path('clubes-publicos/', views.clubes_publicos, name='clubes_publicos'),
     path('campeonatos-fixture/', views.campeonatos, name='campeonatos'),
     path('arbitraje-designaciones/', views.arbitraje, name='arbitraje'),
     path('deportistas-fichajes/', views.deportistas, name='deportistas'),

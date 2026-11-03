@@ -7,13 +7,17 @@ class Club(models.Model):
     nombre = models.CharField(max_length=150)
     direccion = models.TextField(null=True, blank=True)
     telefono = models.CharField(max_length=30, null=True, blank=True)
+    fundacion = models.DateField(null=True, blank=True)
+    presidente = models.CharField(max_length=150, null=True, blank=True)
+    categoria_ingreso = models.CharField(max_length=100, null=True, blank=True)
+    nit_personeria = models.CharField(max_length=100, null=True, blank=True)
+    estado_juridico = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         db_table = 'clubes'
 
     def __str__(self):
         return self.nombre
-
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100)
@@ -28,16 +32,20 @@ class Categoria(models.Model):
 class Campeonato(models.Model):
     nombre = models.CharField(max_length=150)
     categoria = models.ForeignKey(
-        Categoria, on_delete=models.SET_NULL,
-        null=True, blank=True
+        Categoria,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
     )
+    disciplina = models.CharField(max_length=100, blank=True)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_conclusion = models.DateField(null=True, blank=True)
 
     class Meta:
         db_table = 'campeonatos'
 
     def __str__(self):
         return self.nombre
-
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=150)
@@ -81,26 +89,40 @@ class Arbitro(models.Model):
         return self.nombre + ' ' + self.apellido
 
 
+
 class Partido(models.Model):
     campeonato = models.ForeignKey(
-        Campeonato, on_delete=models.SET_NULL,
-        null=True, blank=True
+        Campeonato,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
     )
     equipo_local = models.ForeignKey(
-        Equipo, on_delete=models.SET_NULL,
-        null=True, blank=True,
+        Equipo,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
         related_name='partidos_locales'
     )
     equipo_visitante = models.ForeignKey(
-        Equipo, on_delete=models.SET_NULL,
-        null=True, blank=True,
+        Equipo,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
         related_name='partidos_visitantes'
     )
     fecha = models.DateTimeField(null=True, blank=True)
     resultado = models.TextField(null=True, blank=True)
+    escenario = models.CharField(max_length=150, blank=True)
+    terna_arbitral = models.TextField(blank=True)
+    estado = models.CharField(max_length=50, default='Programado')
 
     class Meta:
         db_table = 'partidos'
+
+    def __str__(self):
+        return f'{self.equipo_local} vs {self.equipo_visitante}'
+
 
 
 class AsignacionArbitro(models.Model):

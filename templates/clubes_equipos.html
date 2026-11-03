@@ -1,6 +1,5 @@
 {% load static %}
 <!DOCTYPE html>
-
 <html lang="es">
 <!-- Sistema de Gestion Deportiva AFO · Oruro — pantalla unificada.
      Estilos compartidos: styles.css + tailwind-config.js -->
@@ -103,651 +102,223 @@
 </div>
 <!-- KPI / Administrative Overview Strip -->
 <div class="px-margin py-space-sm">
-<div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm">
-<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">Total Clubes AFO</span>
-<span class="font-headline-lg text-headline-lg text-primary mt-1">48</span>
-<span class="font-body-sm text-body-sm text-secondary font-semibold">12 Fundadores Históricos</span>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm">
+
+        <!-- Total Clubes AFO -->
+        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
+            <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">
+                    Total Clubes AFO
+                </span>
+                <span class="font-headline-lg text-headline-lg text-primary mt-1">
+                    {{ total_clubes }}
+                </span>
+                <span class="font-body-sm text-body-sm text-secondary font-semibold">
+                    12 Fundadores Históricos
+                </span>
+            </div>
+            <div class="w-11 h-11 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-[24px]">corporate_fare</span>
+            </div>
+        </div>
+
+        <!-- Equipos en Competencia -->
+        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
+            <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">
+                    Equipos en Competencia
+                </span>
+                <span class="font-headline-lg text-headline-lg text-primary mt-1">
+                    {{ total_equipos }}
+                </span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">
+                    4 Categorías Oficiales
+                </span>
+            </div>
+            <div class="w-11 h-11 rounded-lg bg-secondary-fixed/50 flex items-center justify-center text-secondary">
+                <span class="material-symbols-outlined text-[24px]">groups</span>
+            </div>
+        </div>
+
+        <!-- Futbolistas Habilitados -->
+        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
+            <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">
+                    Futbolistas Habilitados
+                </span>
+                <span class="font-headline-lg text-headline-lg text-primary mt-1">
+                    {{ total_deportistas }}
+                </span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">
+                    Con carnet biométrico
+                </span>
+            </div>
+            <div class="w-11 h-11 rounded-lg bg-tertiary-fixed flex items-center justify-center text-tertiary">
+                <span class="material-symbols-outlined text-[24px]">badge</span>
+            </div>
+        </div>
+
+        <!-- Planillas Pendientes -->
+        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
+            <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">
+                    Planillas Pendientes
+                </span>
+                <span class="font-headline-lg text-headline-lg text-primary mt-1">
+                    {{ planillas_pendientes }}
+                </span>
+                <span class="font-body-sm text-body-sm text-on-secondary-container font-semibold">
+                    Inspección de sedes
+                </span>
+            </div>
+            <div class="w-11 h-11 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary-container">
+                <span class="material-symbols-outlined text-[24px]">assignment_turned_in</span>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="w-11 h-11 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-[24px]">corporate_fare</span>
-</div>
-</div>
-<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">Equipos en Competencia</span>
-<span class="font-headline-lg text-headline-lg text-primary mt-1">114</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">4 Categorías Oficiales</span>
-</div>
-<div class="w-11 h-11 rounded-lg bg-secondary-fixed/50 flex items-center justify-center text-secondary">
-<span class="material-symbols-outlined text-[24px]">groups</span>
-</div>
-</div>
-<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">Futbolistas Habilitados</span>
-<span class="font-headline-lg text-headline-lg text-primary mt-1">2,840</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">Con carnet biométrico</span>
-</div>
-<div class="w-11 h-11 rounded-lg bg-tertiary-fixed flex items-center justify-center text-tertiary">
-<span class="material-symbols-outlined text-[24px]">badge</span>
-</div>
-</div>
-<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">Planillas Pendientes</span>
-<span class="font-headline-lg text-headline-lg text-primary mt-1">03</span>
-<span class="font-body-sm text-body-sm text-on-secondary-container font-semibold">Inspección de sedes</span>
-</div>
-<div class="w-11 h-11 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary-container">
-<span class="material-symbols-outlined text-[24px]">assignment_turned_in</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Main View: Card Grid Mode -->
+<!-- Vista de tarjetas de clubes -->
 <div class="px-margin py-space-sm" id="grid-view-container">
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
-<!-- Club Card 1: Oruro Royal Club -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
-<div>
-<!-- Header Card Pattern -->
-<div class="p-space-md bg-gradient-to-r from-surface-container-high to-surface-container-low flex items-start justify-between relative">
-<div class="flex items-center gap-space-sm">
-<div class="w-16 h-16 rounded-xl bg-surface-container-lowest p-1 shadow-sm flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain rounded-lg" alt="Official round crest of Oruro Royal Club, the oldest football team in Bolivia founded in 1896, featuring bold navy and white vertical stripes, black accents, an authentic Bolivian football heritage seal with crisp graphic design on clean white canvas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV6F2LaQldohEZbVl7q_75l-5xXw_kZgDSGCLSaFSKACsBzbGPVqG4yVUpitAGyonl7jRAAn242GR_5y_UFvbheg4PXpUntrGE1NhXgf3j9fyWHsjlQhdUk4kog3uwh-cdz6v3Bk_IlD7pzy6HqoJDbXP0UtGBSzRwjWPou3VRNfMrJdr7YLW3i1cQBXN9NylQ9CB0BeUz8FdKtuvn4AbBoFf-ZSpgkJpuA_hJtlj4I51qw3Mkdg8QYg"/>
-</div>
-<div class="flex flex-col min-w-0">
-<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">Decano del Fútbol Boliviano</span>
-<h3 class="font-headline-sm text-headline-sm text-primary font-bold truncate leading-tight mt-0.5">Oruro Royal Club</h3>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
-<span class="material-symbols-outlined text-[14px]">event</span> Fundado: 26 de Mayo, 1896
-                </span>
-</div>
-</div>
-<span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold uppercase tracking-wider">Primera A</span>
-</div>
-<!-- Institutional Dossier Body -->
-<div class="p-space-md flex flex-col gap-space-sm">
-<div class="grid grid-cols-2 gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Presidente Actual</span>
-<span class="font-title-md text-label-lg text-on-surface truncate">Ing. Ivar Cortez V.</span>
-</div>
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Estado Jurídico</span>
-<span class="font-label-md text-label-md text-secondary font-bold flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-secondary-container"></span> Homologado FBF
-                </span>
-</div>
-</div>
-<div class="flex flex-col gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">location_on</span>
-<span class="truncate">Av. 6 de Octubre esq. Sargento Flores s/n, Oruro</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">call</span>
-<span>+591 (2) 525-4190 / 724-81992</span>
-</div>
-</div>
-<!-- Quantitative Footprint -->
-<div class="flex items-center justify-between py-1 bg-surface-container-lowest">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[18px]">sports_soccer</span>
-<span class="font-title-md text-title-md text-primary font-bold">4 Equipos</span>
-</div>
-<span class="text-outline-variant">•</span>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[18px]">person</span>
-<span class="font-title-md text-title-md text-on-surface font-bold">96 Jugadores</span>
-</div>
-<span class="text-outline-variant">•</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">12 Cuerpos Téc.</span>
-</div>
-<!-- Dependent Teams: Model 'Equipo' -->
-<div class="bg-surface-container rounded-lg p-space-sm flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Equipos Dependientes</span>
-<button class="text-secondary hover:text-primary font-label-sm text-label-sm font-bold flex items-center gap-0.5 cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[14px]">add</span> Añadir
-                </button>
-</div>
-<div class="flex flex-wrap gap-1.5">
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Primera "A" (Honor)
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Juvenil Sub-19
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Femenino Primera
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Sub-15 Infantil
-                </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Action Footer -->
-<div class="p-space-md bg-surface-container-low flex items-center justify-between gap-space-xs">
-<div class="flex items-center gap-1">
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" title="Ver Ficha Institucional" type="button">
-<span class="material-symbols-outlined text-[16px]">visibility</span> Ficha
-            </button>
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" title="Plantel de Jugadores" type="button">
-<span class="material-symbols-outlined text-[16px]">badge</span> Plantel
-            </button>
-</div>
-<div class="flex items-center gap-1">
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Editar Datos del Club" type="button">
-<span class="material-symbols-outlined text-[18px]">edit</span>
-</button>
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-error-container text-on-surface-variant hover:text-error transition-colors cursor-pointer" title="Configurar Estatutos" type="button">
-<span class="material-symbols-outlined text-[18px]">settings</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Club Card 2: Club Deportivo San José -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
-<div>
-<!-- Header Card Pattern -->
-<div class="p-space-md bg-gradient-to-r from-surface-container-high to-surface-container-low flex items-start justify-between relative">
-<div class="flex items-center gap-space-sm">
-<div class="w-16 h-16 rounded-xl bg-surface-container-lowest p-1 shadow-sm flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain rounded-lg" alt="Traditional emblem of Club Deportivo San Jose de Oruro with the historic prominent V navy blue chest chevron on pristine white shield background, stars representing Bolivian national championships, modern crisp vector sports emblem styling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBskC8-i7L-2RPOjOxyFclpz84bnLYc9DmEtgm49XoxLKPZ9yz86UJFVNfy158gdwCfrPVXuHclhr5c6m-e0RkDEh0mr9EpLkuGwrIE_m34A1FNTqyYC_SvNtwuKYF8daYnuOHd_qguIZdW_BR4NqlN8XtDDSGZsikwkBV11VFxRg7mKm1l_W_eVbZcxweZLAm8QNoNe6lzZTmVHGUj0ubOwmr7aityeGb-E5LELwWnI9LgFHRQp7Ymng"/>
-</div>
-<div class="flex flex-col min-w-0">
-<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">La V Azulada Monumental</span>
-<h3 class="font-headline-sm text-headline-sm text-primary font-bold truncate leading-tight mt-0.5">C.D. San José de Oruro</h3>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
-<span class="material-symbols-outlined text-[14px]">event</span> Fundado: 19 de Marzo, 1942
-                </span>
-</div>
-</div>
-<span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold uppercase tracking-wider">Primera A</span>
-</div>
-<!-- Institutional Dossier Body -->
-<div class="p-space-md flex flex-col gap-space-sm">
-<div class="grid grid-cols-2 gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Presidente Actual</span>
-<span class="font-title-md text-label-lg text-on-surface truncate">Dr. Ernesto Aranibar</span>
-</div>
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Estado Jurídico</span>
-<span class="font-label-md text-label-md text-secondary font-bold flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-secondary-container"></span> Tribunal Regularizado
-                </span>
-</div>
-</div>
-<div class="flex flex-col gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">location_on</span>
-<span class="truncate">Calle Washington entre Sucre y Bolívar #1432, Oruro</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">call</span>
-<span>+591 (2) 524-7811 / 718-50021</span>
-</div>
-</div>
-<!-- Quantitative Footprint -->
-<div class="flex items-center justify-between py-1 bg-surface-container-lowest">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[18px]">sports_soccer</span>
-<span class="font-title-md text-title-md text-primary font-bold">5 Equipos</span>
-</div>
-<span class="text-outline-variant">•</span>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[18px]">person</span>
-<span class="font-title-md text-title-md text-on-surface font-bold">118 Jugadores</span>
-</div>
-<span class="text-outline-variant">•</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">14 Cuerpos Téc.</span>
-</div>
-<!-- Dependent Teams: Model 'Equipo' -->
-<div class="bg-surface-container rounded-lg p-space-sm flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Equipos Dependientes</span>
-<button class="text-secondary hover:text-primary font-label-sm text-label-sm font-bold flex items-center gap-0.5 cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[14px]">add</span> Añadir
-                </button>
-</div>
-<div class="flex flex-wrap gap-1.5">
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Primera "A" (Oficial)
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Reserva Sub-20
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Sub-17 Cantera
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Femenino Sub-18
-                </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Action Footer -->
-<div class="p-space-md bg-surface-container-low flex items-center justify-between gap-space-xs">
-<div class="flex items-center gap-1">
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">visibility</span> Ficha
-            </button>
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">badge</span> Plantel
-            </button>
-</div>
-<div class="flex items-center gap-1">
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Editar Datos del Club" type="button">
-<span class="material-symbols-outlined text-[18px]">edit</span>
-</button>
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-error-container text-on-surface-variant hover:text-error transition-colors cursor-pointer" title="Configurar Estatutos" type="button">
-<span class="material-symbols-outlined text-[18px]">settings</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Club Card 3: Club Deportivo Sur-Car -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
-<div>
-<!-- Header Card Pattern -->
-<div class="p-space-md bg-gradient-to-r from-surface-container-high to-surface-container-low flex items-start justify-between relative">
-<div class="flex items-center gap-space-sm">
-<div class="w-16 h-16 rounded-xl bg-surface-container-lowest p-1 shadow-sm flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain rounded-lg" alt="Modern sports club shield for Deportivo Sur-Car representing Oruro, Bolivia, with dynamic geometric elements in deep royal blue, emerald green and bright yellow accents, sharp clean vector design suitable for a modern football federation badge" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHRmbWzP9nf7Hya_EsyDoeBOzLY3kF7-N6eVVD-K8WKiyBdMF5oUXcK72JQXLx3HpiYg5C0-GIdpVrsvaj_exz0dgfu1Rl5Mnwfprw2kCqMk3sCjk7W0LHMuhEt3QKGwyjhNHMDdBiGn39W4F2xB4hh_nSklseijhUSmf1tmKNsE4jSH_toPUpQIfipW6L3jgRv-NOR9FCvFtfBmg5HGDw-cNsbJHV2yS1iuFsYPmQ8zoT4qiyqZ-Pkg"/>
-</div>
-<div class="flex flex-col min-w-0">
-<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">Fuerza Provincial Carangas</span>
-<h3 class="font-headline-sm text-headline-sm text-primary font-bold truncate leading-tight mt-0.5">Club Deportivo Sur-Car</h3>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
-<span class="material-symbols-outlined text-[14px]">event</span> Fundado: 21 de Marzo, 2014
-                </span>
-</div>
-</div>
-<span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold uppercase tracking-wider">Primera A</span>
-</div>
-<!-- Institutional Dossier Body -->
-<div class="p-space-md flex flex-col gap-space-sm">
-<div class="grid grid-cols-2 gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Presidente Actual</span>
-<span class="font-title-md text-label-lg text-on-surface truncate">Sra. Edgar Zuna G.</span>
-</div>
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Estado Jurídico</span>
-<span class="font-label-md text-label-md text-secondary font-bold flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-secondary-container"></span> Al Día A.F.O.
-                </span>
-</div>
-</div>
-<div class="flex flex-col gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">location_on</span>
-<span class="truncate">Calle Pagador entre Herrera y 1ro de Noviembre, Oruro</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">call</span>
-<span>+591 (2) 528-9901 / 741-20934</span>
-</div>
-</div>
-<!-- Quantitative Footprint -->
-<div class="flex items-center justify-between py-1 bg-surface-container-lowest">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[18px]">sports_soccer</span>
-<span class="font-title-md text-title-md text-primary font-bold">3 Equipos</span>
-</div>
-<span class="text-outline-variant">•</span>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[18px]">person</span>
-<span class="font-title-md text-title-md text-on-surface font-bold">74 Jugadores</span>
-</div>
-<span class="text-outline-variant">•</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">8 Cuerpos Téc.</span>
-</div>
-<!-- Dependent Teams: Model 'Equipo' -->
-<div class="bg-surface-container rounded-lg p-space-sm flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Equipos Dependientes</span>
-<button class="text-secondary hover:text-primary font-label-sm text-label-sm font-bold flex items-center gap-0.5 cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[14px]">add</span> Añadir
-                </button>
-</div>
-<div class="flex flex-wrap gap-1.5">
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Primera "A"
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Copa Simón Bolívar
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Sub-19 Juvenil
-                </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Action Footer -->
-<div class="p-space-md bg-surface-container-low flex items-center justify-between gap-space-xs">
-<div class="flex items-center gap-1">
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">visibility</span> Ficha
-            </button>
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">badge</span> Plantel
-            </button>
-</div>
-<div class="flex items-center gap-1">
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Editar Datos del Club" type="button">
-<span class="material-symbols-outlined text-[18px]">edit</span>
-</button>
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-error-container text-on-surface-variant hover:text-error transition-colors cursor-pointer" title="Configurar Estatutos" type="button">
-<span class="material-symbols-outlined text-[18px]">settings</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Club Card 4: Empresa Minera Huanuni -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
-<div>
-<!-- Header Card Pattern -->
-<div class="p-space-md bg-gradient-to-r from-surface-container-high to-surface-container-low flex items-start justify-between relative">
-<div class="flex items-center gap-space-sm">
-<div class="w-16 h-16 rounded-xl bg-surface-container-lowest p-1 shadow-sm flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain rounded-lg" alt="Emblem of Empresa Minera Huanuni football club, featuring classic crossed miner hammers over a stylized blue and white Andean football crest, representing Bolivia mining town soccer pride, high contrast vector logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAElQW_5dTVOka0XLrq_L8zJcVtp1BX9uZ8BpBeMeD8KTHturXdgaiKccOhAzhLy7uTRGXMOApa4Ktzm_KbiS53lT2mY3FFAY5-GCgNKhrieS4tESKM-TOVh6Bgp_djhubxYN4a3-anromh48K3mlz3oHd-8QJFp2lLG0lvUfNhCi7OnHm-8dcG58-b-bp3QwNkC5C7Gd9TGJZqdf618hnqDp8mnZL0kpdSJLa4dluNhFtstjZUHniVqw"/>
-</div>
-<div class="flex flex-col min-w-0">
-<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">Fuerza Minera del Estaño</span>
-<h3 class="font-headline-sm text-headline-sm text-primary font-bold truncate leading-tight mt-0.5">Empresa Minera Huanuni</h3>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
-<span class="material-symbols-outlined text-[14px]">event</span> Fundado: 02 de Febrero, 2012
-                </span>
-</div>
-</div>
-<span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold uppercase tracking-wider">Primera A</span>
-</div>
-<!-- Institutional Dossier Body -->
-<div class="p-space-md flex flex-col gap-space-sm">
-<div class="grid grid-cols-2 gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Presidente Actual</span>
-<span class="font-title-md text-label-lg text-on-surface truncate">Lic. Pedro Choque M.</span>
-</div>
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Estado Jurídico</span>
-<span class="font-label-md text-label-md text-secondary font-bold flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-secondary-container"></span> Vigente
-                </span>
-</div>
-</div>
-<div class="flex flex-col gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">location_on</span>
-<span class="truncate">Plaza Principal Huanuni s/n, Sede Sindicato Minero</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">call</span>
-<span>+591 (2) 552-2109 / 718-44211</span>
-</div>
-</div>
-<!-- Quantitative Footprint -->
-<div class="flex items-center justify-between py-1 bg-surface-container-lowest">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[18px]">sports_soccer</span>
-<span class="font-title-md text-title-md text-primary font-bold">3 Equipos</span>
-</div>
-<span class="text-outline-variant">•</span>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[18px]">person</span>
-<span class="font-title-md text-title-md text-on-surface font-bold">82 Jugadores</span>
-</div>
-<span class="text-outline-variant">•</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">7 Cuerpos Téc.</span>
-</div>
-<!-- Dependent Teams: Model 'Equipo' -->
-<div class="bg-surface-container rounded-lg p-space-sm flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Equipos Dependientes</span>
-<button class="text-secondary hover:text-primary font-label-sm text-label-sm font-bold flex items-center gap-0.5 cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[14px]">add</span> Añadir
-                </button>
-</div>
-<div class="flex flex-wrap gap-1.5">
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Primera "A"
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Huanuni Juvenil B
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Femenino Minero
-                </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Action Footer -->
-<div class="p-space-md bg-surface-container-low flex items-center justify-between gap-space-xs">
-<div class="flex items-center gap-1">
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">visibility</span> Ficha
-            </button>
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">badge</span> Plantel
-            </button>
-</div>
-<div class="flex items-center gap-1">
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Editar Datos del Club" type="button">
-<span class="material-symbols-outlined text-[18px]">edit</span>
-</button>
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-error-container text-on-surface-variant hover:text-error transition-colors cursor-pointer" title="Configurar Estatutos" type="button">
-<span class="material-symbols-outlined text-[18px]">settings</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Club Card 5: Deportivo Shalon -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
-<div>
-<!-- Header Card Pattern -->
-<div class="p-space-md bg-gradient-to-r from-surface-container-high to-surface-container-low flex items-start justify-between relative">
-<div class="flex items-center gap-space-sm">
-<div class="w-16 h-16 rounded-xl bg-surface-container-lowest p-1 shadow-sm flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain rounded-lg" alt="Official soccer crest of Deportivo Shalon from Oruro Bolivia, featuring blue, red and gold color palette with an eagle wing and football motif, clean flat athletic vector symbol" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwsbLpmrnWaDdXvc5l16BpcCehyozs9omrX3SRDaMpzQLKIHGX-maY4u44r3FTDIxlkUw05b_0-_F8XdAVG94VHZm-jIT3l3jAhOxIGWXeR4GYRLhoxqLX98z4a1-QTTr1wwsUtV_kvpB4NNSphRFFV7aaPBelT7goFrrjj485FPzpXR2YRitX6M3ElaezlWPzrGYTAKSjDL8J-gc_Wchwj9aMCsQNJJwjNpcYUbnhabq8YggJqIH7qg"/>
-</div>
-<div class="flex flex-col min-w-0">
-<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">Pentacampeón Provincial</span>
-<h3 class="font-headline-sm text-headline-sm text-primary font-bold truncate leading-tight mt-0.5">Club Deportivo Shalon</h3>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
-<span class="material-symbols-outlined text-[14px]">event</span> Fundado: 09 de Mayo, 1999
-                </span>
-</div>
-</div>
-<span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold uppercase tracking-wider">Primera A</span>
-</div>
-<!-- Institutional Dossier Body -->
-<div class="p-space-md flex flex-col gap-space-sm">
-<div class="grid grid-cols-2 gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Presidente Actual</span>
-<span class="font-title-md text-label-lg text-on-surface truncate">Lic. Jaime Montaño L.</span>
-</div>
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Estado Jurídico</span>
-<span class="font-label-md text-label-md text-secondary font-bold flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-secondary-container"></span> Vigente A.F.O.
-                </span>
-</div>
-</div>
-<div class="flex flex-col gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">location_on</span>
-<span class="truncate">Calle Cochabamba y La Plata #780, Oruro</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">call</span>
-<span>+591 (2) 527-3312 / 723-11890</span>
-</div>
-</div>
-<!-- Quantitative Footprint -->
-<div class="flex items-center justify-between py-1 bg-surface-container-lowest">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[18px]">sports_soccer</span>
-<span class="font-title-md text-title-md text-primary font-bold">2 Equipos</span>
-</div>
-<span class="text-outline-variant">•</span>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[18px]">person</span>
-<span class="font-title-md text-title-md text-on-surface font-bold">54 Jugadores</span>
-</div>
-<span class="text-outline-variant">•</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">5 Cuerpos Téc.</span>
-</div>
-<!-- Dependent Teams: Model 'Equipo' -->
-<div class="bg-surface-container rounded-lg p-space-sm flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Equipos Dependientes</span>
-<button class="text-secondary hover:text-primary font-label-sm text-label-sm font-bold flex items-center gap-0.5 cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[14px]">add</span> Añadir
-                </button>
-</div>
-<div class="flex flex-wrap gap-1.5">
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Primera "A" (Copa)
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Shalon Sub-19
-                </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Action Footer -->
-<div class="p-space-md bg-surface-container-low flex items-center justify-between gap-space-xs">
-<div class="flex items-center gap-1">
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">visibility</span> Ficha
-            </button>
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">badge</span> Plantel
-            </button>
-</div>
-<div class="flex items-center gap-1">
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Editar Datos del Club" type="button">
-<span class="material-symbols-outlined text-[18px]">edit</span>
-</button>
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-error-container text-on-surface-variant hover:text-error transition-colors cursor-pointer" title="Configurar Estatutos" type="button">
-<span class="material-symbols-outlined text-[18px]">settings</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Club Card 6: Club Ingenieros de Oruro -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
-<div>
-<!-- Header Card Pattern -->
-<div class="p-space-md bg-gradient-to-r from-surface-container-high to-surface-container-low flex items-start justify-between relative">
-<div class="flex items-center gap-space-sm">
-<div class="w-16 h-16 rounded-xl bg-surface-container-lowest p-1 shadow-sm flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain rounded-lg" alt="Traditional academic and sports crest of Club Ingenieros de Oruro linked to FNI engineering school, featuring an engineering compass, ruler, blue and white colors and laurel wreath, clean sports club emblem" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDP5CUNyvcl33Yxg-S7JyNIsfPWNj98D__nVMZsKCIVKpZSTJS9dz658ifPD3V5kyVnQyy2ens2XhV1UNX_bJJClO8vy3OOqQYrssLKrxhVMzqCBf1CNazuUC2Vf4FhUq13b_6iNMMjiqXE8GwI2llAVZmFKEZN7B5aQmw5C3lqANaJiK3RRfFeJdGYB7scrhk9AN5yVOvHzrPnFEt2fKaQBcIRJcE5gT-wc7ZIe2dib_W9q2FIpi-bhg"/>
-</div>
-<div class="flex flex-col min-w-0">
-<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">Tradición Universitaria FNI</span>
-<h3 class="font-headline-sm text-headline-sm text-primary font-bold truncate leading-tight mt-0.5">Club Ingenieros de Oruro</h3>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
-<span class="material-symbols-outlined text-[14px]">event</span> Fundado: 04 de Julio, 1928
-                </span>
-</div>
-</div>
-<span class="bg-surface-container-highest text-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold uppercase tracking-wider">Primera B</span>
-</div>
-<!-- Institutional Dossier Body -->
-<div class="p-space-md flex flex-col gap-space-sm">
-<div class="grid grid-cols-2 gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Presidente Actual</span>
-<span class="font-title-md text-label-lg text-on-surface truncate">Ing. Carlos Morales C.</span>
-</div>
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline font-semibold">Estado Jurídico</span>
-<span class="font-label-md text-label-md text-secondary font-bold flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-secondary-container"></span> Vinculado UTO
-                </span>
-</div>
-</div>
-<div class="flex flex-col gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">location_on</span>
-<span class="truncate">Ciudad Universitaria FNI, Av. Dehene, Oruro</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-outline text-[16px]">call</span>
-<span>+591 (2) 526-1210 / 704-98112</span>
-</div>
-</div>
-<!-- Quantitative Footprint -->
-<div class="flex items-center justify-between py-1 bg-surface-container-lowest">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[18px]">sports_soccer</span>
-<span class="font-title-md text-title-md text-primary font-bold">3 Equipos</span>
-</div>
-<span class="text-outline-variant">•</span>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[18px]">person</span>
-<span class="font-title-md text-title-md text-on-surface font-bold">68 Jugadores</span>
-</div>
-<span class="text-outline-variant">•</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">6 Cuerpos Téc.</span>
-</div>
-<!-- Dependent Teams: Model 'Equipo' -->
-<div class="bg-surface-container rounded-lg p-space-sm flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Equipos Dependientes</span>
-<button class="text-secondary hover:text-primary font-label-sm text-label-sm font-bold flex items-center gap-0.5 cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[14px]">add</span> Añadir
-                </button>
-</div>
-<div class="flex flex-wrap gap-1.5">
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Primera "B" (Ascenso)
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Facultativo UTO
-                </span>
-<span class="bg-surface-container-lowest text-on-surface font-label-sm text-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Femenino Honor
-                </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Action Footer -->
-<div class="p-space-md bg-surface-container-low flex items-center justify-between gap-space-xs">
-<div class="flex items-center gap-1">
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">visibility</span> Ficha
-            </button>
-<button class="px-2.5 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1 shadow-xs transition-colors cursor-pointer" type="button">
-<span class="material-symbols-outlined text-[16px]">badge</span> Plantel
-            </button>
-</div>
-<div class="flex items-center gap-1">
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Editar Datos del Club" type="button">
-<span class="material-symbols-outlined text-[18px]">edit</span>
-</button>
-<button class="p-1.5 rounded bg-surface-container-lowest hover:bg-error-container text-on-surface-variant hover:text-error transition-colors cursor-pointer" title="Configurar Estatutos" type="button">
-<span class="material-symbols-outlined text-[18px]">settings</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-space-md">
+        {% for club in clubes_registrados %}
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
+            <div>
+                <!-- Encabezado -->
+                <div class="p-space-md bg-gradient-to-r from-surface-container-high to-surface-container-low flex items-center gap-space-sm">
+                    <div class="w-16 h-16 rounded-xl bg-surface-container-lowest p-1 shadow-sm flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-primary text-[38px]">
+                            shield
+                        </span>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-label-sm text-secondary font-bold uppercase tracking-wider">
+                            Club afiliado A.F.O.
+                        </span>
+                        <h3 class="font-headline-sm text-primary font-bold truncate leading-tight mt-0.5">
+                            {{ club.nombre }}
+                        </h3>
+                        <span class="font-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+                            <span class="material-symbols-outlined text-[14px]">event</span>
+                            Fundado: {{ club.fundacion|date:"d/m/Y"|default:"Sin fecha" }}
+                        </span>
+                    </div>
+                </div>
+                <!-- Categoría -->
+                <div class="px-space-md pt-space-sm">
+                    <span class="bg-primary-container text-on-primary font-label-sm px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+                        {{ club.categoria_ingreso|default:"Sin categoría" }}
+                    </span>
+                </div>
+                <!-- Información del club -->
+                <div class="p-space-md flex flex-col gap-space-sm">
+                    <div class="grid grid-cols-2 gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
+                        <div class="flex flex-col">
+                            <span class="font-label-sm text-outline font-semibold">Presidente</span>
+                            <span class="font-title-md text-on-surface truncate">
+                                {{ club.presidente|default:"No registrado" }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-label-sm text-outline font-semibold">Estado jurídico</span>
+                            <span class="font-label-md text-secondary font-bold">
+                                {{ club.estado_juridico|default:"Sin estado" }}
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Dirección y teléfono -->
+                    <div class="flex flex-col gap-1.5 text-body-sm text-on-surface-variant">
+                        <div class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-outline text-[16px]">location_on</span>
+                            <span class="truncate">
+                                {{ club.direccion|default:"Sin dirección registrada" }}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-outline text-[16px]">call</span>
+                            <span>{{ club.telefono|default:"Sin teléfono registrado" }}</span>
+                        </div>
+                    </div>
+                    <!-- Cantidad de equipos y deportistas -->
+                    <div class="flex items-center justify-between py-2 bg-surface-container-lowest">
+                        <div class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-primary text-[18px]">sports_soccer</span>
+                            <span class="font-title-md text-primary font-bold">
+                                {{ club.equipo_set.count }} Equipos
+                            </span>
+                        </div>
+                        <span class="text-outline-variant">•</span>
+                        <div class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-secondary text-[18px]">person</span>
+                            <span class="font-title-md text-on-surface font-bold">
+                                {{ club.deportista_set.count }} Jugadores
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Equipos dependientes -->
+                    <div class="bg-surface-container rounded-lg p-space-sm flex flex-col gap-1.5">
+                        <span class="font-label-sm text-primary font-bold uppercase tracking-wider">
+                            Equipos dependientes
+                        </span>
+                        <div class="flex flex-wrap gap-1.5">
+                            {% for equipo in club.equipo_set.all %}
+                            <span class="bg-surface-container-lowest text-on-surface font-label-sm px-2 py-1 rounded shadow-xs flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                {{ equipo.nombre }}
+                            </span>
+                            {% empty %}
+                            <span class="font-label-sm text-outline">
+                                No tiene equipos registrados.
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Acciones -->
+            <div class="p-space-md bg-surface-container-low flex items-center justify-between gap-space-xs">
+                <div class="flex items-center gap-1">
+                    <button class="px-2.5 py-1.5 rounded bg-surface-container-lowest text-primary font-label-md flex items-center gap-1 shadow-xs" type="button">
+                        <span class="material-symbols-outlined text-[16px]">visibility</span>
+                        Ficha
+                    </button>
+                    <button class="px-2.5 py-1.5 rounded bg-surface-container-lowest text-primary font-label-md flex items-center gap-1 shadow-xs" type="button">
+                        <span class="material-symbols-outlined text-[16px]">badge</span>
+                        Plantel
+                    </button>
+                </div>
+                <!-- Eliminar club -->
+                <form method="POST"
+      action="{% url 'clubes' %}"
+      onsubmit="return confirm('¿Estás seguro de eliminar este club?');"
+      class="shrink-0">
+    {% csrf_token %}
+    <input type="hidden" name="accion" value="eliminar_club">
+    <input type="hidden" name="club_id" value="{{ club.id }}">
+
+    <button type="submit"
+            class="whitespace-nowrap px-2.5 py-1.5 rounded bg-red-600 hover:bg-red-700 text-white font-label-md flex items-center gap-1 shadow-xs">
+        <span class="material-symbols-outlined text-[16px]">delete</span>
+        Eliminar
+    </button>
+</form>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full bg-surface-container-lowest rounded-xl p-space-lg text-center">
+            <span class="material-symbols-outlined text-outline text-[48px]">
+                sports_soccer
+            </span>
+            <h3 class="font-title-lg text-primary font-bold mt-2">
+                No hay clubes registrados
+            </h3>
+            <p class="text-body-sm text-on-surface-variant mt-1">
+                Utiliza el botón Registrar Nuevo Club para comenzar.
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 <!-- Alternative View: Table View Mode (Hidden by Default, toggled via JS) -->
 <div class="px-margin py-space-sm hidden" id="table-view-container">
 <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
@@ -766,159 +337,73 @@
 </tr>
 </thead>
 <tbody class="divide-y-0">
+{% for club in clubes_registrados %}
 <tr class="hover:bg-surface-container-high/40 transition-colors">
-<td class="py-space-sm px-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-9 h-9 rounded-lg bg-surface-container-low p-1 flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain" alt="Official small round badge of Oruro Royal Club, historic blue and white stripes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKn_-R5jXh7azW3OUYaNisB7PyhwB56RvN5jrYM9d5mMMBQP2JCgqDUWTsjZ31W7uMt7mzJ2iJVPhjMvchHmxVuudBoVDknIvh2yvAlj-SsFoLdeZQO4U3id93pANn2dnoQMpF-J-n7RqhuRjUE861Gj8lGEprV6mahFeLEHLDZUXTxdyBA1RZEQ_uUkINLQsXFEGYxQzUmNon8yeCitDVy5wltf0y5B-llayOCAPfdZ2STNu-hmefsg"/>
-</div>
-<div class="flex flex-col">
-<span class="font-title-md text-title-md text-primary font-bold">Oruro Royal Club</span>
-<span class="font-label-sm text-label-sm text-outline">Fundado 26/05/1896 (128 años)</span>
-</div>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="font-title-md text-label-lg font-semibold">Ing. Ivar Cortez V.</span>
-<span class="block font-label-sm text-label-sm text-on-surface-variant">Gestión 2023-2025</span>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="truncate max-w-xs block font-body-sm text-body-sm text-on-surface">Av. 6 de Octubre esq. Sargento Flores</span>
-<span class="font-label-sm text-label-sm text-secondary font-mono">+591 525-4190</span>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold">Primera "A"</span>
-</td>
-<td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-primary">4</td>
-<td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-on-surface">96</td>
-<td class="py-space-sm px-space-sm text-center">
-<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm font-bold">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Activo
+    <td class="py-space-sm px-space-md">
+        <div class="flex items-center gap-space-sm">
+            <div class="w-9 h-9 rounded-lg bg-surface-container-low p-1 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">shield</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-title-md text-title-md text-primary font-bold">
+                    {{ club.nombre }}
                 </span>
-</td>
-<td class="py-space-sm px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1 rounded hover:bg-surface-container text-primary" title="Ficha" type="button"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
-<button class="p-1 rounded hover:bg-surface-container text-secondary" title="Plantel" type="button"><span class="material-symbols-outlined text-[18px]">badge</span></button>
-<button class="p-1 rounded hover:bg-surface-container text-outline" title="Editar" type="button"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-</div>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-high/40 transition-colors bg-surface-container-lowest">
-<td class="py-space-sm px-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-9 h-9 rounded-lg bg-surface-container-low p-1 flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain" alt="Official small shield of San Jose de Oruro V blue on white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1pEk_bAojlJS13OyIDHEizTL6XIsolJd_ecgHt6LCICzm4NdtoVWZHbBbRXcGBMjX5azz-tyQxSHO6wWti4fTf50usjTNpJAU7ySxwhijwTOcb5NIaKjbRa51FJn-WNtdONUoNEFgSU054qH-ME6GPeBn2PdPsIB7VhZGYWJv5I6xUcmfzfTAIyFiHoVeJYRkbS8NtHAMeahjhl2wFRengHhKiVmMo3WfDtDbWmzH3WJACbVSng7iVA"/>
-</div>
-<div class="flex flex-col">
-<span class="font-title-md text-title-md text-primary font-bold">C.D. San José de Oruro</span>
-<span class="font-label-sm text-label-sm text-outline">Fundado 19/03/1942 (82 años)</span>
-</div>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="font-title-md text-label-lg font-semibold">Dr. Ernesto Aranibar</span>
-<span class="block font-label-sm text-label-sm text-on-surface-variant">Comisión Transitoria</span>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="truncate max-w-xs block font-body-sm text-body-sm text-on-surface">Calle Washington #1432</span>
-<span class="font-label-sm text-label-sm text-secondary font-mono">+591 524-7811</span>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold">Primera "A"</span>
-</td>
-<td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-primary">5</td>
-<td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-on-surface">118</td>
-<td class="py-space-sm px-space-sm text-center">
-<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm font-bold">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Activo
+                <span class="font-label-sm text-label-sm text-outline">
+                    Fundado {{ club.fundacion|date:"d/m/Y"|default:"Sin fecha" }}
                 </span>
-</td>
-<td class="py-space-sm px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1 rounded hover:bg-surface-container text-primary" title="Ficha" type="button"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
-<button class="p-1 rounded hover:bg-surface-container text-secondary" title="Plantel" type="button"><span class="material-symbols-outlined text-[18px]">badge</span></button>
-<button class="p-1 rounded hover:bg-surface-container text-outline" title="Editar" type="button"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-</div>
-</td>
+            </div>
+        </div>
+    </td>
+    <td class="py-space-sm px-space-sm">
+        <span class="font-title-md text-label-lg font-semibold">
+            {{ club.presidente|default:"No registrado" }}
+        </span>
+    </td>
+    <td class="py-space-sm px-space-sm">
+        <span class="truncate max-w-xs block font-body-sm text-body-sm text-on-surface">
+            {{ club.direccion|default:"Sin dirección" }}
+        </span>
+        <span class="font-label-sm text-label-sm text-secondary font-mono">
+            {{ club.telefono|default:"Sin teléfono" }}
+        </span>
+    </td>
+    <td class="py-space-sm px-space-sm">
+        <span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold">
+            {{ club.categoria_ingreso|default:"Sin categoría" }}
+        </span>
+    </td>
+    <td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-primary">
+        {{ club.equipo_set.count }}
+    </td>
+    <td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-on-surface">
+    {{ club.deportista_set.count }}
+    </td>
+    <td class="py-space-sm px-space-sm text-center">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm font-bold">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            {{ club.estado_juridico|default:"Sin estado" }}
+        </span>
+    </td>
+    <td class="py-space-sm px-space-md text-right">
+        <div class="flex items-center justify-end gap-1">
+            <button class="p-1 rounded hover:bg-surface-container text-primary" title="Ficha" type="button">
+                <span class="material-symbols-outlined text-[18px]">visibility</span>
+            </button>
+            <button class="p-1 rounded hover:bg-surface-container text-outline" title="Editar" type="button">
+                <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+        </div>
+    </td>
 </tr>
-<tr class="hover:bg-surface-container-high/40 transition-colors">
-<td class="py-space-sm px-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-9 h-9 rounded-lg bg-surface-container-low p-1 flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain" alt="Small round icon for Sur-Car Oruro soccer team badge" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBKFIf_f93jPYEXolJEyBsM8IdCLmwugQSsAXlvWoqwOoNZzTRhoT4eU6AXSYtqmQczX7P4ytWEtFboDI04h6Pe7BzpCUXP1kXOoAOJwItuGXowWvtAg5hGv8pSScMQJBj3V_64xYtseR1PhpW8pLcwfU4tyjQ_VrDMS9YgnRRh-A8VNMp5XqC_1bfZxmzOGCTxEVKAkxoGztYolNmxwe-b176-2N5EV___aEl7aGyhe8L5nzCmrkCGA"/>
-</div>
-<div class="flex flex-col">
-<span class="font-title-md text-title-md text-primary font-bold">Club Deportivo Sur-Car</span>
-<span class="font-label-sm text-label-sm text-outline">Fundado 21/03/2014 (10 años)</span>
-</div>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="font-title-md text-label-lg font-semibold">Sra. Edgar Zuna G.</span>
-<span class="block font-label-sm text-label-sm text-on-surface-variant">Gestión 2024-2026</span>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="truncate max-w-xs block font-body-sm text-body-sm text-on-surface">Calle Pagador e/ Herrera y 1ro Nov.</span>
-<span class="font-label-sm text-label-sm text-secondary font-mono">+591 528-9901</span>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold">Primera "A"</span>
-</td>
-<td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-primary">3</td>
-<td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-on-surface">74</td>
-<td class="py-space-sm px-space-sm text-center">
-<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm font-bold">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Activo
-                </span>
-</td>
-<td class="py-space-sm px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1 rounded hover:bg-surface-container text-primary" title="Ficha" type="button"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
-<button class="p-1 rounded hover:bg-surface-container text-secondary" title="Plantel" type="button"><span class="material-symbols-outlined text-[18px]">badge</span></button>
-<button class="p-1 rounded hover:bg-surface-container text-outline" title="Editar" type="button"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-</div>
-</td>
+{% empty %}
+<tr>
+    <td colspan="8" class="text-center py-space-lg">
+        No hay clubes registrados.
+    </td>
 </tr>
-<tr class="hover:bg-surface-container-high/40 transition-colors bg-surface-container-lowest">
-<td class="py-space-sm px-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-9 h-9 rounded-lg bg-surface-container-low p-1 flex items-center justify-center flex-shrink-0">
-<img class="w-full h-full object-contain" alt="Small round crest of Huanuni soccer team with miner hammers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAHj40rM9trA9gFOIyt_YjZKbcqoEGITAnvHig5stlLVgh32X9LR00-dyTbA9Lk_G-0Bd0_rJrtGeiWVLyb8qG1Q9OXXP94HyCuaGRoEoIqmNMQ06skzW_U1ZVEQ22NtzXjz0Ja0WGIVS9iO7L_9QOxQ-KYPZE1CRt4qr-WgsIK-gHR7H506QZkNxhHm5-OkoNFziqdVZldkb0ih5sM-tSofxQq-EZWqR_gDKoLkdKjFPDBahCujjMwA"/>
-</div>
-<div class="flex flex-col">
-<span class="font-title-md text-title-md text-primary font-bold">Empresa Minera Huanuni</span>
-<span class="font-label-sm text-label-sm text-outline">Fundado 02/02/2012 (12 años)</span>
-</div>
-</div>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="font-title-md text-label-lg font-semibold">Lic. Pedro Choque M.</span>
-<span class="block font-label-sm text-label-sm text-on-surface-variant">Gestión 2024</span>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="truncate max-w-xs block font-body-sm text-body-sm text-on-surface">Plaza Principal Huanuni s/n</span>
-<span class="font-label-sm text-label-sm text-secondary font-mono">+591 552-2109</span>
-</td>
-<td class="py-space-sm px-space-sm">
-<span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-bold">Primera "A"</span>
-</td>
-<td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-primary">3</td>
-<td class="py-space-sm px-space-sm text-right font-title-md text-title-md font-bold text-on-surface">82</td>
-<td class="py-space-sm px-space-sm text-center">
-<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm font-bold">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Activo
-                </span>
-</td>
-<td class="py-space-sm px-space-md text-right">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1 rounded hover:bg-surface-container text-primary" title="Ficha" type="button"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
-<button class="p-1 rounded hover:bg-surface-container text-secondary" title="Plantel" type="button"><span class="material-symbols-outlined text-[18px]">badge</span></button>
-<button class="p-1 rounded hover:bg-surface-container text-outline" title="Editar" type="button"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-</div>
-</td>
-</tr>
+{% endfor %}
 </tbody>
+
 </table>
 </div>
 </div>
@@ -952,7 +437,11 @@
               Los datos inscritos quedarán asentados en los Libros Notariados de la Asociación y se transmitirán al Sistema Comet - FBF.
             </span>
 </div>
-<form class="flex flex-col gap-space-md" id="club-registration-form">
+<form method="POST" class="flex flex-col gap-space-md" id="club-registration-form">
+
+    {% csrf_token %}
+
+    <input type="hidden" name="accion" value="registrar_club">
 <!-- Campo: Nombre del Club -->
 <div class="flex flex-col gap-1">
 <label class="font-label-md text-label-md text-on-surface font-semibold flex items-center justify-between" for="club-nombre">
@@ -1019,7 +508,7 @@
 <label class="font-label-md text-label-md text-on-surface font-semibold" for="club-categoria">
                   Categoría de Ingreso
                 </label>
-<select class="h-10 px-space-sm rounded bg-surface-container-low text-on-surface font-body-md text-body-md outline-none" id="club-categoria">
+<select class="h-10 px-space-sm rounded bg-surface-container-low text-on-surface font-body-md text-body-md outline-none" id="club-categoria" name="categoria_ingreso">
 <option value="primera-a">Primera "A" (Honor)</option>
 <option value="primera-b">Primera "B" (Ascenso)</option>
 <option value="primera-ascenso">Primera de Ascenso</option>
@@ -1028,43 +517,95 @@
 </select>
 </div>
 <div class="flex flex-col gap-1">
-<label class="font-label-md text-label-md text-on-surface font-semibold" for="club-nit">
-                  NIT / Personería Jurídica
-                </label>
-<input class="h-10 px-space-sm rounded bg-surface-container-low text-on-surface font-body-md text-body-md outline-none" id="club-nit" placeholder="N° Resolución GADOR" type="text"/>
-</div>
+    <label class="font-label-md text-label-md text-on-surface font-semibold" for="club-nit">
+        NIT / Personería Jurídica
+    </label>
+
+    <input class="h-10 px-space-sm rounded bg-surface-container-low text-on-surface font-body-md text-body-md outline-none"
+           id="club-nit"
+           name="nit_personeria"
+           placeholder="N° Resolución GADOR"
+           type="text"/>
+
+    <div class="flex flex-col gap-2">
+        <label class="font-label-md text-label-md text-on-surface font-semibold">
+            Estado jurídico
+        </label>
+
+        <select name="estado_juridico" class="h-10 px-space-sm rounded bg-surface-container-low text-on-surface font-body-md text-body-md outline-none">
+            <option value="Vigente">Vigente</option>
+            <option value="En trámite">En trámite</option>
+            <option value="Observado">Observado</option>
+        </select>
+    </div>
 </div>
 <!-- Equipos dependientes a crear por defecto (Modelo Equipo) -->
+
+<!-- Equipos dependientes a crear -->
 <div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col gap-space-xs">
-<span class="font-label-md text-label-md text-primary font-bold">Equipos a Habilitar Automáticamente</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">Se crearán instancias asociadas en la tabla 'Equipo':</span>
-<div class="grid grid-cols-2 gap-2 mt-1">
-<label class="inline-flex items-center gap-2 font-body-sm text-body-sm cursor-pointer">
-<input checked="" class="rounded text-primary focus:ring-0" type="checkbox"/>
-<span>Equipo Principal (Primera A)</span>
-</label>
-<label class="inline-flex items-center gap-2 font-body-sm text-body-sm cursor-pointer">
-<input checked="" class="rounded text-primary focus:ring-0" type="checkbox"/>
-<span>Equipo Sub-19 Juvenil</span>
-</label>
-<label class="inline-flex items-center gap-2 font-body-sm text-body-sm cursor-pointer">
-<input class="rounded text-primary focus:ring-0" type="checkbox"/>
-<span>Equipo Femenino Departamental</span>
-</label>
-<label class="inline-flex items-center gap-2 font-body-sm text-body-sm cursor-pointer">
-<input class="rounded text-primary focus:ring-0" type="checkbox"/>
-<span>Categoría Sub-15 Infantil</span>
-</label>
-</div>
+
+    <span class="font-label-md text-primary font-bold">
+        Equipos a habilitar
+    </span>
+
+    <span class="font-body-sm text-on-surface-variant">
+        Selecciona los equipos que pertenecerán a este club.
+    </span>
+
+    <div class="grid grid-cols-2 gap-2 mt-1">
+
+        <label class="inline-flex items-center gap-2 font-body-sm cursor-pointer">
+            <input
+                checked
+                class="rounded text-primary focus:ring-0"
+                type="checkbox"
+                name="equipos"
+                value="Equipo Principal (Primera A)"
+            >
+            <span>Equipo Principal (Primera A)</span>
+        </label>
+
+        <label class="inline-flex items-center gap-2 font-body-sm cursor-pointer">
+            <input
+                checked
+                class="rounded text-primary focus:ring-0"
+                type="checkbox"
+                name="equipos"
+                value="Equipo Sub-19 Juvenil"
+            >
+            <span>Equipo Sub-19 Juvenil</span>
+        </label>
+
+        <label class="inline-flex items-center gap-2 font-body-sm cursor-pointer">
+            <input
+                class="rounded text-primary focus:ring-0"
+                type="checkbox"
+                name="equipos"
+                value="Equipo Femenino Departamental"
+            >
+            <span>Equipo Femenino Departamental</span>
+        </label>
+
+        <label class="inline-flex items-center gap-2 font-body-sm cursor-pointer">
+            <input
+                class="rounded text-primary focus:ring-0"
+                type="checkbox"
+                name="equipos"
+                value="Categoría Sub-15 Infantil"
+            >
+            <span>Categoría Sub-15 Infantil</span>
+        </label>
+
+    </div>
+
 </div>
 </form>
-</div>
 <!-- Drawer Footer Buttons -->
 <div class="p-space-md bg-surface-container-low flex items-center justify-end gap-space-sm">
 <button class="px-space-md py-2 rounded bg-surface-container-lowest hover:bg-surface-container text-on-surface font-title-md text-title-md transition-colors cursor-pointer" id="cancel-drawer-btn" type="button">
             Cancelar
           </button>
-<button class="inline-flex items-center gap-space-xs px-space-lg py-2 rounded bg-primary hover:bg-primary-container text-on-primary font-title-md text-title-md shadow-sm transition-all cursor-pointer" id="submit-club-btn" type="button">
+<button class="inline-flex items-center gap-space-xs px-space-lg py-2 rounded bg-primary hover:bg-primary-container text-on-primary font-title-md text-title-md shadow-sm transition-all cursor-pointer" id="submit-club-btn" type="submit" form="club-registration-form">
 <span class="material-symbols-outlined text-[20px]">save</span>
 <span>Guardar e Inscribir Club</span>
 </button>
@@ -1093,90 +634,104 @@
 </div>
 </div>
 <script>
-  // Simple view switcher and drawer interaction
-  const gridBtn = document.getElementById('view-grid-btn');
-  const tableBtn = document.getElementById('view-table-btn');
-  const gridContainer = document.getElementById('grid-view-container');
-  const tableContainer = document.getElementById('table-view-container');
-
-  const openDrawerBtn = document.getElementById('open-register-modal-btn');
-  const closeDrawerBtn = document.getElementById('close-drawer-btn');
-  const cancelDrawerBtn = document.getElementById('cancel-drawer-btn');
-  const drawerBackdrop = document.getElementById('drawer-backdrop');
-  const drawer = document.getElementById('club-drawer');
-  const submitClubBtn = document.getElementById('submit-club-btn');
-
-  // View toggle logic
-  if (gridBtn && tableBtn && gridContainer && tableContainer) {
+// Elementos principales
+const gridBtn = document.getElementById('view-grid-btn');
+const tableBtn = document.getElementById('view-table-btn');
+const gridContainer = document.getElementById('grid-view-container');
+const tableContainer = document.getElementById('table-view-container');
+const openDrawerBtn = document.getElementById('open-register-modal-btn');
+const closeDrawerBtn = document.getElementById('close-drawer-btn');
+const cancelDrawerBtn = document.getElementById('cancel-drawer-btn');
+const drawerBackdrop = document.getElementById('drawer-backdrop');
+const drawer = document.getElementById('club-drawer');
+const searchInput = document.getElementById('club-search-input');
+// Cambiar entre tarjetas y tabla
+if (gridBtn && tableBtn && gridContainer && tableContainer) {
     gridBtn.addEventListener('click', () => {
-      gridContainer.classList.remove('hidden');
-      tableContainer.classList.add('hidden');
-      gridBtn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-xs');
-      gridBtn.classList.remove('text-on-surface-variant');
-      tableBtn.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-xs');
-      tableBtn.classList.add('text-on-surface-variant');
+        gridContainer.classList.remove('hidden');
+        tableContainer.classList.add('hidden');
+        gridBtn.classList.add(
+            'bg-surface-container-lowest',
+            'text-primary',
+            'shadow-xs'
+        );
+        gridBtn.classList.remove('text-on-surface-variant');
+        tableBtn.classList.remove(
+            'bg-surface-container-lowest',
+            'text-primary',
+            'shadow-xs'
+        );
+        tableBtn.classList.add('text-on-surface-variant');
     });
-
     tableBtn.addEventListener('click', () => {
-      tableContainer.classList.remove('hidden');
-      gridContainer.classList.add('hidden');
-      tableBtn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-xs');
-      tableBtn.classList.remove('text-on-surface-variant');
-      gridBtn.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-xs');
-      gridBtn.classList.add('text-on-surface-variant');
+        tableContainer.classList.remove('hidden');
+        gridContainer.classList.add('hidden');
+        tableBtn.classList.add(
+            'bg-surface-container-lowest',
+            'text-primary',
+            'shadow-xs'
+        );
+        tableBtn.classList.remove('text-on-surface-variant');
+        gridBtn.classList.remove(
+            'bg-surface-container-lowest',
+            'text-primary',
+            'shadow-xs'
+        );
+        gridBtn.classList.add('text-on-surface-variant');
     });
-  }
-
-  // Drawer modal open/close
-  function openDrawer() {
-    drawer.classList.remove('hidden');
-  }
-
-  function closeDrawer() {
-    drawer.classList.add('hidden');
-  }
-
-  if (openDrawerBtn) openDrawerBtn.addEventListener('click', openDrawer);
-  if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
-  if (cancelDrawerBtn) cancelDrawerBtn.addEventListener('click', closeDrawer);
-  if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeDrawer);
-
-  if (submitClubBtn) {
-    submitClubBtn.addEventListener('click', () => {
-      const nombreInput = document.getElementById('club-nombre');
-      if (nombreInput && nombreInput.value.trim() === '') {
-        nombreInput.focus();
-        return;
-      }
-      // Micro-interaction: Confirmation visual feedback
-      submitClubBtn.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-spin">sync</span><span>Guardando...</span>';
-      setTimeout(() => {
-        submitClubBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">check</span><span>¡Inscrito con Éxito!</span>';
-        setTimeout(() => {
-          submitClubBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">save</span><span>Guardar e Inscribir Club</span>';
-          closeDrawer();
-        }, 800);
-      }, 600);
-    });
-  }
-
-  // Search input filter simulation
-  const searchInput = document.getElementById('club-search-input');
-  if (searchInput) {
+}
+// Abrir formulario
+function openDrawer() {
+    if (drawer) {
+        drawer.classList.remove('hidden');
+    }
+}
+// Cerrar formulario
+function closeDrawer() {
+    if (drawer) {
+        drawer.classList.add('hidden');
+    }
+}
+if (openDrawerBtn) {
+    openDrawerBtn.addEventListener('click', openDrawer);
+}
+if (closeDrawerBtn) {
+    closeDrawerBtn.addEventListener('click', closeDrawer);
+}
+if (cancelDrawerBtn) {
+    cancelDrawerBtn.addEventListener('click', closeDrawer);
+}
+if (drawerBackdrop) {
+    drawerBackdrop.addEventListener('click', closeDrawer);
+}
+// Buscar clubes en tarjetas y tabla
+if (searchInput) {
     searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      const cards = document.querySelectorAll('#grid-view-container .group');
-      cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        if (text.includes(query)) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
+        const query = e.target.value.toLowerCase().trim();
+        // Filtrar tarjetas
+        const cards = document.querySelectorAll(
+            '#grid-view-container .group'
+        );
+        cards.forEach(card => {
+            const contenido = card.textContent.toLowerCase();
+            card.style.display = contenido.includes(query)
+                ? 'flex'
+                : 'none';
+        });
+        // Filtrar filas de la tabla
+        const rows = document.querySelectorAll(
+            '#table-view-container tbody tr'
+        );
+        rows.forEach(row => {
+            const contenido = row.textContent.toLowerCase();
+            row.style.display = contenido.includes(query)
+                ? ''
+                : 'none';
+        });
     });
-  }
-</script></main></div><script>
+}
+</script>
+</main></div><script>
   window.AFO_URLS = {
     panel: "{% url 'panel' %}",
     clubes: "{% url 'clubes' %}",

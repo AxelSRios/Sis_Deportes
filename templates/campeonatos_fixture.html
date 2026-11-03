@@ -1,6 +1,5 @@
 {% load static %}
 <!DOCTYPE html>
-
 <html lang="es">
 <!-- Sistema de Gestion Deportiva AFO · Oruro — pantalla unificada.
      Estilos compartidos: styles.css + tailwind-config.js -->
@@ -35,14 +34,7 @@
 <span class="material-symbols-outlined text-[16px]">sports_soccer</span>
               Fútbol 11
             </button>
-<button class="px-space-md py-1.5 rounded text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all flex items-center gap-1.5" type="button">
-<span class="material-symbols-outlined text-[16px]">sports_handball</span>
-              Futsal / Salón
-            </button>
-<button class="px-space-md py-1.5 rounded text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all flex items-center gap-1.5" type="button">
-<span class="material-symbols-outlined text-[16px]">surfing</span>
-              Fútbol Playa
-            </button>
+
 </div>
 </div>
 <!-- Category Dropdown / Pills -->
@@ -79,53 +71,173 @@
 </div>
 </div>
 </div>
-<!-- Active Championship Hero Bento Canvas -->
-<div class="grid grid-cols-12 gap-space-md">
-<!-- Main Championship Detail Card -->
-<div class="col-span-12 lg:col-span-8 bg-primary text-on-primary rounded-xl p-space-lg relative overflow-hidden shadow-md flex flex-col justify-between min-h-[220px]">
-<div class="absolute -right-16 -bottom-16 opacity-10 pointer-events-none">
-<span class="material-symbols-outlined text-[280px]">emoji_events</span>
-</div>
-<div class="relative z-10 flex flex-wrap items-start justify-between gap-space-md">
-<div>
-<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-secondary-fixed/20 text-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider mb-2">
-<span class="material-symbols-outlined text-[14px]">verified</span>
-              Campeonato Oficial Vigente
-            </div>
-<h1 class="font-display-lg text-headline-lg lg:text-display-lg font-bold tracking-tight text-white leading-tight">
-              Torneo Centenario AFO 2024
-            </h1>
-<p class="font-body-md text-body-md text-primary-fixed mt-1 flex items-center gap-2">
-<span class="font-bold">Fase Regular — Rueda 1</span>
-<span>•</span>
-<span>12 Clubes Afiliados</span>
-<span>•</span>
-<span class="text-secondary-fixed font-semibold">Copa Simón Bolívar 2025</span>
-</p>
-</div>
-<!-- Quick Stat Badge -->
-<div class="bg-primary-container/80 backdrop-blur-md px-space-md py-space-sm rounded-lg text-right">
-<span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider">Período de Competencia</span>
-<p class="font-headline-sm text-headline-sm text-white font-bold mt-0.5">15 Mar — 24 Nov</p>
-<span class="font-body-sm text-body-sm text-secondary-fixed">Fecha Actual: Jornada 8 de 22</span>
-</div>
-</div>
-<!-- Action Control Center -->
-<div class="relative z-10 pt-space-md flex flex-wrap items-center gap-space-sm">
-<button class="px-space-md py-2 rounded bg-secondary text-on-secondary-fixed font-title-md text-title-md hover:bg-secondary-fixed-dim transition-all shadow-sm flex items-center gap-1.5 font-bold" onclick="openChampionshipModal()" type="button">
-<span class="material-symbols-outlined text-[20px]">add_circle</span>
+
+
+<!-- ACTIVE CHAMPIONSHIP HERO BENTO CANVAS -->
+
+<!-- ENCABEZADO Y BOTONES GENERALES -->
+<div class="grid grid-cols-12 gap-space-md mb-space-md">
+
+<div class="col-span-12 bg-primary text-on-primary rounded-xl p-space-lg relative overflow-hidden shadow-md">
+
+    <div class="absolute -right-16 -bottom-16 opacity-10 pointer-events-none">
+        <span class="material-symbols-outlined text-[280px]">emoji_events</span>
+    </div>
+
+    <div class="relative z-10">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-secondary-fixed/20 text-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider mb-2">
+            <span class="material-symbols-outlined text-[14px]">verified</span>
+            Gestión de Campeonatos AFO
+        </div>
+
+        <h1 class="font-display-lg text-headline-lg lg:text-display-lg font-bold tracking-tight text-white leading-tight">
+            Campeonatos Oficiales
+        </h1>
+
+        <p class="font-body-md text-body-md text-primary-fixed mt-1">
+            Administración de torneos, competencias y programación deportiva.
+        </p>
+    </div>
+
+    <!-- BOTONES GENERALES: SOLO UNA VEZ -->
+    <div class="relative z-10 pt-space-md flex flex-wrap items-center gap-space-sm">
+
+        <button class="px-space-md py-2 rounded bg-secondary text-on-secondary-fixed font-title-md text-title-md hover:bg-secondary-fixed-dim transition-all shadow-sm flex items-center gap-1.5 font-bold" onclick="openChampionshipModal()" type="button">
+            <span class="material-symbols-outlined text-[20px]">add_circle</span>
             + Nuevo Campeonato
-          </button>
-<button class="px-space-md py-2 rounded bg-surface-container-lowest text-primary font-title-md text-title-md hover:bg-surface-container-high transition-all shadow-sm flex items-center gap-1.5" onclick="openProgramarModal()" type="button">
-<span class="material-symbols-outlined text-[20px]">event</span>
-            + Programar Partido
-          </button>
-<button class="px-space-md py-2 rounded bg-primary-container text-white hover:bg-surface-container-high hover:text-primary font-title-md text-title-md transition-all shadow-sm flex items-center gap-1.5" type="button">
-<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
-            Descargar Planilla Oficial de Juego
-          </button>
+        </button>
+
+    </div>
+
 </div>
 </div>
+
+
+<!-- LISTADO DE CAMPEONATOS REGISTRADOS -->
+
+<div class="mb-space-md">
+    <h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">
+        Campeonatos Registrados
+    </h2>
+    <p class="font-body-sm text-body-sm text-on-surface-variant">
+        
+    </p>
+</div>
+
+
+{% for campeonato in campeonatos_registrados %}
+
+<div class="grid grid-cols-12 gap-space-md mb-space-md">
+
+    <!-- TARJETA DE CAMPEONATO -->
+    <div class="col-span-12 lg:col-span-8 bg-primary text-on-primary rounded-xl p-space-lg relative overflow-hidden shadow-md flex flex-col justify-between min-h-[220px]">
+
+        <div class="absolute -right-16 -bottom-16 opacity-10 pointer-events-none">
+            <span class="material-symbols-outlined text-[280px]">emoji_events</span>
+        </div>
+
+        <div class="relative z-10 flex flex-wrap items-start justify-between gap-space-md">
+
+            <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-secondary-fixed/20 text-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider mb-2">
+                    <span class="material-symbols-outlined text-[14px]">verified</span>
+                    Campeonato Registrado
+                </div>
+
+                <h2 class="font-display-lg text-headline-lg lg:text-display-lg font-bold tracking-tight text-white leading-tight">
+                    {{ campeonato.nombre }}
+                </h2>
+
+                <p class="font-body-md text-body-md text-primary-fixed mt-1 flex items-center gap-2 flex-wrap">
+                    <span class="font-bold">{{ campeonato.disciplina }}</span>
+                    <span>•</span>
+                    <span>{{ campeonato.categoria.nombre|default:"Sin categoría" }}</span>
+                </p>
+            </div>
+
+            <!-- FECHAS DEL CAMPEONATO -->
+            <div class="bg-primary-container/80 backdrop-blur-md px-space-md py-space-sm rounded-lg text-right">
+
+                <span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider">
+                    Período de Competencia
+                </span>
+
+                <p class="font-headline-sm text-headline-sm text-white font-bold mt-0.5">
+                    {{ campeonato.fecha_inicio|date:"d M Y"|default:"Por definir" }}
+                    —
+                    {{ campeonato.fecha_conclusion|date:"d M Y"|default:"Por definir" }}
+                </p>
+
+                <span class="font-body-sm text-body-sm text-secondary-fixed">
+                    Categoría: {{ campeonato.categoria.nombre|default:"Sin categoría" }}
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- INFORMACIÓN ADICIONAL Y ACCIONES -->
+        <div class="relative z-10 pt-space-md flex flex-wrap items-center gap-space-sm">
+
+            <span class="px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm font-semibold">
+                {{ campeonato.disciplina }}
+            </span>
+
+            <span class="px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm font-semibold">
+                Campeonato AFO
+            </span>
+
+            <div class="w-full flex flex-wrap items-center gap-space-sm mt-2">
+
+                <!-- PROGRAMAR PARTIDO -->
+                <button
+                    type="button"
+                    onclick="openProgramarModal('{{ campeonato.id }}')"
+                    class="px-space-md py-2 rounded-lg bg-surface-container-high text-primary font-title-md font-semibold hover:bg-surface-container-highest transition-colors flex items-center gap-2">
+
+                    <span class="material-symbols-outlined text-[18px]">event_available</span>
+                    Programar Partido
+                </button>
+
+                <!-- VER FIXTURE -->
+                <a
+                    href="{% url 'campeonatos' %}?campeonato={{ campeonato.id }}#view-fixture"
+                    class="px-space-md py-2 rounded-lg bg-surface-container-high text-primary font-title-md font-semibold hover:bg-surface-container-highest transition-colors flex items-center gap-2">
+
+                    <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                    Ver Fixture
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- FIN TARJETA DE CAMPEONATO -->
+
+</div>
+<!-- FIN GRID DEL CAMPEONATO -->
+
+{% empty %}
+
+<!-- CUANDO NO EXISTAN CAMPEONATOS -->
+<div class="col-span-12 bg-surface-container-low rounded-xl p-space-lg text-center">
+
+    <span class="material-symbols-outlined text-[40px] text-primary">
+        emoji_events
+    </span>
+
+    <h2 class="font-headline-sm font-bold mt-2">
+        No hay campeonatos registrados
+    </h2>
+
+    <p class="text-on-surface-variant mt-1">
+        Utiliza el botón Nuevo Campeonato para registrar el primero.
+    </p>
+
+</div>
+
+{% endfor %}
+
 <!-- Side Metrics Mosaic Card -->
 <div class="col-span-12 lg:col-span-4 grid grid-rows-2 gap-space-md">
 <!-- Stadium Telemetry -->
@@ -188,409 +300,227 @@
 </button>
 </div>
 </div>
+
 <!-- VIEW 1: FIXTURE Y ROL DE PARTIDOS -->
+ {% if campeonato_actual %}
 <div class="space-y-space-md" id="view-fixture">
-<!-- Section subheader banner -->
-<div class="flex flex-wrap items-center justify-between gap-space-md px-1">
-<div class="flex items-center gap-space-sm">
-<div class="w-2.5 h-6 bg-secondary rounded-full"></div>
-<h2 class="font-headline-sm text-headline-sm text-primary uppercase tracking-tight">
-            Programación Oficial • Sábado 12 y Domingo 13 de Octubre
-          </h2>
-</div>
-<div class="flex items-center gap-2">
-<span class="font-label-sm text-label-sm text-outline">Filtrar por Campo:</span>
-<select class="bg-surface-container-lowest text-on-surface font-body-sm text-body-sm py-1 px-3 rounded-lg outline-none shadow-xs">
-<option>Todos los Escenarios</option>
-<option>Estadio Jesús Bermúdez</option>
-<option>Complejo Deportivo Vinto</option>
-<option>Cancha Jesber Nº 1</option>
-</select>
-</div>
-</div>
-<!-- Fixture Grid Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-space-md">
-<!-- PARTIDO 1: FINALIZADO CLÁSICO ORUREÑO -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
-<div>
-<!-- Match Header Status -->
-<div class="flex items-center justify-between mb-space-sm">
-<span class="px-2 py-0.5 rounded bg-surface-container-high text-primary font-label-sm text-label-sm font-bold uppercase tracking-wider">
-                Finalizado
-              </span>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                Estadio Jesús Bermúdez
-              </span>
-</div>
-<div class="text-center font-label-sm text-label-sm text-outline mb-space-sm">
-              Sábado 12 Oct • 15:30 (Hora Oficial)
-            </div>
-<!-- Teams and Scoreboard Clash -->
-<div class="grid grid-cols-7 items-center gap-1 my-space-sm bg-surface-container-low/60 p-space-sm rounded-lg">
-<!-- Home Club -->
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Official club crest badge of Oruro Royal Club, the oldest football team in Bolivia, with navy blue and white diagonal sash stripes, clean vectors on white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApRtAGslrCuDvfXwf3KYnpMBuuTTEBUVW24xwd-hgQ6J4Qjzb2V6Mh9gL08_vuPGHYiaa4eRDBFA9PLr2qUYpt_uHSlRDJXBD5l3DlrggyYK_ud4ndM1QQjNmVwpYvMJFa8YeV0ZoNXMlGIlM3DB_yefUgkbqujnm_wtwX3nsmRZBqTjtc8SkaTlfX-cTScM0EEzZe3mNW9AmquD0i1P9HaZwi4-O0D20wSuP74mwGpkvT-YAVmFrAeQ"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">Oruro Royal</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Local</span>
-</div>
-<!-- Score Indicator -->
-<div class="col-span-1 flex flex-col items-center justify-center">
-<div class="bg-primary text-white font-display-lg text-headline-md font-bold px-2 py-1 rounded shadow-xs leading-none">
-                  3 — 1
-                </div>
-<span class="font-label-sm text-label-sm text-secondary font-bold mt-1">FT</span>
-</div>
-<!-- Away Club -->
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Official club emblem of Club Deportivo San José de Oruro with distinct holy V navy blue symbol and miners helmet gold details on clean emblem silhouette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDI9JO4_q9s-jEo2eFf0uLH2iefTdVEiQAnFVDNIj9ZYrQlv7wrlhZPub4UZvGBhNvVa5ObpDpePS7ktt-k7KZwHguCKHmQw9VeuNlsGQHaw_YR7xLdg7BvRb47bHD6kwfA7gmUCEoiWbkgrR2vYzqXMQ8YRiM1An0zlopOUIRbnnNmwI_NylXz-iAjaRXutvnqf20zVP_XeFAPjrmXJa31k1OpE86GaD5BMsttblbq9HyOIhz1PUUBXg"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">San José</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Visitante</span>
-</div>
-</div>
-<!-- Goleadores & Highlights Accordion Box -->
-<div class="mt-space-sm space-y-1 bg-surface-container-lowest p-2 rounded">
-<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
-<span class="flex items-center gap-1 truncate max-w-[140px]">
-<span class="material-symbols-outlined text-[14px] text-primary">sports_soccer</span>
-                  J. Torrico 24', M. Sandy 58', 81'
-                </span>
-<span class="flex items-center gap-1 truncate max-w-[120px] text-right justify-end">
-<span class="material-symbols-outlined text-[14px] text-primary">sports_soccer</span>
-                  R. Saucedo 73' (P)
-                </span>
-</div>
-<div class="flex items-center justify-between text-label-sm font-label-sm text-outline pt-1">
-<span class="flex items-center gap-1">
-<span class="w-2 h-2.5 bg-amber-400 rounded-2xs inline-block"></span> 2 Amarillas
-                </span>
-<span class="flex items-center gap-1 text-error font-bold">
-<span class="w-2 h-2.5 bg-red-600 rounded-2xs inline-block"></span> 1 Roja (88' C. Flores)
-                </span>
-</div>
-</div>
-</div>
-<!-- Card Actions / Homologation State -->
-<div class="pt-space-md mt-space-sm flex items-center justify-between">
-<span class="inline-flex items-center gap-1 text-secondary font-label-sm text-label-sm font-bold">
-<span class="material-symbols-outlined text-[16px]">verified</span>
-              Acta Homologada
+
+    <!-- Encabezado -->
+    <div class="flex flex-wrap items-center justify-between gap-space-md px-1">
+        <div class="flex items-center gap-space-sm">
+            <div class="w-2.5 h-6 bg-secondary rounded-full"></div>
+            <h2 class="font-headline-sm text-headline-sm text-primary uppercase tracking-tight">
+                Programación Oficial AFO
+            </h2>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span class="font-label-sm text-label-sm text-outline">
+                Partidos registrados:
             </span>
-<button class="px-space-sm py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md font-semibold transition-colors flex items-center gap-1" onclick="openResultadoModal('Oruro Royal', 'San José', '3 - 1')" type="button">
-<span class="material-symbols-outlined text-[16px]">assignment_turned_in</span>
-              Planilla Cerrada
-            </button>
-</div>
-</div>
-<!-- PARTIDO 2: EN VIVO (LIVE) -->
-<div class="bg-surface-container-lowest rounded-xl shadow-md hover:shadow-lg transition-shadow p-space-md flex flex-col justify-between relative overflow-hidden group ring-2 ring-secondary">
-<div class="absolute top-0 left-0 right-0 h-1.5 bg-secondary animate-pulse"></div>
-<div>
-<!-- Match Header Status -->
-<div class="flex items-center justify-between mb-space-sm">
-<span class="px-2.5 py-0.5 rounded bg-secondary text-on-secondary-fixed font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-xs">
-<span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
-                EN VIVO • 2T 68'
-              </span>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-secondary">stadium</span>
-                Complejo Vinto
-              </span>
-</div>
-<div class="text-center font-label-sm text-label-sm text-outline mb-space-sm">
-              Domingo 13 Oct • 13:30 (En disputa)
-            </div>
-<!-- Teams and Scoreboard Clash -->
-<div class="grid grid-cols-7 items-center gap-1 my-space-sm bg-surface-container-low/60 p-space-sm rounded-lg">
-<!-- Home Club -->
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Football club crest of Empresa Minera Huanuni, featuring mining drills, yellow and green emerald accents on athletic shield shield vector emblem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCiDxJwMd0RST1tmlsNIih_i6vilG0vPjMjHiNdlSj8UIp69kDttU1HWFuQCzU_ADO0bDHVO35Y53TY_hYS-l5uRW64_vCUM4lI890GC2elGa6TkAlPi_z51at0E6mAgUn64jl1qR8AGfjHIIueCE3M9KAum4EK1cQkvAggKTNvtMDW0ok0806JWtZOreDKnbMvKrYV6tQJuFxeyduEUq1eleeNxddLgREN6LSrsUWZBryGXBh3s__fg"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">EM Huanuni</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Local</span>
-</div>
-<!-- Score Indicator -->
-<div class="col-span-1 flex flex-col items-center justify-center">
-<div class="bg-secondary text-on-secondary-fixed font-display-lg text-headline-md font-extrabold px-2 py-1 rounded shadow-sm leading-none animate-pulse">
-                  2 — 2
-                </div>
-<span class="font-label-sm text-label-sm text-error font-bold mt-1">TIEMPO REAL</span>
-</div>
-<!-- Away Club -->
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Sporting badge of Deportivo Escara football club with deep blue and white royal lines on professional heraldic football crest." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-I4UwqsQVO5exslU7NZdR7v41upevDK9aH7emzxLEThZ4JvugWoebVzBomYEqmK3pI0EXe9HddwaRi7F3oPGFFHRaXRD4srVblXxNlRQHJxkdldjGbeO9t3OmO-kcu8Pm_UR-99RKx5zinlyLoyYtlT9uwVKGzt6Cb5kubpbu4wl9FLL1jK_VZk8FHmtOp1S9HAHPRChfcdzJ6sGub6f2R4GqbTtCWHdJboKLs2wtcHC0zpB6epsekw"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">Dep. Escara</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Visitante</span>
-</div>
-</div>
-<!-- Live Events Stream -->
-<div class="mt-space-sm space-y-1 bg-surface-container-lowest p-2 rounded">
-<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px] text-primary">sports_soccer</span>
-                  P. Mamani 12', 49'
-                </span>
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px] text-primary">sports_soccer</span>
-                  D. Choque 34', V. Rios 62'
-                </span>
-</div>
-<div class="flex items-center justify-center text-label-sm font-label-sm text-secondary font-bold pt-1">
-                Árbitro Central: Juan Carlos Alá (Colegio Oruro)
-              </div>
-</div>
-</div>
-<!-- Card Actions: Direct Sheet Intervention -->
-<div class="pt-space-md mt-space-sm flex items-center justify-between gap-2">
-<span class="inline-flex items-center gap-1 text-error font-label-sm text-label-sm font-bold">
-<span class="material-symbols-outlined text-[16px] animate-spin">sync</span>
-              Planilla Abierta
+            <span class="px-3 py-1 rounded-lg bg-surface-container text-primary font-bold">
+                {{ partidos_registrados|length }}
             </span>
-<button class="px-space-md py-1.5 rounded bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-bold transition-all shadow-xs flex items-center gap-1.5" onclick="openResultadoModal('EM Huanuni', 'Dep. Escara', '2 - 2')" type="button">
-<span class="material-symbols-outlined text-[16px]">edit_note</span>
-              Cargar Incidencia / Tarjetas
-            </button>
-</div>
-</div>
-<!-- PARTIDO 3: POR JUGAR (SCHEDULED) -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 left-0 right-0 h-1 bg-surface-variant"></div>
-<div>
-<!-- Match Header Status -->
-<div class="flex items-center justify-between mb-space-sm">
-<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold uppercase tracking-wider">
-                Por Jugar
-              </span>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                Cancha Jesber Nº 1
-              </span>
-</div>
-<div class="text-center font-label-sm text-label-sm text-outline mb-space-sm">
-              Domingo 13 Oct • 15:45 (Programado)
-            </div>
-<!-- Teams and Scoreboard Clash -->
-<div class="grid grid-cols-7 items-center gap-1 my-space-sm bg-surface-container-low/60 p-space-sm rounded-lg">
-<!-- Home Club -->
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Football club crest of Sur-Car Oruro with vibrant green and white geometric crest, sharp lines, football icon, high contrast badge." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzM1PjJFYlQ44pqXC7hpCIrMtNnuEsIlBjD-GvE9BSTapfjs6BcndQUP2_LjDSYhHVpF_k2ILgUY11bZDneUUB5iJ0PWcDjmul1-9wvr2s2qNyMSsE8-sJduCu0rhRl9gl9HbXxJ4eRKOodAkUVuAdLOc3-8PH1oRQ_EHKbTbDstGcxXz-8HC6U4pQ6a_ssI99J0Byf5oyQG01OCiFvwOXQVVot9ZCpmCrcUrGOTwZUY1ax2cOSYpL9w"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">Sur-Car</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Local</span>
-</div>
-<!-- VS Badge -->
-<div class="col-span-1 flex flex-col items-center justify-center">
-<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant font-headline-sm text-title-md font-bold flex items-center justify-center">
-                  VS
+        </div>
+    </div>
+
+    <!-- Tarjetas de partidos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-space-md">
+
+        {% for partido in partidos_registrados %}
+
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative overflow-hidden group">
+
+            <!-- Línea superior según estado -->
+            {% if partido.estado == 'Finalizado' %}
+                <div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+            {% elif partido.estado == 'En vivo' %}
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-secondary animate-pulse"></div>
+            {% elif partido.estado == 'Reprogramado' %}
+                <div class="absolute top-0 left-0 right-0 h-1 bg-amber-400"></div>
+            {% else %}
+                <div class="absolute top-0 left-0 right-0 h-1 bg-surface-variant"></div>
+            {% endif %}
+
+            <div>
+                <!-- Estado y escenario -->
+                <div class="flex items-center justify-between gap-2 mb-space-sm">
+
+                    {% if partido.estado == 'Finalizado' %}
+                        <span class="px-2 py-0.5 rounded bg-surface-container-high text-primary font-label-sm text-label-sm font-bold uppercase">
+                            Finalizado
+                        </span>
+                    {% elif partido.estado == 'En vivo' %}
+                        <span class="px-2.5 py-0.5 rounded bg-secondary text-on-secondary-fixed font-label-sm text-label-sm font-bold uppercase">
+                            EN VIVO
+                        </span>
+                    {% elif partido.estado == 'Reprogramado' %}
+                        <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold uppercase">
+                            Reprogramado
+                        </span>
+                    {% else %}
+                        <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold uppercase">
+                            Por jugar
+                        </span>
+                    {% endif %}
+
+                    <span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 text-right">
+                        <span class="material-symbols-outlined text-[16px] text-secondary">
+                            location_on
+                        </span>
+                        {{ partido.escenario|default:"Escenario pendiente" }}
+                    </span>
                 </div>
-</div>
-<!-- Away Club -->
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Sports badge for Club Deportivo Kala Oruro with sky blue and red traditional Bolivian association insignia design on round badge." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD34SsVSHtSspSysUMfIIZbMZLqK3x9czhaOP7RHoO6ZGMj9OLN52BxQcyWUMkKnu_LQ3nM65aMQz3fo1Qq634dAOLkAJNjiNT4U0ULWRTyQ54oGkPxAVVFfqjZ6Fq1E6IGrt64v9cayGJ_6I1cdTSAdR-nf7kCBv7ABACWfJrXcSrLy8-4CdKT4XRV9iqVr852-j9yyInGe9NFJ-UjglVLMNWSYnAShqR-VccORTyZNxWTmdOCiDbiHA"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">Deportivo Kala</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Visitante</span>
-</div>
-</div>
-<!-- Delegate Checkin Status -->
-<div class="mt-space-sm bg-surface-container-lowest p-2 rounded flex items-center justify-between text-label-sm font-label-sm text-outline">
-<span class="flex items-center gap-1 text-primary">
-<span class="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
-                Nóminas Ratificadas
-              </span>
-<span>Comisario: Prof. Félix Choque</span>
-</div>
-</div>
-<!-- Card Actions -->
-<div class="pt-space-md mt-space-sm flex items-center justify-between gap-2">
-<button class="text-secondary hover:text-primary font-label-md text-label-md font-semibold transition-colors flex items-center gap-1" type="button">
-<span class="material-symbols-outlined text-[16px]">print</span>
-              Ver Planilla Previa
-            </button>
-<button class="px-space-md py-1.5 rounded bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-bold transition-all shadow-xs flex items-center gap-1" onclick="openResultadoModal('Sur-Car', 'Deportivo Kala', '0 - 0')" type="button">
-<span class="material-symbols-outlined text-[16px]">add_task</span>
-              Iniciar Partido
-            </button>
-</div>
-</div>
-<!-- PARTIDO 4: POR JUGAR (SCHEDULED) -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 left-0 right-0 h-1 bg-surface-variant"></div>
-<div>
-<div class="flex items-center justify-between mb-space-sm">
-<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold uppercase tracking-wider">
-                Por Jugar
-              </span>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                Estadio Jesús Bermúdez
-              </span>
-</div>
-<div class="text-center font-label-sm text-label-sm text-outline mb-space-sm">
-              Domingo 13 Oct • 17:30 (Partido de Fondo)
-            </div>
-<!-- Teams and Scoreboard Clash -->
-<div class="grid grid-cols-7 items-center gap-1 my-space-sm bg-surface-container-low/60 p-space-sm rounded-lg">
-<!-- Home Club -->
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Official club crest of Club Ingenieros Oruro with engineering compass symbol and navy blue-yellow sport colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCECJ90CGG0rZJ7HWjivH0mfTYibdsD4Pi0p5-sLkKuI3XXQP4NSxywxRwhvlLPHKnXasDKIr_AHtsEvLc-B9SM5gnGns1vAPkpSugk-UCijZiQ9WMBJ6haxWVpmn8i-nbLplEbROfdKYnqejXBaQZkSJa8mSQaDw44YGZ6aV4Ht00HPs6_o5ph0OPLldVqq1hsDeeCL40a9CZDEE6_0_GkL8cuUr8uw79vmI7GluNpu5cAhobClCpXHg"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">Ingenieros</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Local</span>
-</div>
-<!-- VS Badge -->
-<div class="col-span-1 flex flex-col items-center justify-center">
-<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant font-headline-sm text-title-md font-bold flex items-center justify-center">
-                  VS
+
+                <!-- Campeonato -->
+                <div class="text-center font-label-sm text-label-sm text-secondary font-bold mb-space-sm">
+                    {% if partido.campeonato %}
+                        {{ partido.campeonato.nombre }}
+                    {% else %}
+                        Sin campeonato asignado
+                    {% endif %}
                 </div>
-</div>
-<!-- Away Club -->
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Emblem of Club Deportivo Totora Real Oruro with crimson red crest, white football elements, elegant modern vector." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjX7twIWhTQRPMU6EYsQFjgWezK6Nq0GenKM70qC6Bvg7nUolLc0W0suDXI09jRH7hD0uM-Kj6ZWGWSZxNB_25v1FktjBzipXIoyb5Qfpv5ilo_w-OsiBF7TPjNJvN-q1zzU9PZFCygsulGNbST2ZGG7zQNMu_ErRroxiF08oAQ6_qaw9t_R6w6NQOqB0fzIkPCi5aydx2Q7-oiQwpiiy771_-B5_6KUiTjkni61-E7N6FhyHAzSvrHA"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">Real Oruro</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Visitante</span>
-</div>
-</div>
-<div class="mt-space-sm bg-surface-container-lowest p-2 rounded flex items-center justify-between text-label-sm font-label-sm text-outline">
-<span class="flex items-center gap-1 text-primary">
-<span class="material-symbols-outlined text-[16px] text-secondary">security</span>
-                Dispositivo de Seguridad Policial Aprobado
-              </span>
-</div>
-</div>
-<div class="pt-space-md mt-space-sm flex items-center justify-between gap-2">
-<button class="text-secondary hover:text-primary font-label-md text-label-md font-semibold transition-colors flex items-center gap-1" type="button">
-<span class="material-symbols-outlined text-[16px]">print</span>
-              Planilla Previa
-            </button>
-<button class="px-space-md py-1.5 rounded bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-bold transition-all shadow-xs flex items-center gap-1" onclick="openResultadoModal('Ingenieros', 'Real Oruro', '0 - 0')" type="button">
-<span class="material-symbols-outlined text-[16px]">add_task</span>
-              Iniciar Partido
-            </button>
-</div>
-</div>
-<!-- PARTIDO 5: REPROGRAMADO / TELEMETRÍA -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 left-0 right-0 h-1 bg-amber-400"></div>
-<div>
-<div class="flex items-center justify-between mb-space-sm">
-<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold uppercase tracking-wider">
-                Reprogramado
-              </span>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                Cancha Jesber Nº 2
-              </span>
-</div>
-<div class="text-center font-label-sm text-label-sm text-outline mb-space-sm">
-              Miércoles 16 Oct • 14:00 (Postergado Clima)
-            </div>
-<div class="grid grid-cols-7 items-center gap-1 my-space-sm bg-surface-container-low/60 p-space-sm rounded-lg">
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Traditional football emblem of Club Deportivo Sabaya with white and green athletic colors in clean vector style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQJHlLnDduHnGWtM7vKiZ1ik_fxGCZ6vzi-ACuqIHU4bHLZrPlxAMh-dvOpsM3oyZOM3N-qXFW_qVX9Ycc-s2stVjdqGGCDWLSSF6pf6wNHJN9ndA3k0Na5Jvp8KoDdn_YJ7Lw0tq8K0GEbmiVGVHwlinZBKlUppVt5h8Ih2DOmy5EQFBDQNbeAEUgn5unitlbc2YUCqX9OjLRUFewvj1FC_z_4QC57Z6M5HQ8UmdQ5xmcvvk0HocwOQ"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">Dep. Sabaya</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Local</span>
-</div>
-<div class="col-span-1 flex flex-col items-center justify-center">
-<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant font-headline-sm text-title-md font-bold flex items-center justify-center">
-                  VS
+
+                <!-- Fecha y hora -->
+                <div class="text-center font-label-sm text-label-sm text-outline mb-space-sm">
+                    {% if partido.fecha %}
+                        {{ partido.fecha|date:"l d F Y" }} • {{ partido.fecha|date:"H:i" }}
+                    {% else %}
+                        Fecha pendiente
+                    {% endif %}
                 </div>
-</div>
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Football crest of Deportivo Shalon from Oruro with gold stars and dark violet and yellow accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu1I-KQqN0WmzcrKTVjXttRehbMatOpzCbYP78nzngihyliJ70S-RRMcjkdPumLGSdtjCdHI32G-sfpazmrWGFSovu9K7F6UHSwtc5DzAcDFhwTyfA1yMFbtFgM9wJ9FccNc6Xp_SqlK_XGPnC6MO_j4LwEpUQEqA8dZ-wdjMO3Bhi6jCPLEBa9Q28yTNcnfPSv31XLf4_fk0Vt41tCCVkGD6DEGwjKdSggmRgiEj_suXmM-KbKt1Xyg"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">Dep. Shalon</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Visitante</span>
-</div>
-</div>
-<div class="mt-space-sm bg-surface-container-lowest p-2 rounded text-label-sm font-label-sm text-outline text-center">
-              Acuerdo de partes ratificado por Comité Técnico AFO
-            </div>
-</div>
-<div class="pt-space-md mt-space-sm flex items-center justify-between">
-<span class="font-label-sm text-label-sm text-on-surface-variant">Acta Nº 88-CT</span>
-<button class="px-space-sm py-1.5 rounded bg-surface-container text-primary hover:bg-surface-container-high font-label-md text-label-md font-semibold transition-colors" type="button">
-              Modificar Programación
-            </button>
-</div>
-</div>
-<!-- PARTIDO 6: FINALIZADO / HOMOLOGADO -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
-<div>
-<div class="flex items-center justify-between mb-space-sm">
-<span class="px-2 py-0.5 rounded bg-surface-container-high text-primary font-label-sm text-label-sm font-bold uppercase tracking-wider">
-                Finalizado
-              </span>
-<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                Complejo Vinto
-              </span>
-</div>
-<div class="text-center font-label-sm text-label-sm text-outline mb-space-sm">
-              Viernes 11 Oct • 15:00 (Adelantado)
-            </div>
-<div class="grid grid-cols-7 items-center gap-1 my-space-sm bg-surface-container-low/60 p-space-sm rounded-lg">
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Football badge for San Isidro Oruro with classic green and white round crest with striped central shield." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8G9AF8dWz57RtZBX-4PSaG904DIlNFbM5z7pIk1VfrfPz4oRO0gCQrLpf6I1ypWD1j86QmL5xpcd4gGwCFyNnu4Up9qn-WkYn0JTrjVGbl5gUYxzPwlrtzPQZDRO5YAxHa6g9WeOYfbz1VI8Cf_9dneBRsIwqJ9ENO6fXTlUkQhFX9vS2C6g9_AcRSGTP2MNVLO2R9ufAPwFWM78tTICWPJR_hsteEZG9AXm4PW4Cr2FWKXtHgkXa1Q"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">San Isidro</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Local</span>
-</div>
-<div class="col-span-1 flex flex-col items-center justify-center">
-<div class="bg-primary text-white font-display-lg text-headline-md font-bold px-2 py-1 rounded shadow-xs leading-none">
-                  0 — 2
+
+                <!-- Equipos y resultado -->
+                <div class="grid grid-cols-7 items-center gap-1 my-space-sm bg-surface-container-low/60 p-space-sm rounded-lg">
+
+                    <!-- Equipo local -->
+                    <div class="col-span-3 flex flex-col items-center text-center">
+                        <div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
+                            <span class="material-symbols-outlined text-3xl text-primary">
+                                shield
+                            </span>
+                        </div>
+
+                        <span class="font-title-md text-title-md text-primary font-bold leading-tight">
+                            {% if partido.equipo_local %}
+                                {{ partido.equipo_local.nombre }}
+                            {% else %}
+                                Equipo local
+                            {% endif %}
+                        </span>
+
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">
+                            Local
+                        </span>
+                    </div>
+
+                    <!-- Marcador -->
+                    <div class="col-span-1 flex flex-col items-center justify-center">
+                        {% if partido.resultado %}
+                            <div class="bg-primary text-white font-display-lg text-headline-md font-bold px-2 py-1 rounded shadow-xs leading-none text-center">
+                                {{ partido.resultado }}
+                            </div>
+                            <span class="font-label-sm text-label-sm text-secondary font-bold mt-1">
+                                {% if partido.estado == 'Finalizado' %}
+                                    FT
+                                {% else %}
+                                    MARCADOR
+                                {% endif %}
+                            </span>
+                        {% else %}
+                            <div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant font-headline-sm text-title-md font-bold flex items-center justify-center">
+                                VS
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Equipo visitante -->
+                    <div class="col-span-3 flex flex-col items-center text-center">
+                        <div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
+                            <span class="material-symbols-outlined text-3xl text-primary">
+                                shield
+                            </span>
+                        </div>
+
+                        <span class="font-title-md text-title-md text-primary font-bold leading-tight">
+                            {% if partido.equipo_visitante %}
+                                {{ partido.equipo_visitante.nombre }}
+                            {% else %}
+                                Equipo visitante
+                            {% endif %}
+                        </span>
+
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">
+                            Visitante
+                        </span>
+                    </div>
+
                 </div>
-<span class="font-label-sm text-label-sm text-secondary font-bold mt-1">FT</span>
-</div>
-<div class="col-span-3 flex flex-col items-center text-center">
-<div class="w-14 h-14 rounded-full bg-white shadow-xs p-1 flex items-center justify-center mb-1.5 overflow-hidden">
-<img class="w-full h-full object-contain" alt="Club crest of AFIZ football club with orange, navy and white geometric shield logo." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFDNy6P2WeGn839wrqk_phZC-eHehqtCltuvuonnFdjVVIKMNOQGC7goWJFQIFTYJBscHXFW8EsL7sudTcOK-m592xF9Ix812794haNAIIc6-Ugn6l218mN39jftE8-8T_CZmzyeNI9q1gAUBxXNoyiwL4TpjJB4FZe_bDQ0ztaG45VzBbsSq6bFPHMJzYHMf-VxpaTDscpW0exClZ7HO9R33ddPterEp_h2n3R7RTL0dygZIep57g_w"/>
-</div>
-<span class="font-title-md text-title-md text-primary font-bold leading-tight">A.F.I.Z.</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Visitante</span>
-</div>
-</div>
-<div class="mt-space-sm space-y-1 bg-surface-container-lowest p-2 rounded">
-<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
-<span class="text-outline italic">Sin goles</span>
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px] text-primary">sports_soccer</span>
-                  A. Colque 41', G. Morales 79'
+
+                <!-- Información adicional -->
+                <div class="mt-space-sm bg-surface-container-lowest p-2 rounded">
+
+                    <div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
+                        <span class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px] text-primary">
+                                sports_soccer
+                            </span>
+                            Terna arbitral
+                        </span>
+                    </div>
+
+                    <div class="text-label-sm text-outline mt-1">
+                        {{ partido.terna_arbitral|default:"Sin terna arbitral asignada" }}
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="pt-space-md mt-space-sm flex items-center justify-between gap-2">
+
+                <span class="inline-flex items-center gap-1 text-secondary font-label-sm text-label-sm font-bold">
+                    <span class="material-symbols-outlined text-[16px]">
+                        {% if partido.estado == 'Finalizado' %}
+                            verified
+                        {% else %}
+                            event
+                        {% endif %}
+                    </span>
+                    {{ partido.estado|default:"Programado" }}
                 </span>
-</div>
-</div>
-</div>
-<div class="pt-space-md mt-space-sm flex items-center justify-between">
-<span class="inline-flex items-center gap-1 text-secondary font-label-sm text-label-sm font-bold">
-<span class="material-symbols-outlined text-[16px]">verified</span>
-              Acta Homologada
+
+                <span class="px-space-sm py-1.5 rounded bg-surface-container text-primary font-label-md text-label-md font-semibold">
+                    Partido AFO
+                </span>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <!-- Cuando todavía no existen partidos -->
+        <div class="col-span-full bg-surface-container-lowest rounded-xl p-10 text-center shadow-sm">
+            <span class="material-symbols-outlined text-5xl text-outline">
+                sports_soccer
             </span>
-<button class="px-space-sm py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md font-semibold transition-colors flex items-center gap-1" onclick="openResultadoModal('San Isidro', 'A.F.I.Z.', '0 - 2')" type="button">
-<span class="material-symbols-outlined text-[16px]">assignment_turned_in</span>
-              Planilla Cerrada
-            </button>
+
+            <h3 class="font-headline-sm text-headline-sm text-primary mt-3">
+                No hay partidos programados
+            </h3>
+
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+                Todavía no se registraron partidos. Utiliza el botón
+                "Programar Partido" para agregar el primero al fixture.
+            </p>
+        </div>
+
+        {% endfor %}
+
+    </div>
 </div>
-</div>
-</div>
-</div>
+{% endif %}
 <!-- VIEW 2: TABLA DE POSICIONES OFICIAL -->
 <div class="hidden space-y-space-md" id="view-posiciones">
 <!-- Table Header Indicators and Classification Keys -->
@@ -1034,9 +964,16 @@
 </div>
 </div>
 </div>
+
 <!-- MODAL 2: PROGRAMAR PARTIDO -->
 <div class="fixed inset-0 bg-primary/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-space-md" id="modal-programar">
+
+<form method="POST" action="{% url 'campeonatos' %}">
+{% csrf_token %}
+<input type="hidden" name="accion" value="programar_partido">
+
 <div class="bg-surface-container-lowest rounded-2xl shadow-xl w-full max-w-xl overflow-hidden animate-in fade-in duration-150">
+
 <div class="bg-primary text-white p-space-md flex items-center justify-between">
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-secondary text-[24px]">event_available</span>
@@ -1046,59 +983,90 @@
 <span class="material-symbols-outlined text-[24px]">close</span>
 </button>
 </div>
+
 <div class="p-space-lg space-y-space-md">
+
+<!-- CAMPEONATO -->
+<div>
+<label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Campeonato</label>
+<select name="campeonato" required class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
+<option value="">Seleccionar campeonato</option>
+{% for campeonato in campeonatos_registrados %}
+<option value="{{ campeonato.id }}">{{ campeonato.nombre }}</option>
+{% endfor %}
+</select>
+</div>
+
+<!-- EQUIPOS -->
 <div class="grid grid-cols-2 gap-space-md">
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Club Local</label>
-<select class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
-<option>Oruro Royal</option>
-<option>San José</option>
-<option>EM Huanuni</option>
-<option>Sur-Car</option>
-<option>Dep. Escara</option>
-<option>A.F.I.Z.</option>
+<select name="equipo_local" required class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
+<option value="">Seleccionar local</option>
+{% for equipo in equipos %}
+<option value="{{ equipo.id }}">{{ equipo.nombre }}{% if equipo.club %} - {{ equipo.club.nombre }}{% endif %}</option>
+{% endfor %}
 </select>
 </div>
+
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Club Visitante</label>
-<select class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
-<option>San José</option>
-<option>Real Oruro</option>
-<option>Ingenieros</option>
-<option>Deportivo Kala</option>
-<option>San Isidro</option>
+<select name="equipo_visitante" required class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
+<option value="">Seleccionar visitante</option>
+{% for equipo in equipos %}
+<option value="{{ equipo.id }}">{{ equipo.nombre }}{% if equipo.club %} - {{ equipo.club.nombre }}{% endif %}</option>
+{% endfor %}
 </select>
 </div>
 </div>
+
+<!-- FECHA Y ESCENARIO -->
 <div class="grid grid-cols-2 gap-space-md">
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Fecha y Hora</label>
-<input class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" type="datetime-local" value="2024-10-19T15:30"/>
+<input name="fecha" required class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" type="datetime-local"/>
 </div>
+
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Escenario Deportivo</label>
-<select class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
-<option>Estadio Jesús Bermúdez</option>
-<option>Complejo Deportivo Vinto</option>
-<option>Cancha Jesber Nº 1</option>
-<option>Cancha Jesber Nº 2</option>
+<select name="escenario" required class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
+<option value="">Seleccionar escenario</option>
+<option value="Estadio Jesús Bermúdez">Estadio Jesús Bermúdez</option>
+<option value="Complejo Deportivo Vinto">Complejo Deportivo Vinto</option>
+<option value="Cancha Jesber Nº 1">Cancha Jesber Nº 1</option>
+<option value="Cancha Jesber Nº 2">Cancha Jesber Nº 2</option>
 </select>
 </div>
 </div>
+
+<!-- TERNA ARBITRAL -->
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Terna Arbitral Asignada</label>
-<input class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" placeholder="Árbitro Central, Asistente 1, Asistente 2, 4to Árbitro" type="text"/>
+<input name="terna_arbitral" class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" placeholder="Árbitro Central, Asistente 1, Asistente 2, 4to Árbitro" type="text"/>
 </div>
+
 </div>
+
+<!-- BOTONES -->
 <div class="bg-surface-container-low p-space-md flex items-center justify-end gap-space-sm">
 <button class="px-space-md py-2 rounded bg-surface-container-lowest text-on-surface-variant font-title-md" onclick="closeProgramarModal()" type="button">Cancelar</button>
-<button class="px-space-lg py-2 rounded bg-primary text-on-primary font-title-md font-bold" onclick="closeProgramarModal()" type="button">Publicar en Fixture</button>
+
+<button class="px-space-lg py-2 rounded bg-primary text-on-primary font-title-md font-bold" type="submit">Publicar en Fixture</button>
 </div>
+
 </div>
+</form>
 </div>
+
 <!-- MODAL 3: NUEVO CAMPEONATO -->
 <div class="fixed inset-0 bg-primary/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-space-md" id="modal-campeonato">
+
+<form method="POST" action="{% url 'campeonatos' %}">
+{% csrf_token %}
+<input type="hidden" name="accion" value="crear_campeonato">
+
 <div class="bg-surface-container-lowest rounded-2xl shadow-xl w-full max-w-xl overflow-hidden animate-in fade-in duration-150">
+
 <div class="bg-primary text-white p-space-md flex items-center justify-between">
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-secondary text-[24px]">emoji_events</span>
@@ -1108,51 +1076,65 @@
 <span class="material-symbols-outlined text-[24px]">close</span>
 </button>
 </div>
+
 <div class="p-space-lg space-y-space-md">
+
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Nombre Oficial del Campeonato</label>
-<input class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" placeholder="Ej: Torneo Apertura Centenario AFO 2025" type="text"/>
+<input name="nombre" required class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" placeholder="Ej: Torneo Apertura Centenario AFO 2025" type="text"/>
 </div>
+
 <div class="grid grid-cols-2 gap-space-md">
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Disciplina</label>
-<select class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
-<option>Fútbol 11</option>
-<option>Futsal / Salón</option>
-<option>Fútbol Playa</option>
+<select name="disciplina" required class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
+<option value="">Seleccionar disciplina</option>
+<option value="Fútbol 11">Fútbol 11</option>
+<option value="Futsal / Salón">Futsal / Salón</option>
+<option value="Fútbol Playa">Fútbol Playa</option>
 </select>
 </div>
+
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Categoría Base</label>
-<select class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
-<option>Primera de Honor A</option>
-<option>Primera B</option>
-<option>Ascenso</option>
-<option>Juvenil Sub-19</option>
-<option>Femenino Absoluto</option>
+<select name="categoria" required class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
+<option value="">Seleccionar categoría</option>
+<option value="Primera de Honor A">Primera de Honor A</option>
+<option value="Primera B">Primera B</option>
+<option value="Ascenso">Ascenso</option>
+<option value="Juvenil Sub-19">Juvenil Sub-19</option>
+<option value="Femenino Absoluto">Femenino Absoluto</option>
 </select>
 </div>
 </div>
+
 <div class="grid grid-cols-2 gap-space-md">
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Fecha de Inicio</label>
-<input class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" type="date"/>
+<input name="fecha_inicio" class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" type="date"/>
 </div>
+
 <div>
 <label class="font-label-md text-label-md text-on-surface font-bold mb-1 block">Fecha de Conclusión</label>
-<input class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" type="date"/>
+<input name="fecha_conclusion" class="w-full h-10 px-3 bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" type="date"/>
 </div>
 </div>
+
 </div>
+
 <div class="bg-surface-container-low p-space-md flex items-center justify-end gap-space-sm">
 <button class="px-space-md py-2 rounded bg-surface-container-lowest text-on-surface-variant font-title-md" onclick="closeChampionshipModal()" type="button">Descartar</button>
-<button class="px-space-lg py-2 rounded bg-secondary text-on-secondary-fixed font-title-md font-bold" onclick="closeChampionshipModal()" type="button">Aprobar Convocatoria</button>
+
+<button class="px-space-lg py-2 rounded bg-secondary text-on-secondary-fixed font-title-md font-bold" type="submit">Aprobar Convocatoria</button>
 </div>
+
 </div>
+</form>
 </div>
 </div>
 </div>
 <script>
+
   function switchTab(tabName) {
     const fixtureView = document.getElementById('view-fixture');
     const posicionesView = document.getElementById('view-posiciones');
@@ -1186,9 +1168,16 @@
     closeResultadoModal();
   }
 
-  function openProgramarModal() {
-    document.getElementById('modal-programar').classList.remove('hidden');
-  }
+  function openProgramarModal(campeonatoId = '') {
+    const modal = document.getElementById('modal-programar');
+    modal.classList.remove('hidden');
+
+    const selector = modal.querySelector('select[name="campeonato"]');
+
+    if (selector) {
+        selector.value = campeonatoId;
+    }
+}
 
   function closeProgramarModal() {
     document.getElementById('modal-programar').classList.add('hidden');
