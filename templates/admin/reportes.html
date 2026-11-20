@@ -1,0 +1,53 @@
+{% extends "base_admin.html" %}
+{% block nav_activo %}reportes{% endblock %}
+
+{% block contenido %}
+<div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+  {% for clave, reporte in reportes %}
+    <article class="flex flex-col rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+      <div class="flex items-start justify-between gap-3">
+        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary/5 text-primary">
+          <span class="material-symbols-outlined text-[20px]">
+            {% if clave == 'clubes' %}shield
+            {% elif clave == 'equipos' %}groups
+            {% elif clave == 'deportistas' %}person_search
+            {% elif clave == 'campeonatos' %}emoji_events
+            {% elif clave == 'inscripciones' %}fact_check
+            {% elif clave == 'partidos' %}sports_soccer
+            {% elif clave == 'arbitros' %}sports
+            {% elif clave == 'sanciones' %}gavel
+            {% else %}payments{% endif %}
+          </span>
+        </span>
+        <span class="rounded-md bg-secondary-fixed/50 px-2 py-0.5 text-[10px] font-bold text-secondary">{{ reporte.filas|length }} fila{{ reporte.filas|length|pluralize:"s" }}</span>
+      </div>
+
+      <h2 class="mt-3 text-sm font-bold text-on-surface">{{ reporte.titulo }}</h2>
+      <p class="mt-1 flex-1 text-xs leading-5 text-on-surface-variant">
+        {% if clave == 'clubes' %}Padrón institucional con estado de afiliación y estructura deportiva.
+        {% elif clave == 'equipos' %}Equipos por club, categoría, temporada y entrenador.
+        {% elif clave == 'deportistas' %}Fichajes con datos personales, club, equipo y situación federativa.
+        {% elif clave == 'campeonatos' %}Torneos, modalidad, fechas, participantes y partidos.
+        {% elif clave == 'inscripciones' %}Inscripciones por campeonato con su estado y observaciones.
+        {% elif clave == 'partidos' %}Fixture con marcadores, escenarios y estados.
+        {% elif clave == 'arbitros' %}Plantel arbitral con licencia, especialidad y partidos dirigidos.
+        {% elif clave == 'sanciones' %}Resoluciones del tribunal de penas y su vigencia.
+        {% else %}Movimientos de caja, comprobantes y saldos por estado.{% endif %}
+      </p>
+
+      <a href="{% url 'reporte_detalle' clave %}"
+         class="mt-3 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-bold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[16px]">table_view</span>
+        Ver reporte
+      </a>
+    </article>
+  {% endfor %}
+</div>
+
+<div class="mt-4 rounded-xl border border-surface-container bg-surface-container-lowest p-4 text-xs leading-5 text-on-surface-variant shadow-sm">
+  <p class="flex items-start gap-2">
+    <span class="material-symbols-outlined text-[18px] text-secondary">info</span>
+    <span>Todos los reportes se generan con información real de la base institucional. Cada reporte permite filtrar, imprimir y exportar a CSV compatible con Excel.</span>
+  </p>
+</div>
+{% endblock %}

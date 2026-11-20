@@ -1,0 +1,104 @@
+{% load static afo_extras %}
+<!DOCTYPE html>
+<html lang="es">
+<!-- Comprobante imprimible de tesorería · AFO Oruro. -->
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Comprobante {{ pago.comprobante|default:pago.pk }} | AFO Oruro</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="{% static 'js/tailwind-config.js' %}"></script>
+<style>
+  @media print {
+    .no-print { display: none !important; }
+    body { background: #fff !important; }
+    .comprobante { box-shadow: none !important; border: 1px solid #c4c6d2 !important; }
+  }
+</style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<main class="mx-auto w-full max-w-3xl px-4 py-8">
+
+  <div class="no-print mb-4 flex flex-wrap items-center justify-between gap-2">
+    <a href="{% url 'tesoreria' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-on-surface-variant transition hover:bg-surface-container">
+      <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+      Volver a tesorería
+    </a>
+    <button type="button" onclick="window.print()" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">print</span>
+      Imprimir comprobante
+    </button>
+  </div>
+
+  <article class="comprobante overflow-hidden rounded-xl border border-surface-container bg-white shadow-sm">
+    <header class="flex flex-col gap-3 border-b-2 border-primary px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3">
+        <span class="grid h-12 w-12 place-items-center rounded-lg bg-primary text-sm font-bold text-on-primary">AFO</span>
+        <div>
+          <p class="font-headline-sm text-base font-bold text-primary">Asociación de Fútbol Oruro</p>
+          <p class="text-[11px] text-on-surface-variant">Sistema de Gestión Deportiva · Tesorería institucional</p>
+        </div>
+      </div>
+      <div class="text-left sm:text-right">
+        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-outline">Comprobante de pago</p>
+        <p class="text-lg font-bold text-primary">N.º {{ pago.comprobante|default:pago.pk }}</p>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 gap-4 px-6 py-5 sm:grid-cols-2">
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Fecha de emisión</p>
+        <p class="mt-1 text-sm font-semibold text-on-surface">{{ pago.fecha|date:"d/m/Y H:i"|default:emitido|date:"d/m/Y H:i" }}</p>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Estado del pago</p>
+        <p class="mt-1"><span class="inline-flex rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.04em] {{ pago.estado|estado_clase }}">{{ pago.get_estado_display }}</span></p>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Club</p>
+        <p class="mt-1 text-sm font-semibold text-on-surface">{{ pago.club.nombre|default:"Sin club asociado" }}</p>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Deportista / responsable</p>
+        <p class="mt-1 text-sm font-semibold text-on-surface">{{ pago.deportista|default:"No especificado" }}</p>
+      </div>
+      <div class="sm:col-span-2">
+        <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Concepto</p>
+        <p class="mt-1 text-sm font-semibold text-on-surface">{{ pago.tipo|default:"Pago institucional" }}</p>
+      </div>
+    </div>
+
+    <div class="mx-6 mb-5 rounded-lg bg-primary px-5 py-4 text-on-primary">
+      <div class="flex items-center justify-between gap-3">
+        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-primary-fixed">Monto total</p>
+        <p class="text-2xl font-bold">Bs {{ pago.monto|floatformat:2|default:"0,00" }}</p>
+      </div>
+    </div>
+
+    <div class="border-t border-surface-container px-6 py-4">
+      <p class="text-[10px] leading-5 text-on-surface-variant">
+        Documento emitido por el Sistema de Gestión Deportiva de la Asociación de Fútbol Oruro.
+        El pago se registra en la caja institucional y queda respaldado por el historial de operaciones.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 border-t border-surface-container px-6 py-8 sm:grid-cols-2">
+      <div class="text-center">
+        <div class="mx-auto w-48 border-t border-on-surface-variant pt-1.5 text-[10px] text-on-surface-variant">Tesorero / Finanzas</div>
+      </div>
+      <div class="text-center">
+        <div class="mx-auto w-48 border-t border-on-surface-variant pt-1.5 text-[10px] text-on-surface-variant">Sello institucional</div>
+      </div>
+    </div>
+  </article>
+
+  <p class="no-print mt-4 text-center text-[11px] text-on-surface-variant">Emitido el {{ emitido|date:"d/m/Y H:i" }} · {{ usuario_nombre }}</p>
+</main>
+</body>
+</html>

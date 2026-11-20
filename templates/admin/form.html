@@ -1,0 +1,143 @@
+{% extends "base_admin.html" %}
+{% load static afo_extras %}
+{% block nav_activo %}{{ nav_activo|default:'' }}{% endblock %}
+
+{% block acciones %}
+  <a href="{{ cancelar_url }}"
+     class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-on-surface-variant transition hover:bg-surface-container">
+    <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+    Cancelar
+  </a>
+{% endblock %}
+
+{% block contenido %}
+<form method="post" novalidate data-afo-form class="mx-auto w-full max-w-4xl">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div role="alert" class="afo-alert-error mb-4 flex items-start gap-2.5 rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm text-on-error-container">
+      <span class="material-symbols-outlined mt-0.5 text-[18px]">error</span>
+      <div>
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="afo-form-card relative rounded-2xl border border-surface-container bg-surface-container-lowest shadow-sm"
+       data-form-card data-no-anim>
+
+    <!-- ===================== ENCABEZADO DE LA PLANILLA ===================== -->
+    <div class="afo-form-hero relative overflow-hidden rounded-t-2xl border-b border-surface-container px-5 py-6 sm:px-7" data-reveal>
+      <div class="afo-form-hero-glow" aria-hidden="true"></div>
+
+      <div class="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-start gap-4">
+          <span class="afo-form-icon" aria-hidden="true">
+            <span class="material-symbols-outlined">{{ icono|default:"edit_note" }}</span>
+          </span>
+          <div class="min-w-0">
+            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-secondary">
+              Planilla de registro
+            </p>
+            <h2 class="mt-1 font-headline-sm text-lg font-bold leading-tight text-on-surface sm:text-xl">
+              {{ titulo }}
+            </h2>
+            <p class="mt-1 max-w-xl text-xs leading-5 text-on-surface-variant sm:text-sm">
+              {{ subtitulo }}
+            </p>
+          </div>
+        </div>
+
+        <div class="afo-progress-chip" data-form-progress-wrap>
+          <div class="flex items-center justify-between gap-3 text-[10.5px] font-semibold text-on-surface-variant">
+            <span>Campos obligatorios</span>
+            <span class="text-primary">
+              <span data-form-progress-label>0%</span>
+              <span class="text-on-surface-variant">·</span>
+              <span data-form-progress-count>0 de 0</span>
+            </span>
+          </div>
+          <div class="afo-progress-track" role="presentation">
+            <span data-form-progress></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== CAMPOS ===================== -->
+    <div class="grid grid-cols-1 gap-x-5 gap-y-4 p-4 sm:grid-cols-2 sm:p-6">
+      {% for field in form %}
+        {% if field.field.widget.input_type == 'checkbox' %}
+          <div class="afo-field afo-check-card flex items-start gap-3 rounded-lg border border-surface-container bg-surface-container-low px-3.5 py-3 sm:col-span-2" data-reveal>
+            <span class="mt-0.5">{{ field }}</span>
+            <div class="min-w-0">
+              <label for="{{ field.id_for_label }}" class="block cursor-pointer text-sm font-semibold text-on-surface">
+                {{ field.label }}
+              </label>
+              {% if field.help_text %}
+                <p class="mt-0.5 text-[11px] leading-4 text-on-surface-variant">{{ field.help_text }}</p>
+              {% endif %}
+              {% for error in field.errors %}
+                <p class="mt-1.5 flex items-start gap-1 text-[11px] font-semibold text-error">
+                  <span class="material-symbols-outlined text-[14px] leading-4">error</span>
+                  <span>{{ error }}</span>
+                </p>
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          <div class="afo-field {% if field.name == 'direccion' or field.name == 'observaciones' or field.name == 'reglamento' or field.name == 'descripcion' or field.name == 'foto_url' or field.name == 'logo_url' or field.name == 'historial' %}sm:col-span-2{% endif %}" data-reveal>
+            <label for="{{ field.id_for_label }}" class="mb-1.5 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.08em] text-on-surface-variant">
+              <span>{{ field.label }}</span>
+              {% if field.field.required %}
+                <span class="text-[13px] leading-none text-error" aria-hidden="true">*</span>
+              {% endif %}
+            </label>
+            {{ field }}
+            {% if field.help_text %}
+              <p class="mt-1.5 flex items-start gap-1 text-[11px] leading-4 text-on-surface-variant">
+                <span class="material-symbols-outlined text-[13px] leading-4 text-outline">info</span>
+                <span>{{ field.help_text }}</span>
+              </p>
+            {% endif %}
+            {% for error in field.errors %}
+              <p class="mt-1.5 flex items-start gap-1 text-[11px] font-semibold text-error">
+                <span class="material-symbols-outlined text-[14px] leading-4">error</span>
+                <span>{{ error }}</span>
+              </p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- ===================== ACCIONES ===================== -->
+    <div class="afo-form-actions rounded-b-2xl" data-reveal>
+      <div class="flex flex-wrap items-center gap-2.5">
+        <span class="afo-dirty-chip" data-form-dirty aria-hidden="true">
+          Cambios sin guardar
+        </span>
+        <p class="text-[11px] leading-4 text-on-surface-variant">
+          Los campos con <span class="font-bold text-error">*</span> son obligatorios.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <a href="{{ cancelar_url }}"
+           class="inline-flex h-10 items-center rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-on-surface-variant transition hover:bg-surface-container">
+          Cancelar
+        </a>
+        <button type="submit" data-form-submit
+                class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-on-primary shadow-sm">
+          <span class="material-symbols-outlined text-[18px]" data-submit-icon>save</span>
+          <span data-submit-label>{{ guardar_texto|default:"Guardar cambios" }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static_v 'js/forms.js' %}"></script>
+{% endblock %}

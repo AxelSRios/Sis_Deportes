@@ -1,0 +1,220 @@
+{% load static afo_extras %}
+<!DOCTYPE html>
+<html lang="es">
+<!-- Sistema de Gestión Deportiva AFO · Oruro — ficha oficial de partido. -->
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{{ partido.equipo_local.nombre|default:"Partido" }} vs {{ partido.equipo_visitante.nombre|default:"Partido" }} | AFO Oruro</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="{% static 'js/tailwind-config.js' %}"></script>
+</head>
+
+<body class="bg-surface text-on-surface antialiased" data-page="campeonatos" data-shell="true">
+<div>
+<main class="w-full bg-surface">
+<div class="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-5 py-6 pb-12 sm:px-8">
+
+  <!-- Migas -->
+  <nav class="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-on-surface-variant" aria-label="Ruta de navegación">
+    <a href="{% url 'panel' %}" class="transition hover:text-primary">Panel General</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url 'campeonatos' %}" class="transition hover:text-primary">Campeonatos y Fixture</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <span class="text-primary">Ficha de partido</span>
+  </nav>
+
+  <!-- Marcador principal -->
+  <section class="overflow-hidden rounded-2xl border border-surface-container bg-primary text-on-primary shadow-sm">
+    <div class="flex flex-col gap-2 border-b border-white/10 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-secondary-fixed">
+          {{ partido.campeonato.nombre|default:"Partido oficial A.F.O." }}
+        </p>
+        <p class="mt-0.5 text-xs text-primary-fixed/80">
+          {{ partido.fecha|date:"l d \d\e F \d\e Y"|default:"Fecha por confirmar" }}
+          {% if partido.fecha %}· {{ partido.fecha|time:"H:i" }}{% endif %}
+        </p>
+      </div>
+      <span class="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] backdrop-blur-md">
+        <span class="h-1.5 w-1.5 rounded-full bg-secondary-fixed"></span>
+        {{ partido.estado|default:"Programado" }}
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 items-center gap-4 px-6 py-7 sm:grid-cols-3">
+      <div class="flex flex-col items-center gap-2 text-center">
+        <span class="grid h-14 w-14 place-items-center rounded-2xl bg-white/10 text-lg font-bold">
+          {{ partido.equipo_local.nombre|default:"Por definir"|initials }}
+        </span>
+        <p class="text-base font-bold leading-tight">{{ partido.equipo_local.nombre|default:"Por definir" }}</p>
+        <p class="text-[11px] text-primary-fixed/70">{{ partido.equipo_local.club.nombre|default:"Club por definir" }}</p>
+      </div>
+
+      <div class="text-center">
+        {% if marcador %}
+          <p class="text-4xl font-bold tracking-tight text-white">{{ marcador.local }} <span class="text-secondary-fixed">-</span> {{ marcador.visitante }}</p>
+          <p class="mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-fixed">Marcador final</p>
+        {% else %}
+          <p class="text-2xl font-bold tracking-tight text-secondary-fixed">VS</p>
+          <p class="mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-primary-fixed/70">
+            {% if partido.resultado %}Resultado registrado{% else %}Pendiente de marcador{% endif %}
+          </p>
+        {% endif %}
+      </div>
+
+      <div class="flex flex-col items-center gap-2 text-center">
+        <span class="grid h-14 w-14 place-items-center rounded-2xl bg-secondary text-lg font-bold text-on-secondary">
+          {{ partido.equipo_visitante.nombre|default:"Por definir"|initials }}
+        </span>
+        <p class="text-base font-bold leading-tight">{{ partido.equipo_visitante.nombre|default:"Por definir" }}</p>
+        <p class="text-[11px] text-primary-fixed/70">{{ partido.equipo_visitante.club.nombre|default:"Club por definir" }}</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+
+    <!-- Detalle operativo -->
+    <section class="rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm lg:col-span-2">
+      <div class="border-b border-surface-container p-4">
+        <h2 class="font-headline-sm text-lg font-bold text-on-surface">Datos del encuentro</h2>
+        <p class="mt-0.5 text-xs text-on-surface-variant">Información registrada en el fixture oficial.</p>
+      </div>
+
+      <dl class="grid grid-cols-1 divide-y divide-surface-container sm:grid-cols-2 sm:divide-y-0">
+        <div class="border-surface-container p-4 sm:border-b">
+          <dt class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Campeonato</dt>
+          <dd class="mt-1 text-sm font-semibold text-on-surface">{{ partido.campeonato.nombre|default:"Sin campeonato asignado" }}</dd>
+          <dd class="text-[11px] text-on-surface-variant">
+            {{ partido.campeonato.disciplina|default:"Disciplina sin definir" }}
+            {% if partido.campeonato.categoria %}· {{ partido.campeonato.categoria.nombre }}{% endif %}
+          </dd>
+        </div>
+
+        <div class="p-4 sm:border-b">
+          <dt class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Fecha y hora</dt>
+          <dd class="mt-1 text-sm font-semibold text-on-surface">{{ partido.fecha|date:"d/m/Y"|default:"Por confirmar" }}</dd>
+          <dd class="text-[11px] text-on-surface-variant">{{ partido.fecha|time:"H:i"|default:"—" }} · Hora local</dd>
+        </div>
+
+        <div class="border-surface-container p-4 sm:border-r">
+          <dt class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Escenario</dt>
+          <dd class="mt-1 text-sm font-semibold text-on-surface">{{ partido.escenario|default:"Por confirmar" }}</dd>
+          <dd class="text-[11px] text-on-surface-variant">Sede oficial del encuentro.</dd>
+        </div>
+
+        <div class="p-4">
+          <dt class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Estado</dt>
+          <dd class="mt-1 text-sm font-semibold text-on-surface">{{ partido.estado|default:"Programado" }}</dd>
+          <dd class="text-[11px] text-on-surface-variant">Situación administrativa del partido.</dd>
+        </div>
+
+        <div class="border-surface-container p-4 sm:border-r sm:border-t">
+          <dt class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Resultado registrado</dt>
+          <dd class="mt-1 text-sm font-semibold text-on-surface">{{ partido.resultado|default:"Sin marcador registrado" }}</dd>
+        </div>
+
+        <div class="p-4 sm:border-t">
+          <dt class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Terna arbitral</dt>
+          <dd class="mt-1 text-sm font-semibold text-on-surface">{{ partido.terna_arbitral|default:"Sin terna asignada" }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- Árbitros asignados -->
+    <section class="rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+      <div class="border-b border-surface-container p-4">
+        <h2 class="font-headline-sm text-lg font-bold text-on-surface">Designaciones</h2>
+        <p class="mt-0.5 text-xs text-on-surface-variant">Árbitros vinculados al partido.</p>
+      </div>
+
+      {% if asignaciones %}
+        <ul class="divide-y divide-surface-container">
+          {% for asignacion in asignaciones %}
+            <li class="flex items-start gap-3 px-4 py-3">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/5 text-primary">
+                <span class="material-symbols-outlined text-[18px]">sports</span>
+              </span>
+              <div class="min-w-0">
+                <p class="truncate text-sm font-semibold text-on-surface">
+                  {{ asignacion.arbitro.apellido|default:"" }}{% if asignacion.arbitro %}, {% endif %}{{ asignacion.arbitro.nombre|default:"Árbitro sin asignar" }}
+                </p>
+                <p class="text-[11px] text-on-surface-variant">
+                  {% if asignacion.arbitro %}
+                    {{ asignacion.arbitro.get_especialidad_display }} · {{ asignacion.arbitro.get_categoria_display }}
+                    {% if asignacion.arbitro.codigo %}· {{ asignacion.arbitro.codigo }}{% endif %}
+                  {% else %}
+                    Designación sin árbitro vinculado
+                  {% endif %}
+                </p>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="px-4 py-8 text-center">
+          <span class="material-symbols-outlined text-3xl text-outline">sports_off</span>
+          <p class="mt-2 text-sm font-semibold text-on-surface">Sin designaciones registradas</p>
+          <p class="mx-auto mt-1 max-w-xs text-xs leading-5 text-on-surface-variant">
+            La terna arbitral se asigna desde Arbitraje y Designaciones.
+          </p>
+          <a href="{% url 'arbitraje' %}" class="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-surface-container px-3 py-1.5 text-xs font-bold text-primary transition hover:bg-primary/5">
+            <span class="material-symbols-outlined text-[16px]">sports</span>
+            Ir a designaciones
+          </a>
+        </div>
+      {% endif %}
+    </section>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-2">
+    <a href="{% url 'partidos' %}" class="inline-flex items-center gap-1.5 rounded-lg border border-surface-container bg-surface-container-lowest px-4 py-2 text-xs font-bold text-primary transition hover:bg-primary/5">
+      <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+      Volver al fixture
+    </a>
+    {% if puede_editar_partido %}
+      <a href="{% url 'partido_editar' partido.pk %}" class="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[16px]">scoreboard</span>
+        Editar o registrar resultado
+      </a>
+    {% endif %}
+    {% if puede_editar_asignaciones %}
+      <a href="{% url 'asignacion_crear' %}?partido={{ partido.pk }}" class="inline-flex items-center gap-1.5 rounded-lg border border-surface-container bg-surface-container-lowest px-4 py-2 text-xs font-bold text-secondary transition hover:bg-secondary/5">
+        <span class="material-symbols-outlined text-[16px]">assignment_ind</span>
+        Designar árbitro
+      </a>
+    {% endif %}
+    <a href="{% url 'campeonatos' %}" class="inline-flex items-center gap-1.5 rounded-lg border border-surface-container bg-surface-container-lowest px-4 py-2 text-xs font-bold text-primary transition hover:bg-primary/5">
+      <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+      Ver campeonatos
+    </a>
+  </div>
+
+</div>
+</main>
+</div>
+
+<script>
+  window.AFO_URLS = {
+    panel: "{% url 'panel' %}",
+    clubes: "{% url 'clubes' %}",
+    campeonatos: "{% url 'campeonatos' %}",
+    arbitraje: "{% url 'arbitraje' %}",
+    deportistas: "{% url 'deportistas' %}",
+    tesoreria: "{% url 'tesoreria' %}",
+    auditoria: "{% url 'auditoria' %}",
+    logout: "{% url 'logout' %}",
+    username: "{{ request.user.get_full_name|default:request.user.username|escapejs }}",
+    role: "{{ rol_label|default:'Usuario institucional'|escapejs }}"
+  };
+</script>
+<script src="{% static_v 'js/shell.js' %}"></script>
+</body>
+</html>

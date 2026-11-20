@@ -111,6 +111,19 @@ body[data-shell="true"] {
   transition: background .15s ease, color .15s ease, box-shadow .15s ease;
 }
 
+.app-nav-group-label {
+  margin: 14px 12px 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #747782;
+}
+
+.app-nav-group-label:first-child { margin-top: 0; }
+
+.app-user { text-decoration: none; color: inherit; }
+
 .app-nav-item:hover {
   background: #eff4ff;
   color: #002b6d;
@@ -404,4 +417,626 @@ body[data-shell="true"] {
     body.app-shell-open .app-sidebar-backdrop {
         display: block !important;
     }
+}
+
+/* ============================================================
+   SISTEMA DE MOVIMIENTO AFO
+   Animaciones y microinteracciones de la consola y del acceso.
+   Todo respeta «prefers-reduced-motion» y se desactiva al imprimir.
+   ============================================================ */
+
+:root {
+  --afo-ease: cubic-bezier(.22, .68, 0, 1);
+  --afo-ease-out: cubic-bezier(.16, 1, .3, 1);
+  --afo-ease-spring: cubic-bezier(.34, 1.45, .64, 1);
+  --afo-fast: .18s;
+  --afo-base: .32s;
+  --afo-slow: .55s;
+  --afo-ring: 0 0 0 4px rgba(59, 92, 165, .14);
+  --afo-shadow-hover: 0 22px 46px -24px rgba(0, 43, 109, .38);
+}
+
+html { scroll-behavior: smooth; }
+
+/* ---------- Entrada de página ---------- */
+@keyframes afo-page-in {
+  from { opacity: 0; transform: translateY(9px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes afo-header-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+main { animation: afo-page-in var(--afo-slow) var(--afo-ease-out) both; }
+main > header,
+main header:first-of-type { animation: afo-header-in .5s var(--afo-ease-out) both; }
+
+/* ---------- Barra de progreso de navegación ---------- */
+#afo-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 10000;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  background: linear-gradient(90deg, #002b6d 0%, #00677f 52%, #77d3f2 100%);
+  box-shadow: 0 0 14px rgba(119, 211, 242, .85);
+  transition: transform .25s ease, opacity .2s ease;
+}
+
+#afo-progress.is-active {
+  opacity: 1;
+  transform: scaleX(.82);
+  transition: transform 2.6s cubic-bezier(.08, .72, .18, 1), opacity .18s ease;
+}
+
+#afo-progress.is-done {
+  opacity: 0;
+  transform: scaleX(1);
+  transition: transform .22s ease, opacity .35s ease .08s;
+}
+
+/* ---------- Revelado progresivo ---------- */
+.afo-js .afo-reveal {
+  opacity: 0;
+  transform: translateY(16px) scale(.995);
+  transition: opacity .62s var(--afo-ease-out), transform .62s var(--afo-ease-out);
+  transition-delay: calc(var(--afo-i, 0) * 45ms);
+  will-change: opacity, transform;
+}
+
+.afo-js .afo-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.afo-js .afo-reveal.is-settled {
+  transition-delay: 0ms;
+  transition-duration: var(--afo-base);
+  will-change: auto;
+}
+
+/* Filas de tabla */
+.afo-js .afo-row {
+  opacity: 0;
+  transform: translateY(7px);
+  transition: opacity .42s var(--afo-ease-out), transform .42s var(--afo-ease-out);
+  transition-delay: calc(var(--afo-row-i, 0) * 30ms);
+}
+
+.afo-js .afo-row.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Tarjetas con elevación ---------- */
+.afo-js .afo-lift.is-settled {
+  transition:
+    transform var(--afo-base) var(--afo-ease),
+    box-shadow var(--afo-base) ease,
+    border-color var(--afo-base) ease;
+}
+
+@media (hover: hover) {
+  .afo-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--afo-shadow-hover);
+    border-color: rgba(59, 92, 165, .28);
+  }
+
+  .afo-lift:focus-within {
+    transform: translateY(-2px);
+    box-shadow: var(--afo-shadow-hover);
+  }
+}
+
+/* ---------- Botones ---------- */
+a[class~="bg-primary"],
+button[class~="bg-primary"],
+.auth-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform var(--afo-fast) var(--afo-ease),
+    box-shadow var(--afo-fast) ease,
+    background-color var(--afo-fast) ease;
+}
+
+a[class~="bg-primary"]::after,
+button[class~="bg-primary"]::after,
+.auth-btn::after {
+  content: "";
+  position: absolute;
+  inset: -60% -80%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 38%,
+    rgba(255, 255, 255, .30) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%) rotate(8deg);
+  transition: transform .85s var(--afo-ease);
+}
+
+a[class~="bg-primary"]:hover::after,
+button[class~="bg-primary"]:hover::after,
+.auth-btn:hover::after {
+  transform: translateX(130%) rotate(8deg);
+}
+
+a[class~="bg-primary"]:active,
+button[class~="bg-primary"]:active,
+.auth-btn:active {
+  transform: translateY(1px) scale(.99);
+}
+
+button:not(:disabled):active,
+a[class~="rounded-lg"]:active {
+  transform: translateY(1px) scale(.995);
+}
+
+button:disabled { cursor: not-allowed; opacity: .7; }
+
+/* Onda al pulsar */
+.afo-rippling {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.afo-ripple {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: currentColor;
+  opacity: .25;
+  transform: scale(0);
+  animation: afo-ripple-out .62s ease-out forwards;
+}
+
+@keyframes afo-ripple-out {
+  to { transform: scale(1); opacity: 0; }
+}
+
+/* ---------- Campos de formulario ---------- */
+main form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]),
+main form select,
+main form textarea {
+  transition:
+    border-color var(--afo-fast) ease,
+    box-shadow .26s ease,
+    background-color .26s ease;
+}
+
+main form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):hover,
+main form select:hover,
+main form textarea:hover {
+  border-color: rgba(59, 92, 165, .42);
+}
+
+main form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):focus,
+main form select:focus,
+main form textarea:focus {
+  border-color: #3b5ca5 !important;
+  background-color: #ffffff;
+  box-shadow: var(--afo-ring), 0 12px 26px -22px rgba(0, 43, 109, .75);
+  outline: none;
+}
+
+main form select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23434651' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .7rem center;
+  background-size: 16px 16px;
+  padding-right: 2.15rem;
+}
+
+.afo-field {
+  position: relative;
+  transition: transform var(--afo-base) var(--afo-ease);
+}
+
+.afo-field label {
+  transition: color var(--afo-fast) ease;
+}
+
+.afo-field.afo-field-focus label {
+  color: #002b6d;
+}
+
+/* Error de validación */
+@keyframes afo-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}
+
+.afo-field-error {
+  animation: afo-shake .48s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+.afo-field-error input,
+.afo-field-error select,
+.afo-field-error textarea {
+  border-color: #ba1a1a !important;
+  background-color: #fff8f7 !important;
+  box-shadow: 0 0 0 4px rgba(186, 26, 26, .10) !important;
+}
+
+/* Tarjeta de casilla */
+.afo-check-card {
+  transition:
+    border-color var(--afo-fast) ease,
+    background-color var(--afo-fast) ease,
+    transform var(--afo-fast) var(--afo-ease);
+}
+
+.afo-check-card:hover {
+  border-color: rgba(59, 92, 165, .35);
+  background-color: #eff4ff;
+}
+
+.afo-check-card input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #002b6d;
+}
+
+/* ---------- Tablas ---------- */
+main table thead th {
+  transition: color var(--afo-fast) ease;
+}
+
+main table tbody tr {
+  transition: background-color var(--afo-fast) ease, box-shadow var(--afo-fast) ease;
+}
+
+@media (hover: hover) {
+  main table tbody tr:hover {
+    box-shadow: inset 3px 0 0 #3b5ca5;
+  }
+}
+
+/* ---------- Mensajes y alertas ---------- */
+@keyframes afo-msg-in {
+  from { opacity: 0; transform: translateY(-10px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+main [role="status"],
+main [role="alert"],
+.afo-alert-error {
+  animation: afo-msg-in .45s var(--afo-ease-spring) both;
+}
+
+/* ---------- Diálogos ---------- */
+@keyframes afo-dialog-in {
+  from { opacity: 0; transform: translateY(14px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes afo-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+dialog[open] {
+  animation: afo-dialog-in .34s var(--afo-ease-spring) both;
+}
+
+dialog[open]::backdrop {
+  animation: afo-backdrop-in .25s ease both;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+/* ---------- Barra lateral ---------- */
+.app-nav-item {
+  position: relative;
+  overflow: hidden;
+  transition:
+    background-color var(--afo-fast) ease,
+    color var(--afo-fast) ease,
+    transform var(--afo-fast) var(--afo-ease),
+    box-shadow var(--afo-fast) ease;
+}
+
+.app-nav-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, #b6ebff, #77d3f2);
+  transform: translateY(-50%);
+  transition: height .28s var(--afo-ease-spring);
+}
+
+.app-nav-item-active::before { height: 22px; }
+
+.app-nav-item .app-nav-icon {
+  transition: transform .28s var(--afo-ease-spring), color var(--afo-fast) ease;
+}
+
+@media (hover: hover) {
+  .app-nav-item:hover { transform: translateX(2px); }
+  .app-nav-item:hover .app-nav-icon { transform: scale(1.14) rotate(-5deg); }
+  .app-nav-item-active:hover { transform: none; }
+}
+
+.app-sidebar-crest {
+  transition: transform .35s var(--afo-ease-spring), box-shadow .35s ease;
+}
+
+.app-sidebar-head:hover .app-sidebar-crest {
+  transform: rotate(-5deg) scale(1.05);
+  box-shadow: 0 10px 22px -10px rgba(0, 43, 109, .45);
+}
+
+/* ---------- Barra superior ---------- */
+.app-shell-topbar {
+  transition: box-shadow var(--afo-base) ease, background-color var(--afo-base) ease;
+}
+
+.app-shell-topbar.is-scrolled {
+  background: rgba(248, 249, 255, .97);
+  box-shadow: 0 14px 34px -26px rgba(0, 43, 109, .55);
+}
+
+.app-search {
+  transition:
+    width var(--afo-base) var(--afo-ease),
+    border-color var(--afo-fast) ease,
+    background-color var(--afo-fast) ease,
+    box-shadow .25s ease;
+}
+
+.app-search:focus-within {
+  box-shadow: var(--afo-ring);
+}
+
+@media (min-width: 1280px) {
+  .app-search:focus-within { width: 300px; }
+}
+
+.app-avatar {
+  transition: transform .3s var(--afo-ease-spring), box-shadow .3s ease;
+}
+
+.app-user:hover .app-avatar {
+  transform: scale(1.06) rotate(-3deg);
+  box-shadow: 0 8px 20px -10px rgba(0, 43, 109, .6);
+}
+
+.app-topbar-burger:active { transform: scale(.94); }
+
+/* ---------- Planilla de registro ---------- */
+.afo-form-hero {
+  background:
+    radial-gradient(120% 160% at 100% 0%, rgba(119, 211, 242, .22) 0%, transparent 46%),
+    radial-gradient(110% 150% at 0% 100%, rgba(0, 103, 127, .12) 0%, transparent 52%),
+    linear-gradient(135deg, #f8f9ff 0%, #eff4ff 100%);
+}
+
+.afo-form-hero-glow {
+  position: absolute;
+  right: -70px;
+  top: -90px;
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(119, 211, 242, .38), transparent 68%);
+  pointer-events: none;
+  animation: afo-float-orb 9s ease-in-out infinite;
+}
+
+@keyframes afo-float-orb {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-14px, 12px, 0) scale(1.07); }
+}
+
+.afo-form-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  color: #ffffff;
+  background: linear-gradient(145deg, #002b6d, #1f438b 62%, #00677f);
+  box-shadow: 0 14px 30px -14px rgba(0, 43, 109, .65);
+  transition: transform .35s var(--afo-ease-spring);
+}
+
+.afo-form-icon .material-symbols-outlined { font-size: 26px; }
+
+.afo-form-card:hover .afo-form-icon { transform: rotate(-4deg) scale(1.05); }
+
+.afo-progress-chip {
+  min-width: 190px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(59, 92, 165, .18);
+  background: rgba(255, 255, 255, .72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.afo-progress-track {
+  position: relative;
+  height: 6px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #d3e4fe;
+}
+
+.afo-progress-track > span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #002b6d, #00677f 58%, #77d3f2);
+  transition: width .45s var(--afo-ease-out), background .3s ease;
+}
+
+.afo-progress-track > span.is-complete {
+  background: linear-gradient(90deg, #00677f, #00a884);
+}
+
+.afo-form-card .afo-field > label {
+  letter-spacing: .02em;
+}
+
+.afo-form-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #e5eeff;
+  background: rgba(239, 244, 255, .82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 14px 20px;
+  transition: box-shadow var(--afo-base) ease, background-color var(--afo-base) ease;
+}
+
+.afo-form-card.is-dirty .afo-form-actions {
+  background: rgba(255, 251, 235, .88);
+  box-shadow: 0 -12px 30px -24px rgba(0, 43, 109, .55);
+}
+
+.afo-dirty-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(180, 120, 0, .28);
+  background: #fff4d6;
+  color: #8a5a00;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity .25s ease, transform .25s var(--afo-ease-spring);
+}
+
+.afo-form-card.is-dirty .afo-dirty-chip {
+  opacity: 1;
+  transform: none;
+}
+
+.afo-dirty-chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d99a00;
+  animation: afo-pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes afo-pulse-dot {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(217, 154, 0, .45); }
+  50%      { transform: scale(1.15); box-shadow: 0 0 0 5px rgba(217, 154, 0, 0); }
+}
+
+.afo-submit.is-loading .material-symbols-outlined {
+  animation: afo-spin .9s linear infinite;
+}
+
+@keyframes afo-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Acceso (login) ---------- */
+[data-page="login"] .auth-crest { will-change: transform; }
+[data-page="login"] main section:first-of-type { animation: afo-header-in .7s var(--afo-ease-out) both; }
+[data-page="login"] main section:last-of-type { animation: afo-page-in .7s var(--afo-ease-out) .08s both; }
+
+/* ---------- Accesibilidad: movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  main,
+  main header,
+  [data-page="login"] main section,
+  dialog[open],
+  dialog[open]::backdrop,
+  .afo-form-hero-glow,
+  .afo-dirty-chip::before,
+  .afo-submit.is-loading .material-symbols-outlined {
+    animation: none !important;
+  }
+
+  .afo-js .afo-reveal,
+  .afo-js .afo-row {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .afo-lift:hover,
+  .app-nav-item:hover,
+  .app-nav-item:hover .app-nav-icon,
+  .app-user:hover .app-avatar,
+  .afo-form-card:hover .afo-form-icon {
+    transform: none !important;
+  }
+
+  a[class~="bg-primary"]::after,
+  button[class~="bg-primary"]::after,
+  .auth-btn::after,
+  .afo-ripple {
+    display: none !important;
+  }
+
+  #afo-progress { display: none !important; }
+}
+
+/* ---------- Impresión: sin animaciones ni menú ---------- */
+@media print {
+  #afo-progress,
+  .app-shell {
+    display: none !important;
+  }
+
+  body[data-shell="true"] {
+    padding: 0 !important;
+  }
+
+  main,
+  main header,
+  .afo-js .afo-reveal,
+  .afo-js .afo-row,
+  dialog[open] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  a[class~="bg-primary"]::after,
+  button[class~="bg-primary"]::after,
+  .afo-ripple {
+    display: none !important;
+  }
 }

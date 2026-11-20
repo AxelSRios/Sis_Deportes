@@ -1,0 +1,130 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}inscripciones{% endblock %}
+
+{% block acciones %}
+  {% if puede_editar %}
+    <a href="{% url 'inscripcion_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">add</span>
+      Nueva inscripción
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+<div class="overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="border-b border-surface-container p-4">
+    <h2 class="font-headline-sm text-base font-bold text-on-surface">Inscripciones</h2>
+    <p class="mt-0.5 text-xs text-on-surface-variant">{{ total }} inscripción{{ total|pluralize:"es" }} registrada{{ total|pluralize:"s" }}. Controle duplicados, aprobaciones y observaciones.</p>
+  </div>
+
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-6">
+    <div class="lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Equipo o deportista"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div>
+      <label for="campeonato" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Campeonato</label>
+      <select id="campeonato" name="campeonato" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for campeonato in campeonatos %}<option value="{{ campeonato.pk }}" {% if campeonato_actual == campeonato.pk|stringformat:"s" %}selected{% endif %}>{{ campeonato.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="club" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Club</label>
+      <select id="club" name="club" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for club in clubes %}<option value="{{ club.pk }}" {% if club_actual == club.pk|stringformat:"s" %}selected{% endif %}>{{ club.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="estado" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Estado</label>
+      <select id="estado" name="estado" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in estados %}<option value="{{ valor }}" {% if estado_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex items-end gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Filtrar
+      </button>
+      <a href="{% url 'inscripciones' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[880px] text-left">
+        <caption class="sr-only">Inscripciones registradas</caption>
+        <thead>
+          <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
+            <th scope="col" class="px-4 py-2.5">Campeonato</th>
+            <th scope="col" class="px-3 py-2.5">Equipo</th>
+            <th scope="col" class="px-3 py-2.5">Deportista</th>
+            <th scope="col" class="px-3 py-2.5">Registro</th>
+            <th scope="col" class="px-3 py-2.5">Estado</th>
+            <th scope="col" class="px-4 py-2.5 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container">
+          {% for inscripcion in pagina.object_list %}
+            <tr class="transition hover:bg-surface-container-low/60">
+              <td class="px-4 py-3">
+                <p class="text-sm font-semibold text-on-surface">{{ inscripcion.campeonato.nombre|default:"Sin campeonato" }}</p>
+                <p class="text-[11px] text-on-surface-variant">{{ inscripcion.observaciones|default:"Sin observaciones"|truncatechars:60 }}</p>
+              </td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">
+                {% if inscripcion.equipo %}
+                  <p class="font-semibold text-on-surface">{{ inscripcion.equipo.nombre }}</p>
+                  <p>{{ inscripcion.equipo.club.nombre|default:"Sin club" }}</p>
+                {% else %}—{% endif %}
+              </td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">{{ inscripcion.deportista|default:"Inscripción por equipo" }}</td>
+              <td class="whitespace-nowrap px-3 py-3 text-xs text-on-surface-variant">{{ inscripcion.fecha_registro|date:"d/m/Y H:i"|default:"—" }}</td>
+              <td class="px-3 py-3">
+                <span class="inline-flex whitespace-nowrap rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] {{ inscripcion.estado|estado_clase }}">{{ inscripcion.get_estado_display }}</span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex flex-wrap items-center justify-end gap-1">
+                  {% if puede_editar and inscripcion.estado == 'PENDIENTE' %}
+                    <form method="post" action="{% url 'inscripcion_estado' inscripcion.pk 'APROBADA' %}">
+                      {% csrf_token %}
+                      <button type="submit" title="Aprobar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                        <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                      </button>
+                    </form>
+                    <form method="post" action="{% url 'inscripcion_estado' inscripcion.pk 'RECHAZADA' %}">
+                      {% csrf_token %}
+                      <button type="submit" title="Rechazar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                        <span class="material-symbols-outlined text-[18px]">cancel</span>
+                      </button>
+                    </form>
+                  {% endif %}
+                  {% if puede_editar %}
+                    <a href="{% url 'inscripcion_editar' inscripcion.pk %}" title="Editar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                      <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </a>
+                    <a href="{% url 'inscripcion_eliminar' inscripcion.pk %}" title="Eliminar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="fact_check" titulo="Sin inscripciones" detalle="Inscriba equipos o deportistas en un campeonato para comenzar." %}
+  {% endif %}
+</div>
+{% endblock %}

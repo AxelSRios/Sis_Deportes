@@ -1,0 +1,120 @@
+{# Indicadores generales con datos reales. Cada tarjeta abre su módulo. #}
+<section class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6" aria-label="Indicadores generales">
+
+  <a href="{% url 'clubes' %}" class="afo-kpi afo-kpi--blue group">
+    <span class="afo-kpi-orbe" aria-hidden="true"></span>
+    <div class="afo-kpi-top">
+      <span class="afo-kpi-icon material-symbols-outlined">shield</span>
+      <span class="afo-kpi-trend afo-trend-neutral">
+        <span class="material-symbols-outlined text-[13px]">verified</span>
+        {{ clubes_activos }} activos
+      </span>
+    </div>
+    <p class="afo-kpi-label">Clubes afiliados</p>
+    <p class="afo-kpi-value"><span data-counter="{{ total_clubes }}">{{ total_clubes }}</span></p>
+    <p class="afo-kpi-meta">Padrón institucional de la A.F.O.</p>
+    <span class="afo-kpi-go">Ver clubes <span class="material-symbols-outlined text-[15px]">arrow_forward</span></span>
+  </a>
+
+  <a href="{% url 'equipos' %}" class="afo-kpi afo-kpi--teal group">
+    <span class="afo-kpi-orbe" aria-hidden="true"></span>
+    <div class="afo-kpi-top">
+      <span class="afo-kpi-icon material-symbols-outlined">groups</span>
+      <span class="afo-kpi-trend afo-trend-neutral">
+        <span class="material-symbols-outlined text-[13px]">hub</span>
+        {{ equipos_con_club }} con club
+      </span>
+    </div>
+    <p class="afo-kpi-label">Equipos registrados</p>
+    <p class="afo-kpi-value"><span data-counter="{{ total_equipos }}">{{ total_equipos }}</span></p>
+    <p class="afo-kpi-meta">Estructura deportiva por categoría.</p>
+    <span class="afo-kpi-go">Ver equipos <span class="material-symbols-outlined text-[15px]">arrow_forward</span></span>
+  </a>
+
+  <a href="{% url 'deportistas' %}" class="afo-kpi afo-kpi--violet group">
+    <span class="afo-kpi-orbe" aria-hidden="true"></span>
+    <div class="afo-kpi-top">
+      <span class="afo-kpi-icon material-symbols-outlined">person_search</span>
+      <span class="afo-kpi-trend afo-trend-up">
+        <span class="material-symbols-outlined text-[13px]">trending_up</span>
+        {{ deportistas_anio }} este año
+      </span>
+    </div>
+    <p class="afo-kpi-label">Deportistas</p>
+    <p class="afo-kpi-value"><span data-counter="{{ total_deportistas }}">{{ total_deportistas }}</span></p>
+    <p class="afo-kpi-meta">Fichajes habilitados en el sistema.</p>
+    <span class="afo-kpi-go">Ver padrón <span class="material-symbols-outlined text-[15px]">arrow_forward</span></span>
+  </a>
+
+  <a href="{% url 'campeonatos' %}" class="afo-kpi afo-kpi--gold group">
+    <span class="afo-kpi-orbe" aria-hidden="true"></span>
+    <div class="afo-kpi-top">
+      <span class="afo-kpi-icon material-symbols-outlined">emoji_events</span>
+      <span class="afo-kpi-trend {% if campeonatos_activos %}afo-trend-up{% else %}afo-trend-neutral{% endif %}">
+        <span class="material-symbols-outlined text-[13px]">sensors</span>
+        {{ campeonatos_activos }} en curso
+      </span>
+    </div>
+    <p class="afo-kpi-label">Campeonatos activos</p>
+    <p class="afo-kpi-value"><span data-counter="{{ campeonatos_activos }}">{{ campeonatos_activos }}</span></p>
+    <p class="afo-kpi-meta">De {{ total_campeonatos }} torneo{{ total_campeonatos|pluralize:"s" }} registrado{{ total_campeonatos|pluralize:"s" }}.</p>
+    <span class="afo-kpi-go">Ver competencia <span class="material-symbols-outlined text-[15px]">arrow_forward</span></span>
+  </a>
+
+  <a href="{% url 'partidos' %}" class="afo-kpi afo-kpi--sky group">
+    <span class="afo-kpi-orbe" aria-hidden="true"></span>
+    <div class="afo-kpi-top">
+      <span class="afo-kpi-icon material-symbols-outlined">sports_soccer</span>
+      <span class="afo-kpi-trend afo-trend-neutral">
+        <span class="material-symbols-outlined text-[13px]">scoreboard</span>
+        {{ partidos_jugados }} jugados
+      </span>
+    </div>
+    <p class="afo-kpi-label">Partidos programados</p>
+    <p class="afo-kpi-value"><span data-counter="{{ total_partidos_proximos }}">{{ total_partidos_proximos }}</span></p>
+    <p class="afo-kpi-meta">Agenda oficial · {{ total_partidos }} en el historial.</p>
+    <span class="afo-kpi-go">Ver fixture <span class="material-symbols-outlined text-[15px]">arrow_forward</span></span>
+  </a>
+
+  {% if puede_ver_finanzas %}
+    <a href="{% url 'tesoreria' %}" class="afo-kpi afo-kpi--green group">
+      <span class="afo-kpi-orbe" aria-hidden="true"></span>
+      <div class="afo-kpi-top">
+        <span class="afo-kpi-icon material-symbols-outlined">payments</span>
+        {% if variacion_ingresos is not None %}
+          <span class="afo-kpi-trend {% if variacion_ingresos >= 0 %}afo-trend-up{% else %}afo-trend-down{% endif %}">
+            <span class="material-symbols-outlined text-[13px]">{% if variacion_ingresos >= 0 %}trending_up{% else %}trending_down{% endif %}</span>
+            {{ variacion_ingresos }}% vs. mes anterior
+          </span>
+        {% else %}
+          <span class="afo-kpi-trend afo-trend-neutral">
+            <span class="material-symbols-outlined text-[13px]">savings</span>
+            {{ total_pagos }} comprobantes
+          </span>
+        {% endif %}
+      </div>
+      <p class="afo-kpi-label">Ingresos del mes</p>
+      <p class="afo-kpi-value afo-kpi-value--money">
+        <span data-counter="{{ economia.ingresos_mes|floatformat:2 }}" data-counter-prefix="Bs " data-counter-decimals="2">{{ economia.ingresos_mes|floatformat:2 }}</span>
+      </p>
+      <p class="afo-kpi-meta">Caja institucional · {{ hoy|date:"F Y" }}.</p>
+      <span class="afo-kpi-go">Ir a Tesorería <span class="material-symbols-outlined text-[15px]">arrow_forward</span></span>
+    </a>
+  {% else %}
+    <a href="{% url 'arbitros' %}" class="afo-kpi afo-kpi--green group">
+      <span class="afo-kpi-orbe" aria-hidden="true"></span>
+      <div class="afo-kpi-top">
+        <span class="afo-kpi-icon material-symbols-outlined">sports</span>
+        <span class="afo-kpi-trend afo-trend-neutral">
+          <span class="material-symbols-outlined text-[13px]">verified_user</span>
+          Plantel oficial
+        </span>
+      </div>
+      <p class="afo-kpi-label">Árbitros</p>
+      <p class="afo-kpi-value"><span data-counter="{{ total_arbitros }}">{{ total_arbitros }}</span></p>
+      <p class="afo-kpi-meta">Terna arbitral de la Asociación.</p>
+      <span class="afo-kpi-go">Ver árbitros <span class="material-symbols-outlined text-[15px]">arrow_forward</span></span>
+    </a>
+  {% endif %}
+
+</section>

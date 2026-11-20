@@ -1,0 +1,143 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}deportistas{% endblock %}
+
+{% block acciones %}
+  {% if puede_editar %}
+    <a href="{% url 'deportista_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">person_add</span>
+      Nuevo fichaje
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+<div class="overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="flex flex-col gap-2 border-b border-surface-container p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="font-headline-sm text-base font-bold text-on-surface">Padrón de deportistas</h2>
+      <p class="mt-0.5 text-xs text-on-surface-variant">{{ total }} deportista{{ total|pluralize:"s" }} habilitado{{ total|pluralize:"s" }} en el sistema.</p>
+    </div>
+    <span class="inline-flex w-fit items-center gap-1.5 rounded-lg bg-secondary-fixed/40 px-3 py-1.5 text-[11px] font-semibold text-secondary">
+      <span class="material-symbols-outlined text-[15px]">badge</span>
+      Registro federativo
+    </span>
+  </div>
+
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-7">
+    <div class="lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Nombre, apellido, CI o club"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div>
+      <label for="club" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Club</label>
+      <select id="club" name="club" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for club in clubes %}<option value="{{ club.pk }}" {% if club_actual == club.pk|stringformat:"s" %}selected{% endif %}>{{ club.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="equipo" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Equipo</label>
+      <select id="equipo" name="equipo" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for equipo in equipos %}<option value="{{ equipo.pk }}" {% if equipo_actual == equipo.pk|stringformat:"s" %}selected{% endif %}>{{ equipo.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="categoria" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Categoría</label>
+      <select id="categoria" name="categoria" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todas</option>
+        {% for categoria in categorias %}<option value="{{ categoria.pk }}" {% if categoria_actual == categoria.pk|stringformat:"s" %}selected{% endif %}>{{ categoria.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="estado" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Estado</label>
+      <select id="estado" name="estado" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in estados %}<option value="{{ valor }}" {% if estado_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex items-end gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Filtrar
+      </button>
+      <a href="{% url 'deportistas' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[900px] text-left">
+        <caption class="sr-only">Deportistas registrados</caption>
+        <thead>
+          <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
+            <th scope="col" class="px-4 py-2.5">Deportista</th>
+            <th scope="col" class="px-3 py-2.5">CI</th>
+            <th scope="col" class="px-3 py-2.5">Nacimiento</th>
+            <th scope="col" class="px-3 py-2.5">Club / equipo</th>
+            <th scope="col" class="px-3 py-2.5">Categoría</th>
+            <th scope="col" class="px-3 py-2.5">Estado</th>
+            <th scope="col" class="px-4 py-2.5 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container">
+          {% for deportista in pagina.object_list %}
+            <tr class="transition hover:bg-surface-container-low/60">
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2.5">
+                  {% if deportista.foto_url %}
+                    <img src="{{ deportista.foto_url }}" alt="Fotografía de {{ deportista.nombre }}" class="h-9 w-9 shrink-0 rounded-full border border-surface-container object-cover"/>
+                  {% else %}
+                    <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-tertiary-fixed/60 text-[10px] font-bold text-tertiary">
+                      {{ deportista.nombre|initials:2 }}{{ deportista.apellido|initials:1 }}
+                    </span>
+                  {% endif %}
+                  <div class="min-w-0">
+                    <a href="{% url 'deportista_detalle' deportista.pk %}" class="block truncate text-sm font-semibold text-on-surface hover:text-primary">{{ deportista.apellido }}, {{ deportista.nombre }}</a>
+                    <p class="truncate text-[11px] text-on-surface-variant">{{ deportista.get_genero_display|default:"Género sin registrar" }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="whitespace-nowrap px-3 py-3 text-xs text-on-surface-variant">{{ deportista.ci|default:"—" }}</td>
+              <td class="whitespace-nowrap px-3 py-3 text-xs text-on-surface-variant">{{ deportista.fecha_nacimiento|date:"d/m/Y"|default:"—" }}</td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">
+                <p class="font-semibold text-on-surface">{{ deportista.club.nombre|default:"Sin club" }}</p>
+                <p>{{ deportista.equipo.nombre|default:"Sin equipo" }}</p>
+              </td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">{{ deportista.categoria.nombre|default:"—" }}</td>
+              <td class="px-3 py-3">
+                <span class="inline-flex whitespace-nowrap rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] {{ deportista.estado|estado_clase }}">{{ deportista.get_estado_display }}</span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1">
+                  <a href="{% url 'deportista_detalle' deportista.pk %}" title="Ver ficha" class="grid h-8 w-8 place-items-center rounded-lg text-primary transition hover:bg-primary/10">
+                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                  </a>
+                  {% if puede_editar %}
+                    <a href="{% url 'deportista_editar' deportista.pk %}" title="Editar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                      <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </a>
+                    <a href="{% url 'deportista_eliminar' deportista.pk %}" title="Eliminar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="person_search" titulo="Sin deportistas" detalle="Registre un fichaje o ajuste los filtros de búsqueda." %}
+  {% endif %}
+</div>
+{% endblock %}

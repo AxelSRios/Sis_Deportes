@@ -1,0 +1,188 @@
+{# Hub de módulos: accesos visuales con conteos reales y permisos por rol. #}
+<section class="mt-5" aria-labelledby="titulo-modulos">
+  <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <h2 id="titulo-modulos" class="font-headline-sm text-lg font-bold text-on-surface">Centro de operaciones</h2>
+      <p class="mt-0.5 text-xs text-on-surface-variant">
+        Todos los módulos de la A.F.O. organizados por área de trabajo.
+      </p>
+    </div>
+    <span class="inline-flex w-fit items-center gap-1.5 rounded-full border border-surface-container bg-surface-container-lowest px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-on-surface-variant">
+      <span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
+      Datos en vivo
+    </span>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
+
+    <!-- Gestión deportiva -->
+    <article class="afo-hub afo-hub--deportivo">
+      <div class="afo-hub-head">
+        <span class="afo-hub-icon material-symbols-outlined">sports_soccer</span>
+        <div class="min-w-0">
+          <h3>Gestión deportiva</h3>
+          <p>Padrón, estructura y cuerpo técnico.</p>
+        </div>
+        <span class="afo-hub-count">{{ total_clubes|add:total_equipos|add:total_deportistas }}</span>
+      </div>
+
+      <div class="afo-hub-links">
+        <a href="{% url 'clubes' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">shield</span>
+          <span class="min-w-0 flex-1">
+            <strong>Clubes</strong>
+            <small>Instituciones afiliadas</small>
+          </span>
+          <span class="afo-hub-value">{{ total_clubes }}</span>
+        </a>
+        <a href="{% url 'equipos' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">groups</span>
+          <span class="min-w-0 flex-1">
+            <strong>Equipos</strong>
+            <small>Planteles por categoría</small>
+          </span>
+          <span class="afo-hub-value">{{ total_equipos }}</span>
+        </a>
+        <a href="{% url 'deportistas' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">person_search</span>
+          <span class="min-w-0 flex-1">
+            <strong>Deportistas</strong>
+            <small>Fichajes y habilitaciones</small>
+          </span>
+          <span class="afo-hub-value">{{ total_deportistas }}</span>
+        </a>
+        <a href="{% url 'categorias' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">category</span>
+          <span class="min-w-0 flex-1">
+            <strong>Categorías</strong>
+            <small>Divisiones y edades</small>
+          </span>
+          <span class="afo-hub-value">{{ total_categorias }}</span>
+        </a>
+        <a href="{% url 'arbitros' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">sports</span>
+          <span class="min-w-0 flex-1">
+            <strong>Árbitros</strong>
+            <small>Plantel arbitral oficial</small>
+          </span>
+          <span class="afo-hub-value">{{ total_arbitros }}</span>
+        </a>
+      </div>
+    </article>
+
+    <!-- Competencia -->
+    <article class="afo-hub afo-hub--competencia">
+      <div class="afo-hub-head">
+        <span class="afo-hub-icon material-symbols-outlined">emoji_events</span>
+        <div class="min-w-0">
+          <h3>Competencia</h3>
+          <p>Torneos, fixture y tribunal.</p>
+        </div>
+        <span class="afo-hub-count">{{ total_campeonatos|add:total_inscripciones|add:total_partidos }}</span>
+      </div>
+
+      <div class="afo-hub-links">
+        <a href="{% url 'campeonatos' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">emoji_events</span>
+          <span class="min-w-0 flex-1">
+            <strong>Campeonatos</strong>
+            <small>Torneos y calendarios</small>
+          </span>
+          <span class="afo-hub-value">{{ total_campeonatos }}</span>
+        </a>
+        <a href="{% url 'inscripciones' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">fact_check</span>
+          <span class="min-w-0 flex-1">
+            <strong>Inscripciones</strong>
+            <small>Equipos habilitados</small>
+          </span>
+          <span class="afo-hub-value">{{ total_inscripciones }}</span>
+        </a>
+        <a href="{% url 'partidos' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">sports_soccer</span>
+          <span class="min-w-0 flex-1">
+            <strong>Partidos</strong>
+            <small>Fixture y resultados</small>
+          </span>
+          <span class="afo-hub-value">{{ total_partidos }}</span>
+        </a>
+        <a href="{% url 'asignaciones' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">assignment_ind</span>
+          <span class="min-w-0 flex-1">
+            <strong>Asignaciones</strong>
+            <small>Ternas arbitrales</small>
+          </span>
+          <span class="afo-hub-value">{{ total_asignaciones }}</span>
+        </a>
+        <a href="{% url 'sanciones' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">gavel</span>
+          <span class="min-w-0 flex-1">
+            <strong>Sanciones</strong>
+            <small>Tribunal de penas</small>
+          </span>
+          <span class="afo-hub-value">{{ total_sanciones }}</span>
+        </a>
+      </div>
+    </article>
+
+    <!-- Administración -->
+    <article class="afo-hub afo-hub--admin">
+      <div class="afo-hub-head">
+        <span class="afo-hub-icon material-symbols-outlined">account_balance</span>
+        <div class="min-w-0">
+          <h3>Administración</h3>
+          <p>Caja, cuentas y control institucional.</p>
+        </div>
+        <span class="afo-hub-count">AFO</span>
+      </div>
+
+      <div class="afo-hub-links">
+        {% if puede_ver_finanzas %}
+          <a href="{% url 'tesoreria' %}" class="afo-hub-link">
+            <span class="afo-hub-link-icon material-symbols-outlined">payments</span>
+            <span class="min-w-0 flex-1">
+              <strong>Tesorería y pagos</strong>
+              <small>Caja y comprobantes</small>
+            </span>
+            <span class="afo-hub-value">{{ total_pagos }}</span>
+          </a>
+        {% endif %}
+        <a href="{% url 'reportes' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">summarize</span>
+          <span class="min-w-0 flex-1">
+            <strong>Reportes</strong>
+            <small>Exportación PDF y Excel</small>
+          </span>
+          <span class="material-symbols-outlined text-[18px] text-outline">chevron_right</span>
+        </a>
+        {% if rol == 'ADMIN' %}
+          <a href="{% url 'usuarios' %}" class="afo-hub-link">
+            <span class="afo-hub-link-icon material-symbols-outlined">manage_accounts</span>
+            <span class="min-w-0 flex-1">
+              <strong>Usuarios y roles</strong>
+              <small>Accesos institucionales</small>
+            </span>
+            <span class="material-symbols-outlined text-[18px] text-outline">chevron_right</span>
+          </a>
+          <a href="{% url 'auditoria' %}" class="afo-hub-link">
+            <span class="afo-hub-link-icon material-symbols-outlined">history</span>
+            <span class="min-w-0 flex-1">
+              <strong>Historial de operaciones</strong>
+              <small>Auditoría del sistema</small>
+            </span>
+            <span class="material-symbols-outlined text-[18px] text-outline">chevron_right</span>
+          </a>
+        {% endif %}
+        <a href="{% url 'perfil' %}" class="afo-hub-link">
+          <span class="afo-hub-link-icon material-symbols-outlined">settings</span>
+          <span class="min-w-0 flex-1">
+            <strong>Mi perfil y seguridad</strong>
+            <small>Cuenta y contraseña</small>
+          </span>
+          <span class="material-symbols-outlined text-[18px] text-outline">chevron_right</span>
+        </a>
+      </div>
+    </article>
+
+  </div>
+</section>

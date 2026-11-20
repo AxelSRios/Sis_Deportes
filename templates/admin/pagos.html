@@ -1,0 +1,139 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}tesoreria{% endblock %}
+
+{% block acciones %}
+  <a href="{% url 'reporte_detalle' 'pagos' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+    <span class="material-symbols-outlined text-[18px]">summarize</span>
+    Reporte de pagos
+  </a>
+  {% if puede_editar %}
+    <a href="{% url 'pago_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">payments</span>
+      Registrar pago
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+  <div class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+    <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Total cobrado</p>
+    <p class="mt-1.5 text-2xl font-bold text-primary">Bs {{ total_cobrado|floatformat:2 }}</p>
+    <p class="mt-1 text-[11px] text-on-surface-variant">Pagos con estado «Pagado».</p>
+  </div>
+  <div class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+    <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Saldo pendiente</p>
+    <p class="mt-1.5 text-2xl font-bold text-error">Bs {{ total_pendiente|floatformat:2 }}</p>
+    <p class="mt-1 text-[11px] text-on-surface-variant">Obligaciones aún no canceladas.</p>
+  </div>
+  <div class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+    <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Movimientos</p>
+    <p class="mt-1.5 text-2xl font-bold text-secondary">{{ total }}</p>
+    <p class="mt-1 text-[11px] text-on-surface-variant">Registros según los filtros aplicados.</p>
+  </div>
+</div>
+
+<div class="mt-4 overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="border-b border-surface-container p-4">
+    <h2 class="font-headline-sm text-base font-bold text-on-surface">Caja institucional</h2>
+    <p class="mt-0.5 text-xs text-on-surface-variant">Comprobantes, deudas y movimientos de tesorería.</p>
+  </div>
+
+  <form method="get" class="grid grid-cols-2 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-3 lg:grid-cols-8">
+    <div class="col-span-2 sm:col-span-3 lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Concepto, comprobante o club"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div class="col-span-2 sm:col-span-1 lg:col-span-2">
+      <label for="club" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Club</label>
+      <select id="club" name="club" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for club in clubes %}<option value="{{ club.pk }}" {% if club_actual == club.pk|stringformat:"s" %}selected{% endif %}>{{ club.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="estado" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Estado</label>
+      <select id="estado" name="estado" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in estados %}<option value="{{ valor }}" {% if estado_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="desde" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Desde</label>
+      <input id="desde" name="desde" type="date" value="{{ desde }}" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50"/>
+    </div>
+    <div>
+      <label for="hasta" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Hasta</label>
+      <input id="hasta" name="hasta" type="date" value="{{ hasta }}" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50"/>
+    </div>
+    <div class="col-span-2 flex items-end gap-2 sm:col-span-3 lg:col-span-1">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-2 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        <span class="hidden sm:inline">Filtrar</span>
+      </button>
+      <a href="{% url 'tesoreria' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[920px] text-left">
+        <caption class="sr-only">Movimientos de tesorería</caption>
+        <thead>
+          <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
+            <th scope="col" class="px-4 py-2.5">Fecha</th>
+            <th scope="col" class="px-3 py-2.5">Concepto</th>
+            <th scope="col" class="px-3 py-2.5">Club / deportista</th>
+            <th scope="col" class="px-3 py-2.5 text-right">Monto</th>
+            <th scope="col" class="px-3 py-2.5">Comprobante</th>
+            <th scope="col" class="px-3 py-2.5">Estado</th>
+            <th scope="col" class="px-4 py-2.5 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container">
+          {% for pago in pagina.object_list %}
+            <tr class="transition hover:bg-surface-container-low/60">
+              <td class="whitespace-nowrap px-4 py-3 text-xs text-on-surface-variant">{{ pago.fecha|date:"d/m/Y H:i"|default:"—" }}</td>
+              <td class="px-3 py-3 text-sm font-semibold text-on-surface">{{ pago.tipo|default:"Pago" }}</td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">
+                {% if pago.club %}<p class="font-semibold text-on-surface">{{ pago.club.nombre }}</p>{% endif %}
+                <p>{{ pago.deportista|default:"" }}</p>
+              </td>
+              <td class="whitespace-nowrap px-3 py-3 text-right text-sm font-bold text-primary">Bs {{ pago.monto|floatformat:2|default:"0,00" }}</td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">{{ pago.comprobante|default:"Sin número" }}</td>
+              <td class="px-3 py-3">
+                <span class="inline-flex whitespace-nowrap rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] {{ pago.estado|estado_clase }}">{{ pago.get_estado_display }}</span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1">
+                  <a href="{% url 'pago_comprobante' pago.pk %}" title="Ver comprobante" class="grid h-8 w-8 place-items-center rounded-lg text-primary transition hover:bg-primary/10">
+                    <span class="material-symbols-outlined text-[18px]">receipt_long</span>
+                  </a>
+                  {% if puede_editar %}
+                    <a href="{% url 'pago_editar' pago.pk %}" title="Editar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                      <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </a>
+                    <a href="{% url 'pago_eliminar' pago.pk %}" title="Eliminar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="payments" titulo="Sin movimientos" detalle="Registre el primer pago o ajuste los filtros de fecha, club y estado." %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{# Pendientes reales. Si no hay ninguno, una sola línea en lugar de cinco filas. #}
+{% if hay_pendientes %}
+  <section class="mt-5" aria-labelledby="titulo-pendientes">
+    <div class="overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+
+      <div class="flex items-center justify-between gap-3 border-b border-surface-container px-4 py-3">
+        <h2 id="titulo-pendientes" class="flex items-center gap-2 font-headline-sm text-sm font-bold text-on-surface">
+          <span class="material-symbols-outlined text-[18px] text-error">priority_high</span>
+          Requiere tu atención
+        </h2>
+        <span class="rounded-md bg-error/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] text-error">
+          {{ pendientes|length }} pendiente{{ pendientes|length|pluralize:"s" }}
+        </span>
+      </div>
+
+      <ul class="flex flex-col gap-px bg-surface-container sm:flex-row sm:flex-wrap">
+        {% for pendiente in pendientes %}
+          <li class="min-w-[230px] flex-1 bg-surface-container-lowest">
+            <a href="{% url pendiente.ruta %}"
+               class="flex h-full items-start gap-3 px-4 py-3 transition hover:bg-surface-container-low/60">
+              <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg {% if pendiente.tono == 'alerta' %}bg-error/10 text-error{% else %}bg-surface-container text-primary{% endif %}">
+                <span class="material-symbols-outlined text-[18px]">{{ pendiente.icono }}</span>
+              </span>
+              <span class="min-w-0">
+                <span class="block text-sm font-semibold leading-5 text-on-surface">
+                  {{ pendiente.cantidad }}
+                  {% if pendiente.cantidad == 1 %}{{ pendiente.singular }}{% else %}{{ pendiente.plural }}{% endif %}
+                </span>
+                <span class="block text-[11px] leading-4 text-on-surface-variant">{{ pendiente.detalle }}</span>
+              </span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </section>
+{% else %}
+  <section class="mt-5" aria-label="Pendientes operativos">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-secondary/20 bg-secondary-fixed/25 px-4 py-3">
+      <span class="material-symbols-outlined text-[20px] text-secondary">task_alt</span>
+      <p class="text-sm font-semibold text-on-secondary-fixed">Sin pendientes operativos</p>
+      <p class="text-xs text-on-secondary-fixed/80">
+        No hay equipos sin club, clubes sin equipos ni partidos sin terna.
+      </p>
+    </div>
+  </section>
+{% endif %}

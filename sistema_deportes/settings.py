@@ -86,6 +86,20 @@ DATABASES = {
     )
 }
 
+# Pruebas automatizadas: base SQLite en memoria. Evita crear bases de prueba
+# en Supabase y garantiza que `manage.py test` nunca toque los datos reales.
+# El resto de ejecuciones (runserver, migrate, shell) sigue usando DATABASE_URL.
+import sys
+
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+    ALLOWED_HOSTS = ['testserver', 'localhost', '127.0.0.1']
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
@@ -137,3 +151,5 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+DEFAULT_FROM_EMAIL = 'A.F.O. Oruro <no-reply@afo.bo>'

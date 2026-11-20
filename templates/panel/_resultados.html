@@ -1,0 +1,62 @@
+{% load afo_extras %}
+{# Marcadores homologados: el detalle abre la ficha completa del partido. #}
+<section class="mt-5" aria-labelledby="titulo-resultados-panel">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <h2 id="titulo-resultados-panel" class="flex items-center gap-2 font-headline-sm text-lg font-bold text-on-surface">
+        <span class="material-symbols-outlined text-[20px] text-secondary">scoreboard</span>
+        Últimos resultados
+      </h2>
+      <p class="mt-0.5 text-xs text-on-surface-variant">Marcadores registrados y homologados.</p>
+    </div>
+    <a href="{% url 'campeonatos' %}" class="inline-flex items-center gap-1 text-[11px] font-semibold text-primary transition hover:gap-1.5 hover:underline">
+      Gestionar resultados
+      <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+    </a>
+  </div>
+
+  {% if resultados_recientes %}
+    <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+      {% for partido in resultados_recientes %}
+        <a href="{% url 'partido_detalle' partido.id %}" class="afo-result group">
+          <div class="afo-result-head">
+            <span class="afo-result-league">{{ partido.campeonato.nombre|default:"Partido oficial"|short_name:28 }}</span>
+            <span class="afo-result-date">{{ partido.fecha|date:"d M Y"|default:"Sin fecha" }}</span>
+          </div>
+
+          <div class="afo-result-board">
+            <div class="afo-result-team">
+              <span class="afo-crest afo-crest--sm afo-crest--local">{{ partido.equipo_local.nombre|default:"Por definir"|initials }}</span>
+              <span class="afo-result-name" title="{{ partido.equipo_local.nombre|default:'Por definir' }}">{{ partido.equipo_local.nombre|default:"Por definir"|short_name:16 }}</span>
+            </div>
+
+            <span class="afo-result-score" title="{{ partido.resultado }}">
+              {% if partido.marcador %}{{ partido.marcador }}{% else %}{{ partido.resultado|short_name:10 }}{% endif %}
+            </span>
+
+            <div class="afo-result-team afo-result-team--right">
+              <span class="afo-crest afo-crest--sm afo-crest--visitante">{{ partido.equipo_visitante.nombre|default:"Por definir"|initials }}</span>
+              <span class="afo-result-name" title="{{ partido.equipo_visitante.nombre|default:'Por definir' }}">{{ partido.equipo_visitante.nombre|default:"Por definir"|short_name:16 }}</span>
+            </div>
+          </div>
+
+          <div class="afo-result-foot">
+            <span class="inline-flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px] text-secondary">stadium</span>
+              <span class="truncate">{{ partido.escenario|default:"Escenario oficial" }}</span>
+            </span>
+            <span class="afo-result-cta">Ficha <span class="material-symbols-outlined text-[14px] transition group-hover:translate-x-0.5">chevron_right</span></span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="mt-4 flex flex-col items-center justify-center rounded-xl border border-dashed border-surface-container bg-surface-container-lowest px-4 py-8 text-center">
+      <span class="material-symbols-outlined text-3xl text-outline">scoreboard</span>
+      <p class="mt-2 text-sm font-semibold text-on-surface">Aún no hay resultados registrados</p>
+      <p class="mx-auto mt-1 max-w-md text-xs leading-5 text-on-surface-variant">
+        Cuando la Comisión Técnica registre los marcadores, aparecerán en esta sección.
+      </p>
+    </div>
+  {% endif %}
+</section>

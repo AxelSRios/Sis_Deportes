@@ -1,0 +1,142 @@
+{# Dos gráficos protagonistas + el resto en un plegable para no alargar el panel. #}
+<section class="mt-5" aria-labelledby="titulo-estadisticas">
+
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <h2 id="titulo-estadisticas" class="font-headline-sm text-lg font-bold text-on-surface">Estadísticas del sistema</h2>
+      <p class="mt-0.5 text-xs text-on-surface-variant">
+        Series calculadas con consultas reales a la base institucional · Año <span data-anio-label>{{ anio }}</span>.
+      </p>
+    </div>
+
+    <form method="get" id="filtroAnioForm" class="flex items-center gap-2">
+      <label for="filtroAnio" class="text-[11px] font-bold uppercase tracking-[0.12em] text-outline">Año</label>
+      <select id="filtroAnio" name="anio"
+              class="h-9 rounded-lg border border-surface-container bg-surface-container-lowest px-3 text-sm font-semibold text-primary outline-none transition focus:border-primary/40">
+        {% for opcion in anios_disponibles %}
+          <option value="{{ opcion }}" {% if opcion == anio %}selected{% endif %}>{{ opcion }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit"
+              class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-surface-container bg-surface-container-lowest px-3 text-xs font-bold text-primary transition hover:bg-primary/5">
+        <span class="material-symbols-outlined text-[16px]">filter_alt</span>
+        Aplicar
+      </button>
+    </form>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2">
+
+    <!-- Deportistas por mes -->
+    <article class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h3 class="text-sm font-bold text-on-surface">Deportistas registrados por mes</h3>
+          <p class="mt-0.5 text-[11px] text-on-surface-variant">Altas federativas del año <span data-anio-label>{{ anio }}</span>.</p>
+        </div>
+        <span class="grid h-8 w-8 place-items-center rounded-lg bg-primary/5 text-primary">
+          <span class="material-symbols-outlined text-[18px]">person_add</span>
+        </span>
+      </div>
+      <div class="mt-3 h-56">
+        <canvas id="chartDeportistas" role="img" aria-label="Gráfico de deportistas registrados por mes"></canvas>
+      </div>
+      <p data-empty="deportistas_mes"
+         class="mt-2 text-center text-xs text-on-surface-variant {% if charts.deportistas_mes.total %}hidden{% endif %}">
+        Sin altas registradas con fecha en este año.
+      </p>
+      {% if deportistas_sin_fecha %}
+        <p class="mt-2 text-center text-[11px] text-outline">
+          {{ deportistas_sin_fecha }} registro{{ deportistas_sin_fecha|pluralize:"s" }} histórico{{ deportistas_sin_fecha|pluralize:"s" }} sin fecha de alta.
+        </p>
+      {% endif %}
+    </article>
+
+    <!-- Partidos disputados por campeonato -->
+    <article class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h3 class="text-sm font-bold text-on-surface">Partidos disputados por campeonato</h3>
+          <p class="mt-0.5 text-[11px] text-on-surface-variant">Encuentros con marcador o estado finalizado.</p>
+        </div>
+        <span class="grid h-8 w-8 place-items-center rounded-lg bg-secondary-fixed/50 text-secondary">
+          <span class="material-symbols-outlined text-[18px]">emoji_events</span>
+        </span>
+      </div>
+      <div class="mt-3 h-56">
+        <canvas id="chartPartidos" role="img" aria-label="Gráfico de partidos disputados por campeonato"></canvas>
+      </div>
+      <p data-empty="partidos_campeonato"
+         class="mt-2 text-center text-xs text-on-surface-variant {% if charts.partidos_campeonato.total %}hidden{% endif %}">
+        Todavía no hay partidos disputados con fecha en este año.
+      </p>
+    </article>
+
+  </div>
+
+  {% if hay_graficos_secundarios %}
+    <details class="group mt-4" data-charts>
+      <summary class="flex cursor-pointer list-none items-center justify-between gap-3 rounded-xl border border-surface-container bg-surface-container-lowest px-4 py-3 transition hover:border-primary/25 hover:bg-primary/[0.02] [&amp;::-webkit-details-marker]:hidden">
+        <span class="flex items-center gap-2 text-sm font-semibold text-on-surface">
+          <span class="material-symbols-outlined text-[18px] text-secondary">insights</span>
+          Más estadísticas
+          <span class="hidden text-[11px] font-normal text-on-surface-variant sm:inline">· resultados, clubes y equipos</span>
+        </span>
+        <span class="flex items-center gap-1 text-[11px] font-bold text-primary">
+          <span class="group-open:hidden">Mostrar</span>
+          <span class="hidden group-open:inline">Ocultar</span>
+          <span class="material-symbols-outlined text-[18px] transition group-open:rotate-180">expand_more</span>
+        </span>
+      </summary>
+
+      <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2">
+
+        <!-- Resultados de partidos -->
+        <article class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-sm font-bold text-on-surface">Resultados de partidos</h3>
+              <p class="mt-0.5 text-[11px] text-on-surface-variant">Distribución de marcadores del año <span data-anio-label>{{ anio }}</span>.</p>
+            </div>
+            <span class="grid h-8 w-8 place-items-center rounded-lg bg-primary/5 text-primary">
+              <span class="material-symbols-outlined text-[18px]">scoreboard</span>
+            </span>
+          </div>
+          <div class="mt-3 h-56">
+            <canvas id="chartResultados" role="img" aria-label="Gráfico de resultados de partidos"></canvas>
+          </div>
+          <p data-empty="resultados"
+             class="mt-2 text-center text-xs text-on-surface-variant {% if charts.resultados.total %}hidden{% endif %}">
+            Sin marcadores registrados en este año.
+          </p>
+        </article>
+
+        <!-- Clubes y equipos -->
+        <article class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-sm font-bold text-on-surface">Clubes y equipos registrados</h3>
+              <p class="mt-0.5 text-[11px] text-on-surface-variant">Clubes con mayor estructura deportiva (hasta 8).</p>
+            </div>
+            <span class="grid h-8 w-8 place-items-center rounded-lg bg-primary/5 text-primary">
+              <span class="material-symbols-outlined text-[18px]">groups</span>
+            </span>
+          </div>
+          <div class="mt-3 h-56">
+            <canvas id="chartClubes" role="img" aria-label="Gráfico de clubes y equipos registrados"></canvas>
+          </div>
+          <p data-empty="clubes_equipos"
+             class="mt-2 text-center text-xs text-on-surface-variant {% if charts.clubes_equipos.total %}hidden{% endif %}">
+            Sin clubes con equipos o deportistas registrados.
+          </p>
+        </article>
+
+      </div>
+    </details>
+  {% else %}
+    <p class="mt-4 rounded-xl border border-dashed border-surface-container bg-surface-container-lowest px-4 py-3 text-center text-xs text-on-surface-variant">
+      Aún no hay resultados ni clubes con estructura registrada para graficar.
+    </p>
+  {% endif %}
+
+</section>

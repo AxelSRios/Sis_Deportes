@@ -1,0 +1,469 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}A.F.O. Oruro | Fútbol, campeonatos y clubes{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Portal público de la Asociación de Fútbol Oruro: próximos partidos, campeonatos, clubes afiliados y noticias oficiales.{% endblock %}"/>
+  <meta name="theme-color" content="#002b6d"/>
+  <meta name="author" content="Asociación de Fútbol Oruro"/>
+
+  <link rel="icon" type="image/png" href="{% static 'img/afo-crest.png' %}"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Nunito:wght@400..1000&amp;family=Outfit:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="{% static 'js/tailwind-config.js' %}"></script>
+  <script>
+    /* Evita que el contenido animado quede oculto si JavaScript no está disponible. */
+    document.documentElement.classList.remove('no-js');
+    document.documentElement.classList.add('js');
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    [id] { scroll-margin-top: 92px; }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(26px) scale(.985);
+      filter: blur(4px);
+      transition: opacity .7s cubic-bezier(.2, .7, .2, 1),
+                  transform .7s cubic-bezier(.2, .7, .2, 1),
+                  filter .7s ease;
+    }
+    .js .reveal.is-visible { opacity: 1; transform: none; filter: none; }
+
+    .hero-grid {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, .10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .10) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+      -webkit-mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+
+    .text-balance { text-wrap: balance; }
+
+    /* ---------- Tipografía de impacto ---------- */
+    .font-display {
+      font-family: 'Nunito', 'Outfit', system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: .005em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, .10),
+                   0 5px 0 rgba(0, 103, 127, .30),
+                   0 14px 30px rgba(119, 211, 242, .38);
+    }
+
+    .title-glow {
+      filter: drop-shadow(0 16px 34px rgba(119, 211, 242, .42));
+    }
+
+    /* ---------- Escudo AFO de fondo ---------- */
+    .hero-crest {
+      position: absolute;
+      left: 52%;
+      top: 50%;
+      width: min(54rem, 96vw);
+      z-index: 0;
+      opacity: .10;
+      pointer-events: none;
+      user-select: none;
+      transform: translate(-50%, -50%);
+      animation: crest-float 16s ease-in-out infinite;
+      will-change: transform;
+    }
+    .hero-crest img { display: block; width: 100%; height: auto; }
+
+    @keyframes crest-float {
+      0%, 100% { transform: translate(-50%, -50%) rotate(-3deg) scale(1); }
+      50%      { transform: translate(calc(-50% + 10px), calc(-50% - 18px)) rotate(3deg) scale(1.03); }
+    }
+
+    .cta-crest {
+      position: absolute;
+      right: -6rem;
+      bottom: -8rem;
+      width: min(34rem, 90%);
+      z-index: 0;
+      opacity: .11;
+      pointer-events: none;
+      user-select: none;
+      animation: cta-crest-float 18s ease-in-out infinite;
+      will-change: transform;
+    }
+    .cta-crest img { display: block; width: 100%; height: auto; }
+
+    @keyframes cta-crest-float {
+      0%, 100% { transform: rotate(-8deg) translateY(0) scale(1); }
+      50%      { transform: rotate(-3deg) translateY(-16px) scale(1.04); }
+    }
+
+    /* ---------- Titular: revelado con máscara, palabra por palabra ---------- */
+    .word-mask {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+      padding-top: .16em;
+      margin-top: -.16em;
+    }
+    .hero-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(118%);
+      animation: word-rise .95s cubic-bezier(.16, 1, .3, 1) forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes word-rise {
+      0%   { opacity: 0; transform: translateY(118%); }
+      55%  { opacity: 1; }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-highlight {
+      background: linear-gradient(100deg, #b6ebff 0%, #ffffff 28%, #77d3f2 52%, #ffffff 74%, #b6ebff 100%);
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      animation: word-rise .95s cubic-bezier(.16, 1, .3, 1) forwards,
+                 shimmer 6s linear infinite 1.1s;
+    }
+    @keyframes shimmer {
+      to { background-position: 250% center; }
+    }
+
+    /* ---------- Títulos de sección: barrido + subrayado ---------- */
+    .section-title {
+      position: relative;
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      clip-path: inset(-1rem 0 -1rem 0);
+    }
+    html.js .section-title {
+      clip-path: inset(-1rem 100% -1rem 0);
+      transition: clip-path 1s cubic-bezier(.16, 1, .3, 1) .05s;
+    }
+    html.js .reveal.is-visible .section-title,
+    html.js .section-title.is-visible {
+      clip-path: inset(-1rem 0 -1rem 0);
+    }
+
+    .section-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -.3rem;
+      height: .28rem;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, currentColor, #77d3f2);
+      transform: scaleX(1);
+      transform-origin: left;
+      transition: transform .8s cubic-bezier(.16, 1, .3, 1) .55s;
+    }
+    html.js .section-title::after { transform: scaleX(0); }
+    html.js .reveal.is-visible .section-title::after,
+    html.js .section-title.is-visible::after { transform: scaleX(1); }
+
+    .filter-chip.is-active {
+      background: #002b6d;
+      border-color: #002b6d;
+      color: #ffffff;
+    }
+
+    .club-card.is-filtered { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+      .animate-pulse { animation: none; }
+      .hero-crest, .cta-crest, .hero-word, .hero-highlight { animation: none !important; }
+      .hero-word { opacity: 1; transform: none; }
+      .hero-highlight { background-position: 0 center; }
+      html.js .section-title { clip-path: none; transition: none; }
+      html.js .section-title::after { transform: scaleX(1); transition: none; }
+    }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-surface text-on-surface antialiased" data-shell="false">
+  <a href="#contenido-principal"
+     class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary focus:shadow-xl">
+    Saltar al contenido principal
+  </a>
+
+  <header id="site-header" class="sticky top-0 z-50 border-b border-surface-container/80 bg-surface/90 backdrop-blur-xl transition-shadow">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8 lg:px-12">
+      <a href="{% url 'index' %}" class="group flex items-center gap-3" aria-label="A.F.O. Oruro — Asociación de Fútbol — Inicio">
+        <img src="{% static 'img/afo-crest.png' %}"
+             alt="Escudo de la Asociación de Fútbol Oruro"
+             class="h-11 w-11 rounded-xl bg-white object-contain p-1 shadow-sm ring-1 ring-primary/10 transition-transform group-hover:scale-105"/>
+        <span class="leading-tight">
+          <span class="block font-headline-md text-lg font-bold text-primary">A.F.O. Oruro</span>
+          <span class="block text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">Asociación de Fútbol</span>
+        </span>
+      </a>
+
+      <nav class="hidden items-center gap-1 lg:flex" aria-label="Navegación principal">
+        <a href="{% url 'index' %}" class="rounded-full px-3.5 py-2 text-sm font-semibold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary">Inicio</a>
+        <a href="{% url 'index' %}#partidos" class="rounded-full px-3.5 py-2 text-sm font-semibold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary">Partidos</a>
+        <a href="{% url 'index' %}#campeonatos" class="rounded-full px-3.5 py-2 text-sm font-semibold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary">Campeonatos</a>
+        <a href="{% url 'clubes_publicos' %}" class="rounded-full px-3.5 py-2 text-sm font-semibold {% if request.resolver_match.url_name == 'clubes_publicos' %}bg-primary/5 text-primary{% else %}text-on-surface-variant hover:bg-primary/5 hover:text-primary{% endif %} transition">Clubes</a>
+        <a href="{% url 'index' %}#institucion" class="rounded-full px-3.5 py-2 text-sm font-semibold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary">Institucional</a>
+        <a href="{% url 'index' %}#noticias" class="rounded-full px-3.5 py-2 text-sm font-semibold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary">Noticias</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a href="{% url 'clubes_publicos' %}" class="hidden items-center gap-1.5 rounded-full border border-surface-container px-4 py-2 text-sm font-semibold text-primary transition hover:border-primary/30 hover:bg-primary/5 sm:inline-flex">
+          <span class="material-symbols-outlined text-[18px]">shield</span>
+          Clubes
+        </a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'panel' %}" class="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container hover:shadow-md">
+            <span class="material-symbols-outlined text-[18px]">dashboard</span>
+            Panel general
+          </a>
+        {% else %}
+          <a href="{% url 'login' %}?next={% url 'panel' %}" class="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container hover:shadow-md">
+            <span class="material-symbols-outlined text-[18px]">login</span>
+            Iniciar sesión
+          </a>
+        {% endif %}
+        <button id="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu"
+                class="grid h-10 w-10 place-items-center rounded-full border border-surface-container text-primary transition hover:bg-primary/5 lg:hidden">
+          <span class="material-symbols-outlined" id="menu-icon">menu</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden border-t border-surface-container bg-surface-container-lowest px-5 pb-5 pt-3 lg:hidden">
+      <nav class="mx-auto grid max-w-7xl gap-1" aria-label="Navegación móvil">
+        <a data-menu-link href="{% url 'index' %}" class="rounded-lg px-3 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-primary/5 hover:text-primary">Inicio</a>
+        <a data-menu-link href="{% url 'index' %}#partidos" class="rounded-lg px-3 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-primary/5 hover:text-primary">Partidos</a>
+        <a data-menu-link href="{% url 'index' %}#campeonatos" class="rounded-lg px-3 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-primary/5 hover:text-primary">Campeonatos</a>
+        <a data-menu-link href="{% url 'clubes_publicos' %}" class="rounded-lg px-3 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-primary/5 hover:text-primary">Clubes afiliados</a>
+        <a data-menu-link href="{% url 'index' %}#institucion" class="rounded-lg px-3 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-primary/5 hover:text-primary">Institucional</a>
+        <a data-menu-link href="{% url 'index' %}#noticias" class="rounded-lg px-3 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-primary/5 hover:text-primary">Noticias</a>
+        {% if user.is_authenticated %}
+          <a data-menu-link href="{% url 'panel' %}" class="mt-2 inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2.5 text-sm font-semibold text-on-primary">
+            <span class="material-symbols-outlined text-[18px]">dashboard</span>
+            Panel general
+          </a>
+        {% else %}
+          <a data-menu-link href="{% url 'login' %}?next={% url 'panel' %}" class="mt-2 inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2.5 text-sm font-semibold text-on-primary">
+            <span class="material-symbols-outlined text-[18px]">login</span>
+            Iniciar sesión
+          </a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido-principal">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-primary text-on-primary">
+    <div class="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr] lg:px-12">
+      <div>
+        <div class="flex items-center gap-3">
+          <img src="{% static 'img/afo-crest.png' %}" alt="" aria-hidden="true"
+               class="h-12 w-12 rounded-xl bg-white object-contain p-1.5 shadow-sm"/>
+          <div>
+            <p class="font-headline-md text-lg font-bold">A.F.O. Oruro</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-primary-fixed">Asociación de Fútbol</p>
+          </div>
+        </div>
+        <p class="mt-5 max-w-sm text-sm leading-6 text-primary-fixed/85">
+          Institución rectora del fútbol orureño. Organizamos, promovemos y desarrollamos
+          el deporte en sus distintas categorías, con información oficial y acceso
+          transparente para clubes, deportistas y aficionados.
+        </p>
+        <div class="mt-6 flex items-center gap-2" aria-label="Canales institucionales">
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-secondary-fixed" title="Portal web oficial">
+            <span class="material-symbols-outlined text-[18px]">public</span>
+          </span>
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-secondary-fixed" title="Comunicados oficiales">
+            <span class="material-symbols-outlined text-[18px]">campaign</span>
+          </span>
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-secondary-fixed" title="Sede institucional">
+            <span class="material-symbols-outlined text-[18px]">location_on</span>
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-[0.18em] text-secondary-fixed">Explorar</h3>
+        <ul class="mt-4 space-y-2.5 text-sm text-primary-fixed/85">
+          <li><a href="{% url 'index' %}#partidos" class="transition hover:text-white">Próximos partidos</a></li>
+          <li><a href="{% url 'index' %}#campeonatos" class="transition hover:text-white">Campeonatos</a></li>
+          <li><a href="{% url 'clubes_publicos' %}" class="transition hover:text-white">Clubes afiliados</a></li>
+          <li><a href="{% url 'index' %}#resultados" class="transition hover:text-white">Resultados</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-[0.18em] text-secondary-fixed">Institucional</h3>
+        <ul class="mt-4 space-y-2.5 text-sm text-primary-fixed/85">
+          <li><a href="{% url 'index' %}#institucion" class="transition hover:text-white">Nuestra historia</a></li>
+          <li><a href="{% url 'index' %}#institucion" class="transition hover:text-white">Misión y visión</a></li>
+          <li><a href="{% url 'index' %}#noticias" class="transition hover:text-white">Comunicados</a></li>
+          <li><a href="{% url 'login' %}" class="transition hover:text-white">Acceso al sistema</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-[0.18em] text-secondary-fixed">Sede central</h3>
+        <ul class="mt-4 space-y-3 text-sm text-primary-fixed/85">
+          <li class="flex gap-2">
+            <span class="material-symbols-outlined mt-0.5 text-[18px] text-secondary-fixed">location_on</span>
+            <span>Calle Sucre N.º 754, entre La Plata y Presidente Montes, Oruro, Bolivia.</span>
+          </li>
+          <li class="flex gap-2">
+            <span class="material-symbols-outlined mt-0.5 text-[18px] text-secondary-fixed">schedule</span>
+            <span>Atención de Secretaría General en horario institucional.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10">
+      <div class="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-5 text-xs text-primary-fixed/65 sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-12">
+        <p>© {% now "Y" %} Asociación de Fútbol Oruro. Todos los derechos reservados.</p>
+        <p class="inline-flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[14px]">verified</span>
+          Sistema oficial AFO · Oruro, Bolivia
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <button id="back-to-top" type="button" aria-label="Volver arriba"
+          class="fixed bottom-6 right-6 z-40 hidden h-11 w-11 place-items-center rounded-full bg-primary text-on-primary shadow-xl transition hover:bg-primary-container">
+    <span class="material-symbols-outlined">arrow_upward</span>
+  </button>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var header = document.getElementById('site-header');
+      var menuToggle = document.getElementById('menu-toggle');
+      var menu = document.getElementById('mobile-menu');
+      var menuIcon = document.getElementById('menu-icon');
+
+      function closeMenu() {
+        if (!menu) return;
+        menu.classList.add('hidden');
+        if (menuToggle) {
+          menuToggle.setAttribute('aria-expanded', 'false');
+          menuToggle.setAttribute('aria-label', 'Abrir menú');
+        }
+        if (menuIcon) menuIcon.textContent = 'menu';
+      }
+
+      if (menuToggle && menu) {
+        menuToggle.addEventListener('click', function () {
+          var open = !menu.classList.contains('hidden');
+          if (open) {
+            closeMenu();
+          } else {
+            menu.classList.remove('hidden');
+            menuToggle.setAttribute('aria-expanded', 'true');
+            menuToggle.setAttribute('aria-label', 'Cerrar menú');
+            if (menuIcon) menuIcon.textContent = 'close';
+          }
+        });
+        menu.querySelectorAll('[data-menu-link]').forEach(function (link) {
+          link.addEventListener('click', closeMenu);
+        });
+      }
+
+      if (header) {
+        var onScroll = function () {
+          header.classList.toggle('shadow-lg', window.scrollY > 8);
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var revealItems = document.querySelectorAll('.reveal');
+      if (revealItems.length) {
+        if (reduceMotion || !('IntersectionObserver' in window)) {
+          revealItems.forEach(function (el) { el.classList.add('is-visible'); });
+        } else {
+          var revealObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                revealObserver.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+          revealItems.forEach(function (el) { revealObserver.observe(el); });
+        }
+      }
+
+      var counters = document.querySelectorAll('[data-count]');
+      if (counters.length) {
+        var formatter = new Intl.NumberFormat('es-BO');
+        var animateCounter = function (el) {
+          var target = parseInt(el.getAttribute('data-count'), 10) || 0;
+          if (reduceMotion) {
+            el.textContent = formatter.format(target);
+            return;
+          }
+          var started = null;
+          var duration = 1100;
+          var step = function (now) {
+            if (!started) started = now;
+            var progress = Math.min((now - started) / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = formatter.format(Math.round(target * eased));
+            if (progress < 1) window.requestAnimationFrame(step);
+          };
+          el.textContent = '0';
+          window.requestAnimationFrame(step);
+        };
+
+        if (!('IntersectionObserver' in window)) {
+          counters.forEach(animateCounter);
+        } else {
+          var counterObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                counterObserver.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.4 });
+          counters.forEach(function (el) { counterObserver.observe(el); });
+        }
+      }
+
+      var backToTop = document.getElementById('back-to-top');
+      if (backToTop) {
+        window.addEventListener('scroll', function () {
+          backToTop.classList.toggle('hidden', window.scrollY < 600);
+        }, { passive: true });
+        backToTop.addEventListener('click', function () {
+          window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+        });
+      }
+    })();
+  </script>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

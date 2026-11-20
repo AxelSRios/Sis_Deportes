@@ -1,0 +1,135 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}clubes{% endblock %}
+
+{% block acciones %}
+  <a href="{% url 'equipos' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+    <span class="material-symbols-outlined text-[18px]">groups</span>
+    Equipos
+  </a>
+  {% if puede_editar %}
+    <a href="{% url 'club_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">add</span>
+      Nuevo club
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+<div class="overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="flex flex-col gap-2 border-b border-surface-container p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="font-headline-sm text-base font-bold text-on-surface">Padrón de clubes</h2>
+      <p class="mt-0.5 text-xs text-on-surface-variant">{{ total }} club{{ total|pluralize:"es" }} registrado{{ total|pluralize:"s" }} en la asociación.</p>
+    </div>
+    <span class="inline-flex w-fit items-center gap-1.5 rounded-lg bg-primary/5 px-3 py-1.5 text-[11px] font-semibold text-primary">
+      <span class="material-symbols-outlined text-[15px]">verified</span>
+      Afiliación institucional
+    </span>
+  </div>
+
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-5">
+    <div class="lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Nombre, presidente o NIT"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div>
+      <label for="estado" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Estado</label>
+      <select id="estado" name="estado" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm text-on-surface outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in estados %}
+          <option value="{{ valor }}" {% if estado_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="orden" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Ordenar por</label>
+      <select id="orden" name="orden" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm text-on-surface outline-none focus:border-primary/50">
+        <option value="">Predeterminado</option>
+        {% for opcion in opciones_orden %}
+          <option value="{{ opcion.valor }}" {% if orden_actual == opcion.valor %}selected{% endif %}>{{ opcion.etiqueta }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="flex items-end gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Filtrar
+      </button>
+      <a href="{% url 'clubes' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-sm font-semibold text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[860px] text-left">
+        <caption class="sr-only">Clubes afiliados</caption>
+        <thead>
+          <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
+            <th scope="col" class="px-4 py-2.5">Club</th>
+            <th scope="col" class="px-3 py-2.5">Fundación</th>
+            <th scope="col" class="px-3 py-2.5">Contacto</th>
+            <th scope="col" class="px-3 py-2.5 text-center">Equipos</th>
+            <th scope="col" class="px-3 py-2.5 text-center">Deportistas</th>
+            <th scope="col" class="px-3 py-2.5">Estado</th>
+            <th scope="col" class="px-4 py-2.5 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container">
+          {% for club in pagina.object_list %}
+            <tr class="transition hover:bg-surface-container-low/60">
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2.5">
+                  {% if club.logo_url %}
+                    <img src="{{ club.logo_url }}" alt="Escudo de {{ club.nombre }}" class="h-9 w-9 shrink-0 rounded-lg border border-surface-container object-cover"/>
+                  {% else %}
+                    <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary text-[10px] font-bold text-on-primary">{{ club.nombre|initials }}</span>
+                  {% endif %}
+                  <div class="min-w-0">
+                    <a href="{% url 'club_detalle' club.pk %}" class="block truncate text-sm font-semibold text-on-surface hover:text-primary">{{ club.nombre }}</a>
+                    <p class="truncate text-[11px] text-on-surface-variant">{{ club.presidente|default:"Presidente por definir" }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="whitespace-nowrap px-3 py-3 text-xs text-on-surface-variant">{{ club.fundacion|date:"d/m/Y"|default:"—" }}</td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">
+                <p>{{ club.telefono|default:"Sin teléfono" }}</p>
+                <p class="truncate">{{ club.email|default:"" }}</p>
+              </td>
+              <td class="px-3 py-3 text-center text-sm font-semibold text-on-surface">{{ club.total_equipos }}</td>
+              <td class="px-3 py-3 text-center text-sm font-semibold text-on-surface">{{ club.total_deportistas }}</td>
+              <td class="px-3 py-3">
+                <span class="inline-flex whitespace-nowrap rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] {{ club.estado|estado_clase }}">{{ club.get_estado_display }}</span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1">
+                  <a href="{% url 'club_detalle' club.pk %}" title="Ver detalle" class="grid h-8 w-8 place-items-center rounded-lg text-primary transition hover:bg-primary/10">
+                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                  </a>
+                  {% if puede_editar %}
+                    <a href="{% url 'club_editar' club.pk %}" title="Editar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                      <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </a>
+                    <a href="{% url 'club_eliminar' club.pk %}" title="Eliminar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="shield" titulo="Sin clubes registrados" detalle="Registre el primer club afiliado o ajuste los filtros de búsqueda." %}
+  {% endif %}
+</div>
+{% endblock %}

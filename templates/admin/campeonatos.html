@@ -1,0 +1,129 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}campeonatos{% endblock %}
+
+{% block acciones %}
+  <a href="{% url 'partidos' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+    <span class="material-symbols-outlined text-[18px]">sports_soccer</span>
+    Partidos
+  </a>
+  {% if puede_editar %}
+    <a href="{% url 'campeonato_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">add</span>
+      Nuevo campeonato
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+<div class="overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="border-b border-surface-container p-4">
+    <h2 class="font-headline-sm text-base font-bold text-on-surface">Campeonatos oficiales</h2>
+    <p class="mt-0.5 text-xs text-on-surface-variant">{{ total }} torneo{{ total|pluralize:"s" }} registrado{{ total|pluralize:"s" }} con su calendario, posiciones y resultados.</p>
+  </div>
+
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-6">
+    <div class="lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Nombre o disciplina"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div>
+      <label for="categoria" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Categoría</label>
+      <select id="categoria" name="categoria" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todas</option>
+        {% for categoria in categorias %}<option value="{{ categoria.pk }}" {% if categoria_actual == categoria.pk|stringformat:"s" %}selected{% endif %}>{{ categoria.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="estado" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Estado</label>
+      <select id="estado" name="estado" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in estados %}<option value="{{ valor }}" {% if estado_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="orden" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Ordenar por</label>
+      <select id="orden" name="orden" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Predeterminado</option>
+        {% for opcion in opciones_orden %}<option value="{{ opcion.valor }}" {% if orden_actual == opcion.valor %}selected{% endif %}>{{ opcion.etiqueta }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex items-end gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Filtrar
+      </button>
+      <a href="{% url 'campeonatos' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[900px] text-left">
+        <caption class="sr-only">Campeonatos oficiales</caption>
+        <thead>
+          <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
+            <th scope="col" class="px-4 py-2.5">Campeonato</th>
+            <th scope="col" class="px-3 py-2.5">Categoría</th>
+            <th scope="col" class="px-3 py-2.5">Temporada</th>
+            <th scope="col" class="px-3 py-2.5">Fechas</th>
+            <th scope="col" class="px-3 py-2.5 text-center">Equipos</th>
+            <th scope="col" class="px-3 py-2.5 text-center">Partidos</th>
+            <th scope="col" class="px-3 py-2.5">Estado</th>
+            <th scope="col" class="px-4 py-2.5 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container">
+          {% for campeonato in pagina.object_list %}
+            <tr class="transition hover:bg-surface-container-low/60">
+              <td class="px-4 py-3">
+                <a href="{% url 'campeonato_detalle' campeonato.pk %}" class="block text-sm font-semibold text-on-surface hover:text-primary">{{ campeonato.nombre }}</a>
+                <p class="text-[11px] text-on-surface-variant">{{ campeonato.disciplina|default:"Disciplina sin definir" }} · {{ campeonato.get_modalidad_display }}</p>
+              </td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">{{ campeonato.categoria.nombre|default:"—" }}</td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">{{ campeonato.temporada|default:"—" }}</td>
+              <td class="whitespace-nowrap px-3 py-3 text-xs text-on-surface-variant">
+                {{ campeonato.fecha_inicio|date:"d/m/Y"|default:"—" }}<br/>
+                <span class="text-outline">al {{ campeonato.fecha_conclusion|date:"d/m/Y"|default:"—" }}</span>
+              </td>
+              <td class="px-3 py-3 text-center text-sm font-semibold text-on-surface">{{ campeonato.total_equipos }}</td>
+              <td class="px-3 py-3 text-center text-sm font-semibold text-on-surface">{{ campeonato.total_partidos }}</td>
+              <td class="px-3 py-3">
+                {% if campeonato.estado %}
+                  <span class="inline-flex whitespace-nowrap rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] {{ campeonato.estado|estado_clase }}">{{ campeonato.get_estado_display }}</span>
+                {% else %}
+                  <span class="inline-flex rounded-md bg-surface-container px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] text-on-surface-variant">Por fechas</span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1">
+                  <a href="{% url 'campeonato_detalle' campeonato.pk %}" title="Ver calendario y posiciones" class="grid h-8 w-8 place-items-center rounded-lg text-primary transition hover:bg-primary/10">
+                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                  </a>
+                  {% if puede_editar %}
+                    <a href="{% url 'campeonato_editar' campeonato.pk %}" title="Editar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                      <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </a>
+                    <a href="{% url 'campeonato_eliminar' campeonato.pk %}" title="Eliminar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="emoji_events" titulo="Sin campeonatos" detalle="Cree un campeonato para programar partidos y registrar posiciones." %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,4 +1,4 @@
-{% load static %}
+{% load static afo_extras %}
 <!DOCTYPE html>
 <html lang="es">
 <!-- Sistema de Gestion Deportiva AFO · Oruro — pantalla unificada.
@@ -742,7 +742,7 @@ if (searchInput) {
     auditoria: "{% url 'auditoria' %}",
     logout: "{% url 'logout' %}",
     username: "{{ request.user.get_full_name|default:request.user.username }}",
-    role: "{{ rol_label|default:request.session.rol }}"
+    role: "{{ rol_label|default:'Usuario institucional' }}"
   };
 </script>
-<script src="{% static 'js/shell.js' %}"></script></body></html>
+<script src="{% static_v 'js/shell.js' %}"></script></body></html>

@@ -1,0 +1,127 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}sanciones{% endblock %}
+
+{% block acciones %}
+  {% if puede_editar %}
+    <a href="{% url 'sancion_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">gavel</span>
+      Nueva sanción
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+<div class="overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="border-b border-surface-container p-4">
+    <h2 class="font-headline-sm text-base font-bold text-on-surface">Tribunal de penas</h2>
+    <p class="mt-0.5 text-xs text-on-surface-variant">{{ total }} sanción{{ total|pluralize:"es" }} registrada{{ total|pluralize:"s" }} sobre deportistas, clubes o responsables.</p>
+  </div>
+
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-6">
+    <div class="lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Descripción, deportista o club"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div>
+      <label for="tipo" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Tipo</label>
+      <select id="tipo" name="tipo" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in tipos %}<option value="{{ valor }}" {% if tipo_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="club" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Club</label>
+      <select id="club" name="club" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for club in clubes %}<option value="{{ club.pk }}" {% if club_actual == club.pk|stringformat:"s" %}selected{% endif %}>{{ club.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="estado" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Estado</label>
+      <select id="estado" name="estado" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in estados %}<option value="{{ valor }}" {% if estado_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex items-end gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Filtrar
+      </button>
+      <a href="{% url 'sanciones' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[980px] text-left">
+        <caption class="sr-only">Sanciones registradas</caption>
+        <thead>
+          <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
+            <th scope="col" class="px-4 py-2.5">Fecha</th>
+            <th scope="col" class="px-3 py-2.5">Tipo</th>
+            <th scope="col" class="px-3 py-2.5">Sancionado</th>
+            <th scope="col" class="px-3 py-2.5">Campeonato / partido</th>
+            <th scope="col" class="px-3 py-2.5">Vigencia</th>
+            <th scope="col" class="px-3 py-2.5">Estado</th>
+            <th scope="col" class="px-4 py-2.5 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container">
+          {% for sancion in pagina.object_list %}
+            <tr class="transition hover:bg-surface-container-low/60">
+              <td class="whitespace-nowrap px-4 py-3 text-xs text-on-surface-variant">{{ sancion.fecha|date:"d/m/Y"|default:"—" }}</td>
+              <td class="px-3 py-3">
+                <span class="inline-flex rounded-md bg-tertiary-fixed/50 px-2 py-0.5 text-[10px] font-bold text-tertiary">{{ sancion.get_tipo_display }}</span>
+                <p class="mt-1 max-w-[220px] truncate text-[11px] text-on-surface-variant" title="{{ sancion.descripcion }}">{{ sancion.descripcion|default:"Sin detalle" }}</p>
+              </td>
+              <td class="px-3 py-3 text-xs">
+                {% if sancion.deportista %}
+                  <a href="{% url 'deportista_detalle' sancion.deportista.pk %}" class="font-semibold text-primary hover:underline">{{ sancion.deportista }}</a>
+                {% elif sancion.club %}
+                  <a href="{% url 'club_detalle' sancion.club.pk %}" class="font-semibold text-primary hover:underline">{{ sancion.club.nombre }}</a>
+                {% else %}
+                  <span class="text-on-surface-variant">Sin sujeto</span>
+                {% endif %}
+              </td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">
+                <p>{{ sancion.campeonato.nombre|default:"Sin campeonato" }}</p>
+                <p class="truncate">{{ sancion.partido|default:"" }}</p>
+              </td>
+              <td class="whitespace-nowrap px-3 py-3 text-xs text-on-surface-variant">
+                {{ sancion.fecha_inicio|date:"d/m/Y"|default:"—" }}<br/>
+                <span class="text-outline">al {{ sancion.fecha_fin|date:"d/m/Y"|default:"—" }}</span>
+              </td>
+              <td class="px-3 py-3">
+                <span class="inline-flex whitespace-nowrap rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] {{ sancion.estado|estado_clase }}">{{ sancion.get_estado_display }}</span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1">
+                  {% if puede_editar %}
+                    <a href="{% url 'sancion_editar' sancion.pk %}" title="Editar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                      <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </a>
+                    <a href="{% url 'sancion_eliminar' sancion.pk %}" title="Eliminar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="gavel" titulo="Sin sanciones" detalle="No hay resoluciones disciplinarias con los filtros actuales." %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}arbitros{% endblock %}
+
+{% block acciones %}
+  <a href="{% url 'asignaciones' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+    <span class="material-symbols-outlined text-[18px]">assignment_ind</span>
+    Designaciones
+  </a>
+  {% if puede_editar %}
+    <a href="{% url 'arbitro_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">person_add</span>
+      Nuevo árbitro
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+<div class="overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="border-b border-surface-container p-4">
+    <h2 class="font-headline-sm text-base font-bold text-on-surface">Plantel arbitral</h2>
+    <p class="mt-0.5 text-xs text-on-surface-variant">{{ total }} árbitro{{ total|pluralize:"s" }} registrado{{ total|pluralize:"s" }} con su licencia, categoría y disponibilidad.</p>
+  </div>
+
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-5">
+    <div class="lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Nombre, apellido, CI o código"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div>
+      <label for="categoria" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Categoría</label>
+      <select id="categoria" name="categoria" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todas</option>
+        {% for valor, etiqueta in categorias %}<option value="{{ valor }}" {% if categoria_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="estado" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Estado</label>
+      <select id="estado" name="estado" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in estados %}<option value="{{ valor }}" {% if estado_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex items-end gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Filtrar
+      </button>
+      <a href="{% url 'arbitros' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[900px] text-left">
+        <caption class="sr-only">Árbitros registrados</caption>
+        <thead>
+          <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
+            <th scope="col" class="px-4 py-2.5">Árbitro</th>
+            <th scope="col" class="px-3 py-2.5">Código / CI</th>
+            <th scope="col" class="px-3 py-2.5">Categoría</th>
+            <th scope="col" class="px-3 py-2.5">Especialidad / licencia</th>
+            <th scope="col" class="px-3 py-2.5 text-center">Partidos</th>
+            <th scope="col" class="px-3 py-2.5">Disponible</th>
+            <th scope="col" class="px-3 py-2.5">Estado</th>
+            <th scope="col" class="px-4 py-2.5 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container">
+          {% for arbitro in pagina.object_list %}
+            <tr class="transition hover:bg-surface-container-low/60">
+              <td class="px-4 py-3">
+                <a href="{% url 'arbitro_detalle' arbitro.pk %}" class="block text-sm font-semibold text-on-surface hover:text-primary">{{ arbitro.apellido }}, {{ arbitro.nombre }}</a>
+                <p class="text-[11px] text-on-surface-variant">{{ arbitro.telefono|default:"Sin teléfono" }}</p>
+              </td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">
+                <p class="font-semibold text-on-surface">{{ arbitro.codigo|default:"—" }}</p>
+                <p>{{ arbitro.ci|default:"Sin CI" }}</p>
+              </td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">{{ arbitro.get_categoria_display }}</td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">
+                <p>{{ arbitro.get_especialidad_display }}</p>
+                <p>{{ arbitro.licencia|default:"Sin licencia" }}</p>
+              </td>
+              <td class="px-3 py-3 text-center text-sm font-semibold text-on-surface">{{ arbitro.total_partidos }}</td>
+              <td class="px-3 py-3">
+                <span class="inline-flex rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] {% if arbitro.disponible %}bg-secondary-fixed/60 text-on-secondary-fixed{% else %}bg-error/10 text-error{% endif %}">
+                  {{ arbitro.disponible|si_no }}
+                </span>
+              </td>
+              <td class="px-3 py-3">
+                <span class="inline-flex whitespace-nowrap rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] {{ arbitro.estado|estado_clase }}">{{ arbitro.get_estado_display }}</span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1">
+                  <a href="{% url 'arbitro_detalle' arbitro.pk %}" title="Ver historial" class="grid h-8 w-8 place-items-center rounded-lg text-primary transition hover:bg-primary/10">
+                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                  </a>
+                  {% if puede_editar %}
+                    <a href="{% url 'arbitro_editar' arbitro.pk %}" title="Editar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                      <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </a>
+                    <a href="{% url 'arbitro_eliminar' arbitro.pk %}" title="Eliminar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="sports" titulo="Sin árbitros" detalle="Registre el primer árbitro del plantel o ajuste los filtros." %}
+  {% endif %}
+</div>
+{% endblock %}

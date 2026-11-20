@@ -1,258 +1,230 @@
+{% extends 'auth/base_auth.html' %}
 {% load static %}
-<!DOCTYPE html>
 
-<html lang="es">
-<!-- Sistema de Gestion Deportiva AFO · Oruro — pantalla unificada.
-     Estilos compartidos: styles.css + tailwind-config.js -->
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Iniciar Sesión | AFO Oruro</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="{% static 'js/tailwind-config.js' %}"></script>
-</head>
-<body class="bg-surface text-on-surface antialiased" data-page="login" data-shell="false"><main class="w-full min-h-screen flex items-center justify-center bg-surface"><div class="flex flex-col w-full">
-<div class="w-full min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-surface text-on-surface select-none">
-<!-- Left Column / Hero Presentation (Institutional Prestige) -->
-<div class="relative lg:col-span-6 xl:col-span-7 bg-primary overflow-hidden flex flex-col justify-between p-8 sm:p-12 lg:p-16 text-on-primary">
-<!-- Background Ambient Glow & Architectural Motifs -->
-<div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none"></div>
-<div class="absolute -bottom-24 -right-24 w-[32rem] h-[32rem] rounded-full bg-primary-container/40 blur-3xl pointer-events-none"></div>
-<!-- Subtle Football Geometric Pitch Graphic -->
-<div class="absolute inset-0 opacity-10 pointer-events-none flex items-center justify-center">
-<svg class="w-full h-full max-w-2xl" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 600 600">
-<circle cx="300" cy="300" r="180" stroke-dasharray="8 6"></circle>
-<circle cx="300" cy="300" fill="currentColor" r="14"></circle>
-<line x1="0" x2="600" y1="300" y2="300"></line>
-<rect height="440" rx="8" width="440" x="80" y="80"></rect>
-<path d="M80 180h100v240H80M520 180H420v240h100"></path>
-</svg>
-</div>
-<!-- Top Badge / Header Tagline -->
-<div class="relative z-10 flex items-center justify-between">
-<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md">
-<span class="w-2 h-2 rounded-full bg-secondary-fixed animate-pulse"></span>
-<span class="font-label-sm uppercase tracking-widest text-secondary-fixed">Plataforma Oficial Federada</span>
-</div>
-<div class="hidden sm:flex items-center gap-2 font-label-md text-white/70">
-<span class="material-symbols-outlined text-base">verified</span>
-<span>FBF • Oruro</span>
-</div>
-</div>
-<!-- Centerpiece Crest & Identity Presentation -->
-<div class="relative z-10 my-auto py-10">
-<div class="flex flex-col sm:flex-row items-start sm:items-center gap-8 mb-8">
-<!-- Institutional Crest Frame -->
-<div class="relative group">
-<div class="absolute -inset-1 rounded-2xl bg-secondary-fixed opacity-40 blur-md group-hover:opacity-75 transition duration-500"></div>
-<div class="relative w-28 h-28 sm:w-36 sm:h-36 rounded-2xl bg-surface-container-lowest p-3 shadow-xl flex items-center justify-center overflow-hidden">
-<img alt="Escudo Oficial Asociación de Fútbol Oruro" class="w-full h-full object-contain drop-shadow-md" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8YCfWLpvbLOv5_0kkRDxuET03XZgaxwHY7DpInL_KLkLauTEhyu_poqLxGl1TRKfCO8hneb04sIPI8oAXYAnkgvm1hsj3QKxCQd1_T90EXf3DbxCBnU_X77WTaS0WszWCfSzj2FPe_wsG-MOomlXWUweMSiXDwR57eVdTG0PhO1X-U_XQ--A7sExs2gDyH-NngieG32m8lbZvCKi55HzkXtw4hT5QPq8o1yW3v25ChD-9l2gza3VDYLN3Ady9Cx8biDo"/>
-</div>
-</div>
-<div class="flex flex-col">
-<span class="font-label-md tracking-wider uppercase text-secondary-fixed mb-1">Fundada el 21 de Julio de 1921</span>
-<h1 class="font-headline-lg text-headline-lg text-white font-bold leading-none tracking-tight">
-              ASOCIACIÓN DE FÚTBOL ORURO
-            </h1>
-<p class="font-headline-sm text-headline-sm text-secondary-fixed-dim mt-2 font-light">
-              Sistema Integral de Gestión y Competiciones Deportivas
-            </p>
-</div>
-</div>
-<!-- Telemetry & Live Governance Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-<div class="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
-<div class="flex items-center justify-between mb-2">
-<span class="font-label-sm text-white/70">Temporada</span>
-<span class="material-symbols-outlined text-secondary-fixed text-lg">calendar_month</span>
-</div>
-<p class="font-headline-sm text-headline-sm text-white font-bold">2026 / Adecuación</p>
-<span class="font-body-sm text-body-sm text-white/60">Torneos Oficiales AFO</span>
-</div>
-<div class="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
-<div class="flex items-center justify-between mb-2">
-<span class="font-label-sm text-white/70">Registros y Pases</span>
-<span class="material-symbols-outlined text-secondary-fixed text-lg">how_to_reg</span>
-</div>
-<p class="font-headline-sm text-headline-sm text-white font-bold">Planillas Digitales</p>
-<span class="font-body-sm text-body-sm text-white/60">Actas COMET vinculadas</span>
-</div>
-<div class="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
-<div class="flex items-center justify-between mb-2">
-<span class="font-label-sm text-white/70">Sede Central</span>
-<span class="material-symbols-outlined text-secondary-fixed text-lg">stadium</span>
-</div>
-<p class="font-headline-sm text-headline-sm text-white font-bold">Jesús Bermúdez</p>
-<span class="font-body-sm text-body-sm text-white/60">3.735 m.s.n.m. • Bolivia</span>
-</div>
-</div>
-</div>
-<!-- Bottom Institutional Disclaimer -->
-<div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 text-white/60">
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined text-secondary-fixed text-xl">gavel</span>
-<span class="font-body-sm text-body-sm">Tribunal de Justicia Deportiva y Comité de Árbitros en Línea</span>
-</div>
-<span class="font-label-sm text-label-sm tracking-wider uppercase text-white/40">AFO • ORURO - BOLIVIA</span>
-</div>
-</div>
-<!-- Right Column / Authentication Workspace -->
-<div class="lg:col-span-6 xl:col-span-5 flex flex-col justify-between p-8 sm:p-12 lg:p-16 bg-surface-container-lowest">
-<!-- Top Bar: Regional Status -->
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-2 text-on-surface-variant">
-<span class="material-symbols-outlined text-lg text-primary">security</span>
-<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Acceso Seguro SSL v2.4</span>
-</div>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm">
-          Portal Institucional
-        </span>
-</div>
-<!-- Authentication Form Center -->
-<div class="w-full max-w-md mx-auto my-auto py-8">
-<!-- Welcome Title -->
-<div class="mb-8">
-<h2 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight">
-            Acceso al Sistema
-          </h2>
-<p class="font-body-md text-body-md text-on-surface-variant mt-1.5">
-            Ingrese sus credenciales federadas para administrar competiciones, actas y balances.
+{% block title %}Iniciar sesión | A.F.O. Oruro{% endblock %}
+
+{% block body %}
+<main class="min-h-screen w-full overflow-x-hidden bg-surface">
+  <div class="grid min-h-screen grid-cols-1 lg:grid-cols-12">
+
+    <!-- ===================== LADO INSTITUCIONAL ===================== -->
+    <section class="relative order-2 min-w-0 overflow-hidden bg-primary p-7 text-on-primary sm:p-10 lg:order-1 lg:col-span-7 lg:p-14">
+      <div class="auth-grid pointer-events-none absolute inset-0 opacity-60"></div>
+      <div class="auth-crest" aria-hidden="true">
+        <img src="{% static 'img/afo-crest-transparent@2x.png' %}" alt=""/>
+      </div>
+      <div class="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-secondary-fixed/20 blur-3xl"></div>
+      <div class="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-primary-container/70 blur-3xl"></div>
+
+      <div class="relative z-10 flex h-full flex-col justify-between gap-10">
+        <!-- Encabezado -->
+        <div class="flex items-center justify-between gap-4">
+          <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 backdrop-blur-md">
+            <span class="h-2 w-2 animate-pulse rounded-full bg-secondary-fixed"></span>
+            <span class="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary-fixed">
+              Temporada {% now "Y" %} · Plataforma oficial
+            </span>
+          </div>
+          <span class="hidden items-center gap-2 text-xs font-semibold text-white/70 sm:flex">
+            <span class="material-symbols-outlined text-base">verified</span>
+            FBF · Oruro
+          </span>
+        </div>
+
+        <!-- Identidad -->
+        <div class="max-w-2xl">
+          <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-secondary-fixed">
+            Fundada el 21 de julio de 1921
           </p>
-</div>
-{% if error %}<div class="mb-4 p-3 rounded bg-error-container text-on-error-container font-body-sm text-body-sm flex items-center gap-2"><span class="material-symbols-outlined text-lg">error</span><span>{{ error }}</span></div>{% endif %}<form class="space-y-5" id="loginForm" method="post" action="{% url 'login' %}" onsubmit="event.preventDefault(); handleLoginSubmit();">{% csrf_token %}
-<!-- Role Selector -->
-<div class="space-y-1.5">
-<label class="font-label-md text-label-md text-on-surface font-semibold flex items-center justify-between" for="rolSelector">
-<span>Módulo y Rol Institucional</span>
-<span class="text-secondary font-normal text-xs">Perfil federativo</span>
-</label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-xl">
-                badge
-              </span>
-<select class="w-full h-11 pl-11 pr-10 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none transition appearance-none cursor-pointer" id="rolSelector" name="role">
-<option value="ADMIN">Administrador General de la A.F.O.</option>
-<option value="DIRIGENTE">Dirigente de Club Afiliado</option>
-<option value="ARBITRO">Comisión Técnica / Árbitros</option>
-<option value="TESORERO">Tesorero / Finanzas Institucionales</option>
-</select>
-<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-xl">
-                expand_more
-              </span>
-</div>
-</div>
-<!-- Username Input -->
-<div class="space-y-1.5">
-<label class="font-label-md text-label-md text-on-surface font-semibold" for="usernameInput">
-              Nombre de Usuario o Código Institucional
-            </label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-xl">
-                account_circle
-              </span>
-<input class="w-full h-11 pl-11 pr-4 rounded bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-on-surface-variant/50 focus:bg-surface-container-lowest focus:outline-none transition" id="usernameInput" name="username" placeholder="Ej. afo-adm-2026 / usuario@afo.bo" required="" type="text"/>
-</div>
-</div>
-<!-- Password Input with Toggle -->
-<div class="space-y-1.5">
-<div class="flex items-center justify-between">
-<label class="font-label-md text-label-md text-on-surface font-semibold" for="passwordInput">
-                Contraseña
-              </label>
-<a class="font-label-sm text-label-sm text-primary hover:text-secondary-fixed-variant underline transition" href="#recuperar">
+          <h1 class="auth-display mt-3 break-words text-[2.2rem] leading-[0.95] text-white sm:text-[3.4rem] lg:text-[4rem]">
+            Asociación de Fútbol Oruro
+          </h1>
+          <p class="mt-5 max-w-xl text-base leading-7 text-primary-fixed sm:text-lg">
+            Sistema integral de gestión y competiciones deportivas.
+          </p>
+        </div>
+
+        <!-- Datos institucionales -->
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+            <div class="mb-2 flex items-center justify-between">
+              <span class="text-[11px] font-semibold uppercase tracking-wider text-white/70">Temporada</span>
+              <span class="material-symbols-outlined text-lg text-secondary-fixed">calendar_month</span>
+            </div>
+            <p class="font-bold text-white">{% now "Y" %} / Adecuación</p>
+            <span class="text-xs text-white/60">Torneos oficiales AFO</span>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+            <div class="mb-2 flex items-center justify-between">
+              <span class="text-[11px] font-semibold uppercase tracking-wider text-white/70">Registros y pases</span>
+              <span class="material-symbols-outlined text-lg text-secondary-fixed">how_to_reg</span>
+            </div>
+            <p class="font-bold text-white">Planillas digitales</p>
+            <span class="text-xs text-white/60">Actas COMET vinculadas</span>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+            <div class="mb-2 flex items-center justify-between">
+              <span class="text-[11px] font-semibold uppercase tracking-wider text-white/70">Sede central</span>
+              <span class="material-symbols-outlined text-lg text-secondary-fixed">stadium</span>
+            </div>
+            <p class="font-bold text-white">Jesús Bermúdez</p>
+            <span class="text-xs text-white/60">3.735 m.s.n.m. · Bolivia</span>
+          </div>
+        </div>
+
+        <!-- Pie institucional -->
+        <div class="flex flex-col gap-3 border-t border-white/10 pt-5 text-white/60 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-xl text-secondary-fixed">gavel</span>
+            <span class="text-sm">Tribunal de Justicia Deportiva y Comité de Árbitros en línea</span>
+          </div>
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-white/40">AFO · Oruro, Bolivia</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FORMULARIO ===================== -->
+    <section class="order-1 flex min-w-0 flex-col justify-between bg-surface-container-lowest p-7 sm:p-10 lg:order-2 lg:col-span-5 lg:p-12">
+      <!-- Barra superior -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-on-surface-variant">
+          <span class="material-symbols-outlined text-lg text-primary">shield_lock</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.16em]">Conexión institucional</span>
+        </div>
+        <span class="rounded-full bg-surface-container-high px-2.5 py-1 text-[11px] font-semibold text-primary">
+          Portal institucional
+        </span>
+      </div>
+
+      <!-- Formulario -->
+      <div class="mx-auto w-full max-w-md py-10">
+        <h2 class="auth-title text-3xl text-on-surface">Acceso al sistema</h2>
+        <p class="mt-2 text-sm leading-6 text-on-surface-variant">
+          Ingrese sus credenciales federadas para administrar competiciones, actas y balances.
+        </p>
+
+        {% if error %}
+          <div role="alert" aria-live="assertive" class="mt-6 flex items-start gap-2.5 rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm text-on-error-container">
+            <span class="material-symbols-outlined mt-0.5 text-lg">error</span>
+            <span>{{ error }}</span>
+          </div>
+        {% endif %}
+
+        <form class="mt-7 space-y-5" id="loginForm" method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ next }}"/>
+
+          <!-- Usuario -->
+          <div class="space-y-1.5">
+            <label class="auth-label" for="usernameInput">Usuario o código institucional</label>
+            <div class="relative">
+              <span class="material-symbols-outlined pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xl text-on-surface-variant">account_circle</span>
+              <input class="auth-input" id="usernameInput" name="username" type="text"
+                     value="{{ username }}" placeholder="Ej. afo-adm-2026"
+                     autocomplete="username" autocapitalize="none" spellcheck="false"
+                     required autofocus/>
+            </div>
+          </div>
+
+          <!-- Contraseña -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between gap-3">
+              <label class="auth-label" for="passwordInput">Contraseña</label>
+              <a class="text-xs font-semibold text-primary hover:underline" href="{% url 'password_reset' %}">
                 ¿Olvidó su contraseña?
               </a>
-</div>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-xl">
-                lock
-              </span>
-<input class="w-full h-11 pl-11 pr-12 rounded bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-on-surface-variant/50 focus:bg-surface-container-lowest focus:outline-none transition" id="passwordInput" name="password" placeholder="••••••••" required="" type="password"/>
-<button aria-label="Alternar visibilidad de contraseña" class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition p-1 flex items-center justify-center" id="togglePasswordBtn" onclick="togglePasswordVisibility()" type="button">
-<span class="material-symbols-outlined text-xl" id="eyeIcon">visibility</span>
-</button>
-</div>
-</div>
-<!-- Remember Me Checkbox -->
-<div class="flex items-center justify-between pt-1">
-<label class="flex items-center gap-2.5 cursor-pointer">
-<input class="w-4 h-4 rounded text-primary bg-surface-container-low accent-primary cursor-pointer" id="rememberCheckbox" type="checkbox"/>
-<span class="font-body-sm text-body-sm text-on-surface-variant">Recordar credenciales en este equipo</span>
-</label>
-</div>
-<!-- Submit Action Button -->
-<div class="pt-2">
-<button class="w-full h-11 rounded bg-primary text-on-primary font-title-md text-title-md font-semibold tracking-wide shadow-md hover:bg-on-primary-fixed-variant hover:shadow-lg transition-all flex items-center justify-center gap-2 group" id="submitButton" type="submit">
-<span>Iniciar Sesión</span>
-<span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">
-                login
-              </span>
-</button>
-</div>
-<!-- Institutional Help Note -->
-<p class="text-center font-body-sm text-body-sm text-on-surface-variant pt-2">
-            ¿Requiere acreditación federativa? 
-            <a class="text-primary font-semibold hover:underline" href="#contacto-secretaria">Contactar a Secretaría General</a>
-</p>
-</form>
-<!-- Dynamic Feedback Message Container -->
-<div class="hidden mt-4 p-3 rounded bg-surface-container text-on-surface font-body-sm text-body-sm flex items-center gap-2" id="statusNotification">
-<span class="material-symbols-outlined text-primary text-lg">info</span>
-<span id="notificationText">Procesando verificación en el registro de auditoría...</span>
-</div>
-</div>
-<!-- Bottom Security and Audit Footer -->
-<div class="pt-6 mt-6 bg-surface-container-low/50 -mx-8 -mb-8 sm:-mx-12 sm:-mb-12 lg:-mx-16 lg:-mb-16 p-6 sm:px-12 flex flex-col sm:flex-row items-center justify-between gap-3 text-on-surface-variant">
-<div class="flex items-center gap-2 font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-base text-secondary">history_toggle_off</span>
-<span>Auditoría: <code>HistorialOperacion</code> activo (IP y geolocalización registradas).</span>
-</div>
-<div class="font-label-sm text-label-sm text-on-surface-variant/80 text-right">
-          AFO Sistema v2.4 • Oruro, Bolivia
-        </div>
-</div>
-</div>
-</div>
-</div>
+            </div>
+            <div class="relative">
+              <span class="material-symbols-outlined pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xl text-on-surface-variant">lock</span>
+              <input class="auth-input pr-12" id="passwordInput" name="password" type="password"
+                     placeholder="••••••••" autocomplete="current-password" required/>
+              <button type="button" id="togglePasswordBtn" aria-label="Mostrar contraseña" aria-pressed="false"
+                      class="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center p-1 text-on-surface-variant transition hover:text-primary">
+                <span class="material-symbols-outlined text-xl" id="eyeIcon">visibility</span>
+              </button>
+            </div>
+            <p id="capsHint" class="hidden text-xs font-semibold text-amber-600">Bloq Mayús está activado.</p>
+          </div>
+
+          <!-- Sesión -->
+          <label class="flex cursor-pointer items-center gap-2.5">
+            <input class="h-4 w-4 cursor-pointer rounded border-outline-variant text-primary accent-primary"
+                   name="remember" type="checkbox" {% if remember %}checked{% endif %}/>
+            <span class="text-sm text-on-surface-variant">Mantener la sesión en este equipo</span>
+          </label>
+
+          <!-- Enviar -->
+          <button class="auth-btn group" id="submitButton" type="submit">
+            <span>Iniciar sesión</span>
+            <span class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1">login</span>
+          </button>
+
+          <p class="pt-1 text-center text-sm text-on-surface-variant">
+            ¿Requiere acreditación federativa?
+            <a class="font-semibold text-primary hover:underline" href="{% url 'index' %}#institucion">Contactar a Secretaría General</a>
+          </p>
+        </form>
+      </div>
+
+      <!-- Pie -->
+      <div class="-mx-7 -mb-7 flex flex-col gap-2 border-t border-outline-variant/50 bg-surface-container-low/60 p-5 text-xs text-on-surface-variant sm:-mx-10 sm:-mb-10 sm:flex-row sm:items-center sm:justify-between sm:px-10 lg:-mx-12 lg:-mb-12 lg:px-12">
+        <span class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-base text-secondary">history_toggle_off</span>
+          Registro de accesos activo (usuario e IP).
+        </span>
+        <span class="font-semibold uppercase tracking-wider text-on-surface-variant/80">AFO · Oruro, Bolivia</span>
+      </div>
+    </section>
+  </div>
+</main>
+
 <script>
-  function togglePasswordVisibility() {
-    const passwordInput = document.getElementById('passwordInput');
-    const eyeIcon = document.getElementById('eyeIcon');
-    if (!passwordInput || !eyeIcon) return;
+  (function () {
+    var passwordInput = document.getElementById('passwordInput');
+    var eyeIcon = document.getElementById('eyeIcon');
+    var toggleBtn = document.getElementById('togglePasswordBtn');
+    var capsHint = document.getElementById('capsHint');
+    var form = document.getElementById('loginForm');
+    var submitButton = document.getElementById('submitButton');
 
-    if (passwordInput.type === 'password') {
-      passwordInput.type = 'text';
-      eyeIcon.textContent = 'visibility_off';
-    } else {
-      passwordInput.type = 'password';
-      eyeIcon.textContent = 'visibility';
+    function togglePasswordVisibility() {
+      if (!passwordInput || !eyeIcon || !toggleBtn) return;
+      var show = passwordInput.type === 'password';
+      passwordInput.type = show ? 'text' : 'password';
+      eyeIcon.textContent = show ? 'visibility_off' : 'visibility';
+      toggleBtn.setAttribute('aria-pressed', show ? 'true' : 'false');
+      toggleBtn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
     }
-  }
 
-  function handleLoginSubmit() {
-    const btn = document.getElementById('submitButton');
-    const notification = document.getElementById('statusNotification');
-    const notificationText = document.getElementById('notificationText');
-    const username = document.getElementById('usernameInput').value;
-    const role = document.getElementById('rolSelector').value;
-    const form = document.getElementById('loginForm');
+    function updateCapsHint(event) {
+      if (!capsHint) return;
+      var active = typeof event.getModifierState === 'function'
+        ? event.getModifierState('CapsLock')
+        : false;
+      capsHint.classList.toggle('hidden', !active);
+    }
 
-    if (!btn || !notification || !form) return;
+    if (toggleBtn) toggleBtn.addEventListener('click', togglePasswordVisibility);
+    if (passwordInput) {
+      passwordInput.addEventListener('keydown', updateCapsHint);
+      passwordInput.addEventListener('keyup', updateCapsHint);
+      passwordInput.addEventListener('blur', function () {
+        capsHint.classList.add('hidden');
+      });
+    }
 
-    btn.disabled = true;
-    btn.classList.add('opacity-75', 'cursor-not-allowed');
-    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-lg">sync</span><span>Verificando credenciales...</span>';
-
-    notification.classList.remove('hidden');
-    notificationText.textContent = `Validando permisos para [${username}] bajo el rol [${role}]...`;
-
-    setTimeout(() => {
-      form.submit();
-    }, 600);
-  }
-</script></main><script src="{% static 'js/shell.js' %}"></script></body></html>
+    if (form && submitButton) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          form.reportValidity();
+          return;
+        }
+        submitButton.disabled = true;
+        submitButton.innerHTML =
+          '<span class="material-symbols-outlined animate-spin text-lg">sync</span><span>Verificando…</span>';
+      });
+    }
+  })();
+</script>
+{% endblock %}

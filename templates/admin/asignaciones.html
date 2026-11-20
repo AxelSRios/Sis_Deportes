@@ -1,0 +1,120 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}asignaciones{% endblock %}
+
+{% block acciones %}
+  <a href="{% url 'arbitros' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+    <span class="material-symbols-outlined text-[18px]">sports</span>
+    Plantel arbitral
+  </a>
+  {% if puede_editar %}
+    <a href="{% url 'asignacion_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">add</span>
+      Nueva designación
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+<div class="overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="border-b border-surface-container p-4">
+    <h2 class="font-headline-sm text-base font-bold text-on-surface">Designaciones arbitrales</h2>
+    <p class="mt-0.5 text-xs text-on-surface-variant">{{ total }} designación{{ total|pluralize:"es" }} registrada{{ total|pluralize:"s" }}. Cada rol del partido se cubre una sola vez.</p>
+  </div>
+
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-6">
+    <div class="lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Árbitro o equipo"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div class="lg:col-span-2">
+      <label for="campeonato" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Campeonato</label>
+      <select id="campeonato" name="campeonato" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for campeonato in campeonatos %}<option value="{{ campeonato.pk }}" {% if campeonato_actual == campeonato.pk|stringformat:"s" %}selected{% endif %}>{{ campeonato.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="arbitro" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Árbitro</label>
+      <select id="arbitro" name="arbitro" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for arbitro in arbitros %}<option value="{{ arbitro.pk }}" {% if arbitro_actual == arbitro.pk|stringformat:"s" %}selected{% endif %}>{{ arbitro.apellido }}, {{ arbitro.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex items-end gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Filtrar
+      </button>
+      <a href="{% url 'asignaciones' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[840px] text-left">
+        <caption class="sr-only">Designaciones arbitrales</caption>
+        <thead>
+          <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
+            <th scope="col" class="px-4 py-2.5">Partido</th>
+            <th scope="col" class="px-3 py-2.5">Rol arbitral</th>
+            <th scope="col" class="px-3 py-2.5">Árbitro</th>
+            <th scope="col" class="px-4 py-2.5 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container">
+          {% for asignacion in pagina.object_list %}
+            <tr class="transition hover:bg-surface-container-low/60">
+              <td class="px-4 py-3">
+                {% if asignacion.partido %}
+                  <a href="{% url 'partido_detalle' asignacion.partido.pk %}" class="block text-sm font-semibold text-on-surface hover:text-primary">
+                    {{ asignacion.partido.equipo_local.nombre|default:"Por definir" }} vs {{ asignacion.partido.equipo_visitante.nombre|default:"Por definir" }}
+                  </a>
+                  <p class="text-[11px] text-on-surface-variant">
+                    {{ asignacion.partido.fecha|date:"d/m/Y H:i"|default:"Fecha por confirmar" }}
+                    {% if asignacion.partido.campeonato %} · {{ asignacion.partido.campeonato.nombre }}{% endif %}
+                  </p>
+                {% else %}
+                  <span class="text-sm text-on-surface-variant">Partido no disponible</span>
+                {% endif %}
+              </td>
+              <td class="px-3 py-3">
+                <span class="inline-flex rounded-md bg-primary/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.04em] text-primary">{{ asignacion.get_rol_display }}</span>
+              </td>
+              <td class="px-3 py-3">
+                {% if asignacion.arbitro %}
+                  <a href="{% url 'arbitro_detalle' asignacion.arbitro.pk %}" class="text-sm font-semibold text-on-surface hover:text-primary">{{ asignacion.arbitro.apellido }}, {{ asignacion.arbitro.nombre }}</a>
+                  <p class="text-[11px] text-on-surface-variant">{{ asignacion.arbitro.codigo }} · {{ asignacion.arbitro.get_categoria_display }}</p>
+                {% else %}
+                  <span class="text-xs text-on-surface-variant">Sin árbitro</span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1">
+                  {% if puede_editar %}
+                    <a href="{% url 'asignacion_editar' asignacion.pk %}" title="Editar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                      <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </a>
+                    <a href="{% url 'asignacion_eliminar' asignacion.pk %}" title="Eliminar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="assignment_ind" titulo="Sin designaciones" detalle="Asigne árbitros a los partidos programados para cubrir la terna arbitral." %}
+  {% endif %}
+</div>
+{% endblock %}
