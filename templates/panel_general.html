@@ -9,13 +9,14 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Panel General | AFO Oruro</title>
 <meta name="robots" content="noindex,nofollow"/>
+<meta name="theme-color" content="#1D428A"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<link rel="stylesheet" href="{% static_v 'css/styles.css' %}"/>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="{% static 'js/tailwind-config.js' %}"></script>
+<script src="{% static_v 'js/tailwind-config.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
@@ -138,18 +139,18 @@
     </div>
   </header>
 
-  <div class="mx-auto w-full max-w-[1440px] px-5 sm:px-8">
+  <div class="mx-auto w-full max-w-[1440px] px-5 sm:px-8" id="afo-contenido">
 
     <!-- Mensajes de operación -->
     {% if messages %}
       <div class="mt-4 space-y-2">
         {% for message in messages %}
           <div role="status"
-               class="flex items-start gap-2 rounded-xl border px-4 py-3 text-sm {% if message.tags == 'error' %}border-error/20 bg-error-container text-on-error-container{% else %}border-secondary/20 bg-secondary-fixed/40 text-on-secondary-fixed{% endif %}">
-            <span class="material-symbols-outlined mt-0.5 text-[18px]">
+               class="afo-flash {% if message.tags == 'error' %}afo-flash--error{% else %}afo-flash--ok{% endif %}">
+            <span class="material-symbols-outlined mt-0.5" aria-hidden="true">
               {% if message.tags == 'error' %}error{% else %}check_circle{% endif %}
             </span>
-            <span>{{ message }}</span>
+            <span class="afo-flash-text">{{ message }}</span>
           </div>
         {% endfor %}
       </div>
@@ -246,6 +247,9 @@
 <script>
   window.AFO_URLS = {
     panel: "{% url 'panel' %}",
+    gestion: "{% url 'gestion_deportiva' %}",
+    competencia: "{% url 'competencia' %}",
+    administracion: "{% url 'administracion' %}",
     clubes: "{% url 'clubes' %}",
     equipos: "{% url 'equipos' %}",
     deportistas: "{% url 'deportistas' %}",
@@ -260,6 +264,7 @@
     reportes: "{% url 'reportes' %}",
     usuarios: "{% url 'usuarios' %}",
     auditoria: "{% url 'auditoria' %}",
+    accesos: "{% url 'accesos' %}",
     perfil: "{% url 'perfil' %}",
     logout: "{% url 'logout' %}",
     username: "{{ request.user.get_full_name|default:request.user.username|escapejs }}",
@@ -299,16 +304,20 @@
     var charts = {};
 
     var PALETA = {
-      primary: '#002b6d',
-      secondary: '#00677f',
-      sky: '#77d3f2',
-      soft: '#b6ebff',
-      slate: '#3b5ca5',
-      muted: '#a9b4c6'
+      primary: '#1D428A',
+      secondary: '#75D1F0',
+      sky: '#9FE0F6',
+      soft: '#D9E4F7',
+      slate: '#147A9C',
+      gold: '#75D1F0',
+      muted: '#D5DCE5'
     };
 
-    Chart.defaults.font.family = "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif";
-    Chart.defaults.color = '#434651';
+    Chart.defaults.font.family = "'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif";
+    Chart.defaults.color = '#64748B';
+    Chart.defaults.borderColor = 'rgba(29, 66, 138, .08)';
+    Chart.defaults.animation.duration = 900;
+    Chart.defaults.animation.easing = 'easeOutQuart';
 
     function formatearBs(valor) {
       return 'Bs ' + Number(valor).toLocaleString('es-BO', { maximumFractionDigits: 2 });
@@ -326,7 +335,7 @@
     function ejes(extra) {
       var base = {
         x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } },
-        y: { beginAtZero: true, grid: { color: 'rgba(196,198,210,.45)' }, ticks: { precision: 0 } }
+        y: { beginAtZero: true, grid: { color: 'rgba(213, 220, 229, .5)' }, ticks: { precision: 0 } }
       };
       if (extra) {
         Object.keys(extra).forEach(function (k) { base[k] = extra[k]; });
@@ -342,7 +351,7 @@
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: '#001946',
+            backgroundColor: '#0F2654',
             padding: 10,
             cornerRadius: 8,
             titleFont: { weight: '700' }
@@ -374,7 +383,7 @@
             label: 'Altas',
             data: datos,
             borderColor: PALETA.primary,
-            backgroundColor: 'rgba(0, 43, 109, .12)',
+            backgroundColor: 'rgba(29, 66, 138, .12)',
             pointBackgroundColor: PALETA.secondary,
             pointRadius: 3,
             borderWidth: 2.5,
@@ -401,7 +410,7 @@
             maxBarThickness: 34
           }]
         },
-        options: opciones({ indexAxis: 'y', scales: ejes({ x: { beginAtZero: true, grid: { color: 'rgba(196,198,210,.45)' }, ticks: { precision: 0 } }, y: { grid: { display: false }, ticks: { autoSkip: false } } }) })
+        options: opciones({ indexAxis: 'y', scales: ejes({ x: { beginAtZero: true, grid: { color: 'rgba(213, 220, 229, .5)' }, ticks: { precision: 0 } }, y: { grid: { display: false }, ticks: { autoSkip: false } } }) })
       });
     }
 
@@ -426,7 +435,7 @@
           cutout: '62%',
           plugins: {
             legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, padding: 14, font: { size: 11 } } },
-            tooltip: { backgroundColor: '#001946', padding: 10, cornerRadius: 8 }
+            tooltip: { backgroundColor: '#0F2654', padding: 10, cornerRadius: 10 }
           }
         }
       });
@@ -453,13 +462,13 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#001946',
+              backgroundColor: '#0F2654',
               padding: 10,
               cornerRadius: 8,
               callbacks: { label: function (ctx) { return formatearBs(ctx.parsed.y); } }
             }
           },
-          scales: ejes({ y: { beginAtZero: true, grid: { color: 'rgba(196,198,210,.45)' }, ticks: { callback: function (v) { return formatearBs(v); } } } })
+          scales: ejes({ y: { beginAtZero: true, grid: { color: 'rgba(213, 220, 229, .5)' }, ticks: { callback: function (v) { return formatearBs(v); } } } })
         })
       });
     }
@@ -481,7 +490,7 @@
         options: opciones({
           plugins: {
             legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, padding: 14, font: { size: 11 } } },
-            tooltip: { backgroundColor: '#001946', padding: 10, cornerRadius: 8 }
+            tooltip: { backgroundColor: '#0F2654', padding: 10, cornerRadius: 10 }
           }
         })
       });

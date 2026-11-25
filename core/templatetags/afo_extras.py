@@ -73,20 +73,20 @@ def short_name(value, max_length=28):
 
 @register.filter
 def estado_clase(value):
-    """Clases del chip de estado según la situación del registro."""
+    """Clases del chip de estado dentro de la paleta tricolor A.F.O."""
     estado = str(value or '').strip().upper()
     if estado in {
         'ACTIVO', 'APROBADA', 'PAGADO', 'FINALIZADO', 'CUMPLIDA',
         'VIGENTE', 'DISPONIBLE',
     }:
-        return 'bg-secondary-fixed/60 text-on-secondary-fixed'
+        return 'bg-secondary-fixed text-on-secondary-fixed'
     if estado in {'PENDIENTE', 'PLANIFICADO', 'PROGRAMADO', 'EN_JUEGO'}:
-        return 'bg-tertiary-fixed/60 text-tertiary'
+        return 'bg-primary/10 text-primary'
     if estado in {
         'SUSPENDIDO', 'SUSPENDIDA', 'RECHAZADA', 'ANULADA', 'ANULADO',
         'CANCELADO', 'BAJA', 'INACTIVO', 'NO_DISPONIBLE',
     }:
-        return 'bg-error/10 text-error'
+        return 'bg-primary text-on-primary'
     return 'bg-surface-container text-on-surface-variant'
 
 
@@ -101,6 +101,133 @@ def estado_label(value):
 @register.filter
 def si_no(value):
     return 'Sí' if value else 'No'
+
+
+@register.filter
+def rol_label(value):
+    """Etiqueta legible del rol institucional guardado en el registro."""
+    from core.roles import ROLES_LABELS
+    if not value:
+        return '—'
+    return ROLES_LABELS.get(str(value), str(value))
+
+
+@register.filter
+def rango_paginas(pagina, vecinos=2):
+    """Números de página visibles con elipsis, para paginaciones largas.
+
+    Devuelve, por ejemplo, [1, '…', 4, 5, 6, '…', 20]. Es solo una ayuda
+    de presentación: no altera la consulta ni el número de página actual.
+    """
+    try:
+        actual = int(pagina.number)
+        total = int(pagina.paginator.num_pages)
+        vecinos = int(vecinos)
+    except (AttributeError, TypeError, ValueError):
+        return []
+
+    if total <= 1:
+        return []
+
+    visibles = {1, total}
+    for numero in range(actual - vecinos, actual + vecinos + 1):
+        if 1 <= numero <= total:
+            visibles.add(numero)
+
+    resultado = []
+    anterior = 0
+    for numero in sorted(visibles):
+        if anterior and numero - anterior > 1:
+            resultado.append('…')
+        resultado.append(numero)
+        anterior = numero
+    return resultado
+
+
+# Secciones del sistema: clave de navegación, miga, título y descripción.
+_SECCIONES = {
+    'panel': ('panel', 'Panel General', 'Panel General',
+              'Centro de control institucional de la A.F.O.'),
+    'gestion_deportiva': ('gestion', 'Gestión Deportiva', 'Gestión Deportiva',
+                          'Clubes, planteles, fichajes y cuerpo arbitral.'),
+    'competencia': ('competencia', 'Competencia', 'Centro de Competencia',
+                    'Torneos, calendario, posiciones y resultados oficiales.'),
+    'administracion': ('administracion', 'Administración', 'Centro de Administración',
+                       'Caja, usuarios, reportes y auditoría institucional.'),
+    'clubes': ('clubes', 'Clubes', 'Clubes afiliados',
+               'Padrón institucional de la A.F.O.'),
+    'canchas': ('canchas', 'Canchas', 'Canchas y escenarios',
+                'Estadios, complejos y canchas oficiales de la A.F.O.'),
+    'equipos': ('equipos', 'Equipos', 'Equipos',
+                'Planteles por club, categoría y temporada.'),
+    'deportistas': ('deportistas', 'Deportistas', 'Deportistas',
+                    'Fichas, habilitaciones y sanciones del padrón.'),
+    'categorias': ('categorias', 'Categorías', 'Categorías',
+                   'Divisiones y límites de edad del fútbol orureño.'),
+    'campeonatos': ('campeonatos', 'Campeonatos', 'Campeonatos',
+                    'Torneos oficiales, calendario y tablas de posiciones.'),
+    'inscripciones': ('inscripciones', 'Inscripciones', 'Inscripciones',
+                      'Altas de equipos y deportistas en cada torneo.'),
+    'partidos': ('partidos', 'Partidos', 'Partidos',
+                 'Fixture, programación y resultados homologados.'),
+    'arbitros': ('arbitros', 'Árbitros', 'Árbitros',
+                 'Cuerpo arbitral y disponibilidad para designaciones.'),
+    'asignaciones': ('asignaciones', 'Designaciones', 'Designaciones arbitrales',
+                     'Ternas asignadas a cada encuentro oficial.'),
+    'sanciones': ('sanciones', 'Sanciones', 'Sanciones',
+                  'Resoluciones del Tribunal de Penas.'),
+    'tesoreria': ('tesoreria', 'Tesorería', 'Tesorería',
+                  'Caja institucional, comprobantes y pagos.'),
+    'usuarios': ('usuarios', 'Usuarios', 'Usuarios',
+                 'Cuentas, roles y permisos del sistema.'),
+    'perfil': ('perfil', 'Mi perfil', 'Mi perfil',
+               'Datos de la cuenta y seguridad de acceso.'),
+    'reportes': ('reportes', 'Reportes', 'Reportes',
+                 'Exportaciones oficiales en PDF, Excel y CSV.'),
+    'auditoria': ('auditoria', 'Auditoría', 'Auditoría',
+                  'Historial de operaciones y trazabilidad del sistema.'),
+    'accesos': ('accesos', 'Accesos', 'Accesos y sesiones',
+                'Inicios, cierres e intentos fallidos registrados.'),
+    'accesos_sesiones': ('accesos', 'Accesos', 'Accesos y sesiones',
+                         'Inicios, cierres e intentos fallidos registrados.'),
+}
+
+_PREFIJOS_SECCION = (
+    ('club', 'clubes'), ('cancha', 'canchas'), ('equipo', 'equipos'),
+    ('deportista', 'deportistas'),
+    ('categoria', 'categorias'), ('campeonato', 'campeonatos'),
+    ('inscripcion', 'inscripciones'), ('partido', 'partidos'),
+    ('arbitro', 'arbitros'), ('arbitraje', 'arbitros'),
+    ('asignacion', 'asignaciones'), ('sancion', 'sanciones'),
+    ('pago', 'tesoreria'), ('tesoreria', 'tesoreria'),
+    ('usuario', 'usuarios'), ('perfil', 'perfil'), ('password', 'perfil'),
+    ('reporte', 'reportes'), ('auditoria', 'auditoria'),
+)
+
+
+@register.simple_tag(takes_context=True)
+def seccion_actual(context):
+    """Sección de navegación y textos de cabecera según la URL resuelta."""
+    request = context.get('request')
+    nombre = getattr(getattr(request, 'resolver_match', None), 'url_name', '') or ''
+    entrada = _SECCIONES.get(nombre)
+    if entrada is None:
+        for prefijo, candidata in _PREFIJOS_SECCION:
+            if nombre.startswith(prefijo):
+                entrada = next(
+                    (item for item in _SECCIONES.values() if item[0] == candidata),
+                    None,
+                )
+                break
+    if entrada is None:
+        entrada = _SECCIONES['panel']
+    clave, miga, titulo, descripcion = entrada
+    return {
+        'clave': clave,
+        'miga': miga,
+        'titulo': titulo,
+        'descripcion': descripcion,
+    }
 
 
 @register.simple_tag

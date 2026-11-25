@@ -1,4 +1,5 @@
 {% load static afo_extras %}
+{% seccion_actual as seccion %}
 <!DOCTYPE html>
 <html lang="es">
 <!-- Sistema de Gestión Deportiva AFO · Oruro — consola administrativa.
@@ -6,75 +7,74 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>{% block titulo_documento %}{{ titulo|default:"Consola" }}{% endblock %} | AFO Oruro</title>
+<title>{% block titulo_documento %}{{ titulo|default:seccion.titulo }}{% endblock %} | AFO Oruro</title>
 <meta name="robots" content="noindex,nofollow"/>
+<meta name="theme-color" content="#1D428A"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<link rel="stylesheet" href="{% static_v 'css/styles.css' %}"/>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="{% static 'js/tailwind-config.js' %}"></script>
+<script src="{% static_v 'js/tailwind-config.js' %}"></script>
 {% block head_extra %}{% endblock %}
 </head>
 
-<body class="bg-surface text-on-surface antialiased" data-shell="true" data-page="{% block nav_activo %}{{ nav_activo|default:'' }}{% endblock %}">
-<main class="w-full bg-surface">
-<div class="flex w-full flex-col pb-12">
+<body class="bg-surface text-on-surface antialiased" data-shell="true" data-page="{% block nav_activo %}{{ seccion.clave }}{% endblock %}">
+<main class="w-full">
+  <div class="afo-page-wrap">
 
-  <!-- ===================== CABECERA ===================== -->
-  <header class="border-b border-surface-container bg-surface-container-lowest">
-    <div class="mx-auto flex w-full max-w-[1440px] flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-
-      <div class="min-w-0">
-        <nav class="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-on-surface-variant" aria-label="Ruta de navegación">
-          <a href="{% url 'panel' %}" class="transition hover:text-primary">Panel General</a>
-          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
-          <span class="text-primary">{% block miga %}{{ titulo|default:"Consola" }}{% endblock %}</span>
+    <!-- ===================== CABECERA DE PÁGINA ===================== -->
+    <header class="afo-page-head">
+      <div class="afo-page-head-main">
+        <nav class="afo-breadcrumb" aria-label="Ruta de navegación">
+          <a href="{% url 'panel' %}">
+            <span class="material-symbols-outlined">home</span>
+          </a>
+          <span class="material-symbols-outlined">chevron_right</span>
+          <a href="{% url 'panel' %}">Panel General</a>
+          <span class="material-symbols-outlined">chevron_right</span>
+          <span>{% block miga %}{{ seccion.miga }}{% endblock %}</span>
         </nav>
 
-        <h1 class="mt-1.5 font-headline-lg text-xl font-bold tracking-tight text-primary sm:text-2xl">
-          {% block encabezado %}{{ titulo|default:"Consola administrativa" }}{% endblock %}
-        </h1>
-        <p class="mt-1 max-w-3xl text-sm leading-6 text-on-surface-variant">
-          {% block descripcion %}{{ subtitulo|default:"" }}{% endblock %}
-        </p>
+        <h1>{% block encabezado %}{{ titulo|default:seccion.titulo }}{% endblock %}</h1>
+        <p>{% block descripcion %}{{ subtitulo|default:seccion.descripcion }}{% endblock %}</p>
+
+        {% block tabs %}{% endblock %}
       </div>
 
-      <div class="flex flex-wrap items-center gap-2">
+      <div class="afo-page-actions">
         {% block acciones %}{% endblock %}
       </div>
-
-    </div>
-  </header>
-
-  <div class="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8">
+    </header>
 
     <!-- Mensajes de operación -->
     {% if messages %}
       <div class="mt-4 space-y-2" role="status" aria-live="polite">
         {% for message in messages %}
-          <div class="flex items-start gap-2 rounded-xl border px-4 py-3 text-sm {% if message.tags == 'error' %}border-error/20 bg-error-container text-on-error-container{% else %}border-secondary/20 bg-secondary-fixed/40 text-on-secondary-fixed{% endif %}">
-            <span class="material-symbols-outlined mt-0.5 text-[18px]">
+          <div class="afo-flash {% if message.tags == 'error' %}afo-flash--error{% else %}afo-flash--ok{% endif %}">
+            <span class="material-symbols-outlined mt-0.5" aria-hidden="true">
               {% if message.tags == 'error' %}error{% else %}check_circle{% endif %}
             </span>
-            <span>{{ message }}</span>
+            <span class="afo-flash-text">{{ message }}</span>
           </div>
         {% endfor %}
       </div>
     {% endif %}
 
-    <div class="mt-4">
+    <div class="afo-content" id="afo-contenido">
       {% block contenido %}{% endblock %}
     </div>
 
   </div>
-</div>
 </main>
 
 <script>
   window.AFO_URLS = {
     panel: "{% url 'panel' %}",
+    gestion: "{% url 'gestion_deportiva' %}",
+    competencia: "{% url 'competencia' %}",
+    administracion: "{% url 'administracion' %}",
     clubes: "{% url 'clubes' %}",
     equipos: "{% url 'equipos' %}",
     deportistas: "{% url 'deportistas' %}",
@@ -89,6 +89,7 @@
     reportes: "{% url 'reportes' %}",
     usuarios: "{% url 'usuarios' %}",
     auditoria: "{% url 'auditoria' %}",
+    accesos: "{% url 'accesos' %}",
     perfil: "{% url 'perfil' %}",
     logout: "{% url 'logout' %}",
     username: "{{ request.user.get_full_name|default:request.user.username|escapejs }}",

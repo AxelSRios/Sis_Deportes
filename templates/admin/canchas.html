@@ -1,0 +1,126 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}canchas{% endblock %}
+
+{% block acciones %}
+  {% if puede_editar %}
+    <a href="{% url 'cancha_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">add_location_alt</span>
+      Nueva cancha
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+<div class="overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="flex flex-col gap-2 border-b border-surface-container p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="font-headline-sm text-base font-bold text-on-surface">Escenarios deportivos</h2>
+      <p class="mt-0.5 text-xs text-on-surface-variant">{{ total }} escenario{{ total|pluralize }} registrado{{ total|pluralize:"s" }} para las competencias oficiales.</p>
+    </div>
+    <span class="inline-flex w-fit items-center gap-1.5 rounded-lg bg-primary/5 px-3 py-1.5 text-[11px] font-semibold text-primary">
+      <span class="material-symbols-outlined text-[15px]">stadium</span>
+      Portal público
+    </span>
+  </div>
+
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-5">
+    <div class="lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Nombre, dirección o ciudad"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div>
+      <label for="tipo" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Tipo</label>
+      <select id="tipo" name="tipo" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm text-on-surface outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in tipos %}
+          <option value="{{ valor }}" {% if tipo_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="estado" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Estado</label>
+      <select id="estado" name="estado" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm text-on-surface outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        <option value="activas" {% if estado_actual == 'activas' %}selected{% endif %}>Visibles en el portal</option>
+        <option value="inactivas" {% if estado_actual == 'inactivas' %}selected{% endif %}>Ocultas</option>
+      </select>
+    </div>
+    <div class="flex items-end gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Filtrar
+      </button>
+      <a href="{% url 'canchas' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-sm font-semibold text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3">
+      {% for cancha in pagina.object_list %}
+        <article class="group overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm transition hover:border-primary/20 hover:shadow-md">
+          <div class="relative h-44 overflow-hidden bg-primary/5">
+            {% if cancha.imagen_mostrar %}
+              <img src="{{ cancha.imagen_mostrar }}" alt="{{ cancha.nombre }}"
+                   loading="lazy" decoding="async"
+                   class="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>
+            {% else %}
+              <div class="grid h-full w-full place-items-center text-primary/40">
+                <span class="material-symbols-outlined text-6xl">stadium</span>
+              </div>
+            {% endif %}
+            <span class="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.04em] {{ cancha.activa|yesno:'bg-secondary-fixed text-on-secondary-fixed,bg-primary text-on-primary' }}">
+              {{ cancha.activa|yesno:'Visible,Oculta' }}
+            </span>
+          </div>
+
+          <div class="p-4">
+            <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-secondary">{{ cancha.get_tipo_display }}</p>
+            <h3 class="mt-1 truncate font-headline-sm text-base font-bold text-on-surface" title="{{ cancha.nombre }}">{{ cancha.nombre }}</h3>
+            <p class="mt-1 line-clamp-2 min-h-[2.5rem] text-xs leading-5 text-on-surface-variant">
+              {{ cancha.descripcion|default:cancha.direccion|default:"Sin descripción registrada." }}
+            </p>
+
+            <div class="mt-3 flex items-center gap-1.5 text-[11px] text-on-surface-variant">
+              <span class="material-symbols-outlined text-[15px] text-outline">location_on</span>
+              <span class="truncate">{{ cancha.direccion|default:"Ubicación por definir" }}{% if cancha.ciudad %} · {{ cancha.ciudad }}{% endif %}</span>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between gap-2 border-t border-surface-container pt-3">
+              {% if cancha.mapa_url %}
+                <a href="{{ cancha.mapa_url }}" target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-semibold text-secondary transition hover:bg-secondary/10">
+                  <span class="material-symbols-outlined text-[16px]">map</span>
+                  Ver mapa
+                </a>
+              {% else %}
+                <span class="text-[11px] text-outline">Sin coordenadas</span>
+              {% endif %}
+
+              {% if puede_editar %}
+                <div class="flex items-center gap-1">
+                  <a href="{% url 'cancha_editar' cancha.pk %}" title="Editar" class="grid h-8 w-8 place-items-center rounded-lg text-secondary transition hover:bg-secondary/10">
+                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                  </a>
+                  <a href="{% url 'cancha_eliminar' cancha.pk %}" title="Eliminar" class="grid h-8 w-8 place-items-center rounded-lg text-error transition hover:bg-error/10">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="stadium" titulo="Sin escenarios registrados" detalle="Registre el primer estadio o cancha oficial para mostrarlo en el portal público." %}
+  {% endif %}
+</div>
+{% endblock %}

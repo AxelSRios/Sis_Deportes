@@ -416,41 +416,40 @@
       </div>
 
       <div class="mt-8 grid gap-4 sm:grid-cols-3">
-        <figure class="reveal group relative h-60 overflow-hidden rounded-2xl shadow-sm">
-          <img src="{% static 'img/estadio-bermudez.jpg' %}"
-               alt="Estadio Jesús Bermúdez de Oruro"
-               loading="lazy" decoding="async"
-               class="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>
-          <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-4 text-white">
-            <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-fixed">Oruro · Sede principal</p>
-            <h3 class="mt-1 font-title-md text-lg font-bold">Estadio Jesús Bermúdez</h3>
-            <p class="text-xs text-white/70">Capacidad 33.000 · Césped natural</p>
-          </figcaption>
-        </figure>
-
-        <figure class="reveal group relative h-60 overflow-hidden rounded-2xl shadow-sm">
-          <img src="{% static 'img/complejo-vinto.jpg' %}"
-               alt="Complejo deportivo de Vinto, Oruro"
-               loading="lazy" decoding="async"
-               class="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>
-          <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-4 text-white">
-            <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-fixed">Vinto · Cancha oficial</p>
-            <h3 class="mt-1 font-title-md text-lg font-bold">Complejo Deportivo Vinto</h3>
-            <p class="text-xs text-white/70">Sintético FIFA · Competencias oficiales</p>
-          </figcaption>
-        </figure>
-
-        <figure class="reveal group relative h-60 overflow-hidden rounded-2xl shadow-sm">
-          <img src="{% static 'img/canchas-jesber.jpg' %}"
-               alt="Canchas auxiliares Jesber de Oruro"
-               loading="lazy" decoding="async"
-               class="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>
-          <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-4 text-white">
-            <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-fixed">Jesber · Divisiones menores</p>
-            <h3 class="mt-1 font-title-md text-lg font-bold">Canchas Jesber N.º 2 y 3</h3>
-            <p class="text-xs text-white/70">Formación y categorías juveniles</p>
-          </figcaption>
-        </figure>
+        {% for cancha in canchas %}
+          <figure class="reveal group relative h-60 overflow-hidden rounded-2xl shadow-sm">
+            {% if cancha.imagen_mostrar %}
+              <img src="{{ cancha.imagen_mostrar }}"
+                   alt="{{ cancha.nombre }}"
+                   loading="lazy" decoding="async"
+                   class="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>
+            {% else %}
+              <div class="grid h-full w-full place-items-center bg-primary">
+                <span class="material-symbols-outlined text-6xl text-secondary-fixed/70">stadium</span>
+              </div>
+            {% endif %}
+            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-4 text-white">
+              <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-fixed">{{ cancha.ciudad|default:"Oruro" }} · {{ cancha.get_tipo_display }}</p>
+              <h3 class="mt-1 font-title-md text-lg font-bold">{{ cancha.nombre }}</h3>
+              <p class="text-xs text-white/70">{{ cancha.descripcion|default:cancha.direccion|default:"Escenario oficial de la A.F.O." }}</p>
+              {% if cancha.mapa_url %}
+                <a href="{{ cancha.mapa_url }}" target="_blank" rel="noopener"
+                   class="mt-2 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-secondary-fixed transition hover:text-white">
+                  <span class="material-symbols-outlined text-[15px]">map</span>
+                  Cómo llegar
+                </a>
+              {% endif %}
+            </figcaption>
+          </figure>
+        {% empty %}
+          <div class="reveal rounded-2xl border border-dashed border-primary/20 bg-primary/5 px-6 py-14 text-center sm:col-span-3">
+            <span class="material-symbols-outlined text-5xl text-primary/40">stadium</span>
+            <h3 class="mt-3 font-title-md text-lg font-bold text-on-surface">Aún no hay escenarios cargados</h3>
+            <p class="mx-auto mt-1 max-w-md text-sm leading-6 text-on-surface-variant">
+              Cuando la A.F.O. registre las canchas oficiales, aparecerán aquí con su fotografía y ubicación.
+            </p>
+          </div>
+        {% endfor %}
       </div>
     </div>
   </section>

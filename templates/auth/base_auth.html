@@ -7,35 +7,35 @@
   <title>{% block title %}Acceso institucional | A.F.O. Oruro{% endblock %}</title>
   <meta name="description" content="Acceso institucional a la plataforma de gestión deportiva de la Asociación de Fútbol Oruro."/>
   <meta name="robots" content="noindex,nofollow"/>
-  <meta name="theme-color" content="#002b6d"/>
+  <meta name="theme-color" content="#1D428A"/>
   <link rel="icon" type="image/png" href="{% static 'img/afo-crest.png' %}"/>
 
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Nunito:wght@400..1000&amp;family=Outfit:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+  <link rel="stylesheet" href="{% static_v 'css/styles.css' %}"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="{% static 'js/tailwind-config.js' %}"></script>
+  <script src="{% static_v 'js/tailwind-config.js' %}"></script>
 
   <style>
     html { scroll-behavior: smooth; }
 
     /* Titular de marca: misma familia y sombras cian de la portada pública */
     .auth-display {
-      font-family: 'Nunito', 'Outfit', system-ui, sans-serif;
-      font-weight: 900;
-      letter-spacing: .005em;
+      font-family: 'Manrope', system-ui, sans-serif;
+      font-weight: 800;
+      letter-spacing: -.01em;
       text-transform: uppercase;
       text-shadow: 0 1px 0 rgba(0, 0, 0, .10),
-                   0 5px 0 rgba(0, 103, 127, .30),
-                   0 14px 30px rgba(119, 211, 242, .38);
+                   0 5px 0 rgba(29, 66, 138, .30),
+                   0 14px 30px rgba(117, 209, 240, .38);
     }
     .auth-title {
-      font-family: 'Nunito', 'Outfit', system-ui, sans-serif;
-      font-weight: 900;
-      letter-spacing: -.01em;
+      font-family: 'Manrope', system-ui, sans-serif;
+      font-weight: 800;
+      letter-spacing: -.02em;
       line-height: 1.1;
     }
 
@@ -74,25 +74,25 @@
       display: block;
       font-size: .875rem;
       font-weight: 700;
-      color: #0b1c30;
+      color: #0F2654;
     }
     .auth-input {
       width: 100%;
       height: 2.85rem;
       border-radius: .85rem;
-      background: #eff4ff;
+      background: #EEF1F8;
       padding: 0 1rem 0 2.75rem;
       font-size: .95rem;
-      color: #0b1c30;
+      color: #0F2654;
       border: 1px solid transparent;
       outline: none;
       transition: background .2s, border-color .2s, box-shadow .2s;
     }
-    .auth-input::placeholder { color: rgba(67, 70, 81, .55); }
+    .auth-input::placeholder { color: rgba(78, 93, 115, .55); }
     .auth-input:focus {
       background: #ffffff;
-      border-color: #3b5ca5;
-      box-shadow: 0 0 0 3px rgba(59, 92, 165, .15);
+      border-color: #1D428A;
+      box-shadow: 0 0 0 3px rgba(29, 66, 138, .15);
     }
 
     .auth-form input[type="email"],
@@ -101,30 +101,30 @@
       width: 100%;
       height: 2.85rem;
       border-radius: .85rem;
-      background: #eff4ff;
+      background: #EEF1F8;
       padding: 0 1rem;
       font-size: .95rem;
-      color: #0b1c30;
+      color: #0F2654;
       border: 1px solid transparent;
       outline: none;
       transition: background .2s, border-color .2s, box-shadow .2s;
     }
     .auth-form input:focus {
       background: #ffffff;
-      border-color: #3b5ca5;
-      box-shadow: 0 0 0 3px rgba(59, 92, 165, .15);
+      border-color: #1D428A;
+      box-shadow: 0 0 0 3px rgba(29, 66, 138, .15);
     }
-    .auth-form ul { margin-top: .35rem; padding-left: 1rem; font-size: .75rem; color: #434651; }
+    .auth-form ul { margin-top: .35rem; padding-left: 1rem; font-size: .75rem; color: #4E5D73; }
     .auth-form .errorlist {
       list-style: none;
       margin: .4rem 0 0;
       padding: 0;
       font-size: .78rem;
       font-weight: 600;
-      color: #ba1a1a;
+      color: #1D428A;
     }
     .auth-form .errorlist li { margin: 0; }
-    .auth-form .helptext { display: block; margin-top: .35rem; font-size: .75rem; color: #434651; }
+    .auth-form .helptext { display: block; margin-top: .35rem; font-size: .75rem; color: #4E5D73; }
 
     .auth-btn {
       display: inline-flex;
@@ -134,22 +134,22 @@
       justify-content: center;
       gap: .5rem;
       border-radius: .85rem;
-      background: #002b6d;
+      background: #1D428A;
       color: #ffffff;
       font-weight: 700;
       letter-spacing: .01em;
-      box-shadow: 0 10px 24px rgba(0, 43, 109, .22);
+      box-shadow: 0 10px 24px rgba(29, 66, 138, .22);
       transition: background .2s, box-shadow .2s, transform .2s;
     }
     .auth-btn:hover {
-      background: #1f438b;
-      box-shadow: 0 14px 30px rgba(0, 43, 109, .26);
+      background: #1D428A;
+      box-shadow: 0 14px 30px rgba(29, 66, 138, .26);
       transform: translateY(-1px);
     }
     .auth-btn:disabled { opacity: .7; cursor: not-allowed; transform: none; }
 
     .auth-link {
-      color: #002b6d;
+      color: #1D428A;
       font-weight: 600;
     }
     .auth-link:hover { text-decoration: underline; }

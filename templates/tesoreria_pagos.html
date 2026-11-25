@@ -12,9 +12,9 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<link rel="stylesheet" href="{% static_v 'css/styles.css' %}"/>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="{% static 'js/tailwind-config.js' %}"></script>
+<script src="{% static_v 'js/tailwind-config.js' %}"></script>
 </head>
 <body class="bg-surface text-on-surface antialiased" data-page="tesoreria" data-shell="true"><div><main class="w-full bg-surface"><div class="flex flex-col w-full">
 <div class="p-space-lg flex flex-col gap-space-lg">
@@ -24,7 +24,7 @@
 <span class="material-symbols-outlined text-[16px]">account_balance_wallet</span>
 <span>Gestión Contable Centralizada</span>
 <span class="text-outline mx-1">•</span>
-<span class="text-on-surface-variant font-medium">Temporada Oficial 2024</span>
+<span class="text-on-surface-variant font-medium">Temporada Oficial {% now 'Y' %}</span>
 </div>
 <h1 class="font-headline-lg text-headline-lg text-primary tracking-tight mt-0.5">
           Tesorería, Finanzas y Registro de Pagos
@@ -255,16 +255,16 @@
             </label>
 <input class="w-full h-10 px-3 bg-surface-container-lowest text-on-surface rounded-lg font-body-md text-body-md outline-none focus:bg-surface-container-low transition-all" id="input-glosa" placeholder="Ej: Pago de sanción por expulsión 2 fechas o cuota mensual de club..." type="text" value="Pago correspondiente a habilitación de ficha y pase interdepartamental temporada 2024."/>
 </div>
-<!-- Submission and Voucher Trigger Button in #1D428A with #75D1F0 details -->
+<!-- Submission and Voucher Trigger Button in #0F2654 with #75D1F0 details -->
 <div class="md:col-span-2 pt-space-sm flex flex-col sm:flex-row items-center justify-between gap-space-md">
 <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm">
 <span class="material-symbols-outlined text-[18px] text-secondary">verified_user</span>
 <span>Operador: Lic. Marco Antonio Z. (Cajero Habilitado)</span>
 </div>
-<button class="w-full sm:w-auto bg-[#1D428A] hover:bg-[#15326A] text-on-primary px-space-lg py-3 rounded-lg font-title-md text-title-md transition-all flex items-center justify-center gap-space-sm shadow-md group" id="btn-generar-comprobante" type="button">
+<button class="w-full sm:w-auto bg-[#0F2654] hover:bg-[#0F2654] text-on-primary px-space-lg py-3 rounded-lg font-title-md text-title-md transition-all flex items-center justify-center gap-space-sm shadow-md group" id="btn-generar-comprobante" type="button">
 <span class="material-symbols-outlined text-[#75D1F0] group-hover:scale-110 transition-transform">receipt</span>
 <span>Generar Comprobante Oficial de Caja</span>
-<span class="bg-[#75D1F0] text-[#001f28] font-bold text-label-sm px-2 py-0.5 rounded ml-1">AFO-2024</span>
+<span class="bg-[#75D1F0] text-[#0F2654] font-bold text-label-sm px-2 py-0.5 rounded ml-1">AFO-2024</span>
 </button>
 </div>
 </form>
@@ -473,7 +473,7 @@
 <span class="block font-label-sm text-[11px] text-outline">Tesorería Central</span>
 </td>
 <td class="py-3 px-space-md text-center whitespace-nowrap">
-<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00890', 'Juan Carlos Mamani (San José)', 'Derecho de Fichaje', '350.00', 'QR Simple', '20/11/2024 10:15')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<button class="bg-[#0F2654] hover:bg-[#0F2654] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00890', 'Juan Carlos Mamani (San José)', 'Derecho de Fichaje', '350.00', 'QR Simple', '20/11/2024 10:15')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
 <span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
 <span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
 </button>
@@ -525,7 +525,7 @@
 <span class="block font-label-sm text-[11px] text-outline">Tesorería Central</span>
 </td>
 <td class="py-3 px-space-md text-center whitespace-nowrap">
-<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00889', 'Oruro Royal Club', 'Cuota de Afiliación', '1200.00', 'Depósito Banco Unión', '20/11/2024 09:40')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<button class="bg-[#0F2654] hover:bg-[#0F2654] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00889', 'Oruro Royal Club', 'Cuota de Afiliación', '1200.00', 'Depósito Banco Unión', '20/11/2024 09:40')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
 <span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
 <span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
 </button>
@@ -577,7 +577,7 @@
 <span class="block font-label-sm text-[11px] text-outline">Auxiliar de Caja</span>
 </td>
 <td class="py-3 px-space-md text-center whitespace-nowrap">
-<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00888', 'Club Deportivo Sur-Car', 'Multa Disciplinaria', '500.00', 'Efectivo en Caja', '19/11/2024 16:30')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<button class="bg-[#0F2654] hover:bg-[#0F2654] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00888', 'Club Deportivo Sur-Car', 'Multa Disciplinaria', '500.00', 'Efectivo en Caja', '19/11/2024 16:30')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
 <span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
 <span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
 </button>
@@ -629,7 +629,7 @@
 <span class="block font-label-sm text-[11px] text-outline">Tesorería Central</span>
 </td>
 <td class="py-3 px-space-md text-center whitespace-nowrap">
-<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00887', 'Álvaro Rodrigo Torrico', 'Pase Interdepartamental', '850.00', 'Depósito Banco Unión', '19/11/2024 14:10')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<button class="bg-[#0F2654] hover:bg-[#0F2654] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00887', 'Álvaro Rodrigo Torrico', 'Pase Interdepartamental', '850.00', 'Depósito Banco Unión', '19/11/2024 14:10')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
 <span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
 <span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
 </button>
@@ -681,7 +681,7 @@
 <span class="block font-label-sm text-[11px] text-outline">Auxiliar de Caja</span>
 </td>
 <td class="py-3 px-space-md text-center whitespace-nowrap">
-<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00886', 'Club Real Oruro', 'Arancel de Cancha', '600.00', 'Transferencia QR Simple', '18/11/2024 17:45')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
+<button class="bg-[#0F2654] hover:bg-[#0F2654] text-on-primary p-2 rounded-lg transition-all inline-flex items-center gap-1 shadow-sm" onclick="mostrarModalComprobante('REC-2024-00886', 'Club Real Oruro', 'Arancel de Cancha', '600.00', 'Transferencia QR Simple', '18/11/2024 17:45')" title="Descargar e Imprimir Comprobante Oficial PDF" type="button">
 <span class="material-symbols-outlined text-[#75D1F0] text-[18px]">picture_as_pdf</span>
 <span class="font-label-sm text-label-sm pr-1">PDF Homologado</span>
 </button>
@@ -728,10 +728,10 @@
 </div>
 </div>
 <!-- Modal Comprobante Oficial de Pago Homologado (Interactive View) -->
-<div class="fixed inset-0 z-50 bg-[#0F2654]/60 backdrop-blur-sm hidden flex items-center justify-center p-space-md" id="modal-comprobante">
+<div class="fixed inset-0 z-50 bg-[#0B1E43]/60 backdrop-blur-sm hidden flex items-center justify-center p-space-md" id="modal-comprobante">
 <div class="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-scaleUp">
 <!-- Modal Top Bar -->
-<div class="bg-[#1D428A] text-on-primary p-space-md flex items-center justify-between">
+<div class="bg-[#0F2654] text-on-primary p-space-md flex items-center justify-between">
 <div class="flex items-center gap-space-sm">
 <div class="w-10 h-10 rounded-lg bg-on-primary/10 flex items-center justify-center text-[#75D1F0]">
 <span class="material-symbols-outlined text-[24px]">verified</span>
@@ -812,7 +812,7 @@
 <button class="px-space-md py-2 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-title-md text-label-lg font-semibold transition-colors" onclick="cerrarModalComprobante()" type="button">
           Cerrar
         </button>
-<button class="bg-[#1D428A] hover:bg-[#15326A] text-on-primary px-space-lg py-2 rounded-lg font-title-md text-label-lg font-bold transition-all flex items-center gap-space-xs shadow-md" onclick="imprimirReciboSimulado()" type="button">
+<button class="bg-[#0F2654] hover:bg-[#0F2654] text-on-primary px-space-lg py-2 rounded-lg font-title-md text-label-lg font-bold transition-all flex items-center gap-space-xs shadow-md" onclick="imprimirReciboSimulado()" type="button">
 <span class="material-symbols-outlined text-[#75D1F0] text-[18px]">print</span>
 <span>Imprimir Recibo Térmico / Carta</span>
 </button>

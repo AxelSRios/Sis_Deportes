@@ -6,10 +6,12 @@ from django.urls import reverse
 from django.utils import timezone
 
 from . import forms
+from .estadisticas import tabla_posiciones as _tabla_posiciones
 from .models import (
     Arbitro,
     AsignacionArbitro,
     Campeonato,
+    Cancha,
     Categoria,
     Club,
     Deportista,
@@ -230,6 +232,121 @@ def club_eliminar(request, pk):
         'Esta acción borra el club de la base institucional. No se puede deshacer.',
         reverse('club_detalle', args=[club.pk]),
         bloqueo,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Canchas y escenarios
+# ---------------------------------------------------------------------------
+
+
+@modulo_requerido('canchas')
+def canchas(request):
+    busqueda = normalizar_busqueda(request)
+    tipo = (request.GET.get('tipo') or '').strip()
+    estado = (request.GET.get('estado') or '').strip()
+
+    consulta = Cancha.objects.all()
+    consulta = buscar(consulta, busqueda, ['nombre', 'direccion', 'ciudad', 'descripcion'])
+    if tipo:
+        consulta = consulta.filter(tipo=tipo)
+    if estado == 'activas':
+        consulta = consulta.filter(activa=True)
+    elif estado == 'inactivas':
+        consulta = consulta.filter(activa=False)
+
+    consulta, orden_actual = _orden(
+        request,
+        consulta,
+        {
+            'nombre': 'Nombre (A-Z)',
+            '-nombre': 'Nombre (Z-A)',
+            'orden': 'Orden del portal',
+            '-orden': 'Orden inverso',
+        },
+        'orden',
+    )
+    pagina = paginar(request, consulta, por_pagina=12)
+    return render(
+        request,
+        'admin/canchas.html',
+        contexto(
+            request,
+            pagina=pagina,
+            total=consulta.count(),
+            busqueda=busqueda,
+            tipo_actual=tipo,
+            estado_actual=estado,
+            tipos=Cancha.TIPOS,
+            orden_actual=orden_actual,
+            opciones_orden=_opciones_orden(
+                {
+                    'nombre': 'Nombre (A-Z)',
+                    '-nombre': 'Nombre (Z-A)',
+                    'orden': 'Orden del portal',
+                    '-orden': 'Orden inverso',
+                }
+            ),
+            puede_editar=puede_escribir(_rol(request), 'canchas'),
+        ),
+    )
+
+
+@modulo_requerido('canchas', escritura=True)
+def cancha_crear(request):
+    form = forms.CanchaForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST' and form.is_valid():
+        cancha = form.save()
+        registrar(request, 'canchas', 'CREAR', f'Escenario creado · {cancha.nombre}')
+        messages.success(request, f'Escenario «{cancha.nombre}» registrado correctamente.')
+        return redirect('canchas')
+    return _formulario(
+        request,
+        form,
+        'Nuevo escenario deportivo',
+        'Registre la cancha, su ubicación y una imagen para el portal público.',
+        reverse('canchas'),
+        icono='stadium',
+        guardar_texto='Registrar escenario',
+    )
+
+
+@modulo_requerido('canchas', escritura=True)
+def cancha_editar(request, pk):
+    cancha = get_object_or_404(Cancha, pk=pk)
+    form = forms.CanchaForm(
+        request.POST or None, request.FILES or None, instance=cancha
+    )
+    if request.method == 'POST' and form.is_valid():
+        cancha = form.save()
+        registrar(request, 'canchas', 'EDITAR', f'Escenario actualizado · {cancha.nombre}')
+        messages.success(request, 'Datos del escenario actualizados.')
+        return redirect('canchas')
+    return _formulario(
+        request,
+        form,
+        f'Editar · {cancha.nombre}',
+        'Actualice la imagen, la ubicación o el estado del escenario.',
+        reverse('canchas'),
+        icono='stadium',
+    )
+
+
+@modulo_requerido('canchas', escritura=True)
+def cancha_eliminar(request, pk):
+    cancha = get_object_or_404(Cancha, pk=pk)
+    if request.method == 'POST':
+        nombre = cancha.nombre
+        cancha.delete()
+        registrar(request, 'canchas', 'ELIMINAR', f'Escenario eliminado · {nombre}')
+        messages.success(request, f'Escenario «{nombre}» eliminado.')
+        return redirect('canchas')
+    return _confirmar(
+        request,
+        cancha,
+        'Eliminar escenario',
+        'Esta acción quita el escenario del portal público. No se puede deshacer.',
+        reverse('canchas'),
     )
 
 
@@ -617,59 +734,6 @@ def categoria_eliminar(request, pk):
 # ---------------------------------------------------------------------------
 # Campeonatos
 # ---------------------------------------------------------------------------
-
-
-def _tabla_posiciones(campeonato):
-    """Clasificación calculada con los goles registrados."""
-    equipos = {}
-    for equipo in Equipo.objects.filter(inscripcion__campeonato=campeonato).distinct():
-        equipos[equipo.pk] = {
-            'equipo': equipo,
-            'pj': 0, 'pg': 0, 'pe': 0, 'pp': 0,
-            'gf': 0, 'gc': 0, 'dg': 0, 'pts': 0,
-        }
-
-    partidos = campeonato.partido_set.select_related(
-        'equipo_local', 'equipo_visitante'
-    ).filter(goles_local__isnull=False, goles_visitante__isnull=False)
-
-    for partido in partidos:
-        local = equipos.setdefault(partido.equipo_local_id, {
-            'equipo': partido.equipo_local,
-            'pj': 0, 'pg': 0, 'pe': 0, 'pp': 0,
-            'gf': 0, 'gc': 0, 'dg': 0, 'pts': 0,
-        })
-        visitante = equipos.setdefault(partido.equipo_visitante_id, {
-            'equipo': partido.equipo_visitante,
-            'pj': 0, 'pg': 0, 'pe': 0, 'pp': 0,
-            'gf': 0, 'gc': 0, 'dg': 0, 'pts': 0,
-        })
-        gl, gv = partido.goles_local, partido.goles_visitante
-        local['pj'] += 1
-        visitante['pj'] += 1
-        local['gf'] += gl
-        local['gc'] += gv
-        visitante['gf'] += gv
-        visitante['gc'] += gl
-        if gl > gv:
-            local['pg'] += 1
-            visitante['pp'] += 1
-            local['pts'] += 3
-        elif gl < gv:
-            visitante['pg'] += 1
-            local['pp'] += 1
-            visitante['pts'] += 3
-        else:
-            local['pe'] += 1
-            visitante['pe'] += 1
-            local['pts'] += 1
-            visitante['pts'] += 1
-
-    filas = list(equipos.values())
-    for fila in filas:
-        fila['dg'] = fila['gf'] - fila['gc']
-    filas.sort(key=lambda f: (-f['pts'], -f['dg'], -f['gf'], f['equipo'].nombre))
-    return filas
 
 
 @modulo_requerido('campeonatos')

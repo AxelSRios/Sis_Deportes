@@ -22,6 +22,11 @@ urlpatterns = [
     path('panel-general/', views.panel, name='panel'),
     path('panel-general/estadisticas/', views.panel_estadisticas, name='panel_estadisticas'),
 
+    # ------------------------------------------------- Centros de sección
+    path('gestion-deportiva/', views.gestion_deportiva, name='gestion_deportiva'),
+    path('competencia/', views.competencia, name='competencia'),
+    path('administracion/', views.administracion, name='administracion'),
+
     # ----------------------------------------------------------------- Clubes
     path('clubes/', crud.clubes, name='clubes'),
     path('clubes/nuevo/', crud.club_crear, name='club_crear'),
@@ -29,6 +34,12 @@ urlpatterns = [
     path('clubes/<int:pk>/editar/', crud.club_editar, name='club_editar'),
     path('clubes/<int:pk>/eliminar/', crud.club_eliminar, name='club_eliminar'),
     path('clubes-equipos/', crud.clubes),
+
+    # ------------------------------------------------- Canchas y escenarios
+    path('canchas/', crud.canchas, name='canchas'),
+    path('canchas/nueva/', crud.cancha_crear, name='cancha_crear'),
+    path('canchas/<int:pk>/editar/', crud.cancha_editar, name='cancha_editar'),
+    path('canchas/<int:pk>/eliminar/', crud.cancha_eliminar, name='cancha_eliminar'),
 
     # ---------------------------------------------------------------- Equipos
     path('equipos/', crud.equipos, name='equipos'),
@@ -129,6 +140,8 @@ urlpatterns = [
     # --------------------------------------------------------------- Auditoría
     path('auditoria/', admin.auditoria, name='auditoria'),
     path('auditoria-usuarios/', admin.auditoria),
+    path('accesos/', admin.accesos, name='accesos'),
+    path('accesos-sesiones/', admin.accesos, name='accesos_sesiones'),
 
     # Recuperación de contraseña
     path(

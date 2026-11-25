@@ -5,11 +5,12 @@ Traduce el front-end estático original (HTML/CSS/JS) en páginas servidas
 por Django, integrando autenticación real sobre django.contrib.auth.
 """
 import re
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta
 from decimal import Decimal, InvalidOperation
 
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth import authenticate, get_user_model, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.db import transaction
@@ -17,17 +18,21 @@ from django.db.models import Count, Q, Sum
 from django.db.models.functions import TruncMonth
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateparse import parse_date, parse_datetime
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
 from django.utils.timezone import make_aware, is_naive
 
+from .accesslog import registrar_acceso
 from .cache_utils import version_cache
+from .estadisticas import tabla_posiciones
 from .models import (
     Arbitro,
     AsignacionArbitro,
     Campeonato,
+    Cancha,
     Categoria,
     Club,
     Deportista,
@@ -38,22 +43,7 @@ from .models import (
     Partido,
     Sancion,
 )
-
-ROLES_LABELS = {
-    'ADMIN': 'Administrador General de la A.F.O.',
-    'DIRIGENTE': 'Dirigente de Club Afiliado',
-    'ARBITRO': 'Comisión Técnica / Árbitros',
-    'TESORERO': 'Tesorero / Finanzas Institucionales',
-    'USUARIO': 'Usuario institucional',
-}
-# Nombres de grupo aceptados para cada rol. El rol se deduce del usuario,
-# nunca se elige en el formulario de acceso.
-ROLE_GROUP_ALIASES = {
-    'ADMIN': {'ADMIN', 'Administrador General'},
-    'DIRIGENTE': {'DIRIGENTE', 'Dirigente de Club Afiliado'},
-    'ARBITRO': {'ARBITRO', 'Comisión Técnica / Árbitros'},
-    'TESORERO': {'TESORERO', 'Tesorero / Finanzas Institucionales'},
-}
+from .roles import ROLES_LABELS, ROLE_GROUP_ALIASES, resolver_rol
 
 LOGIN_MAX_ATTEMPTS = 5
 LOGIN_LOCKOUT_SECONDS = 15 * 60
@@ -61,19 +51,19 @@ LOGIN_LOCKOUT_SECONDS = 15 * 60
 
 def _resolve_role(user):
     """Deduce el rol institucional a partir de los grupos del usuario."""
-    if user.is_superuser:
-        return 'ADMIN'
-    group_names = set(user.groups.values_list('name', flat=True))
-    for role, aliases in ROLE_GROUP_ALIASES.items():
-        if group_names & aliases:
-            return role
-    return 'USUARIO'
+    return resolver_rol(user)
 
 
 def _client_ip(request):
-    forwarded = request.META.get('HTTP_X_FORWARDED_FOR', '')
-    if forwarded:
-        return forwarded.split(',')[0].strip()
+    """IP de origen para bloqueo y auditoría.
+
+    X-Forwarded-For solo se usa si la instalación declaró un proxy confiable;
+    de lo contrario cualquier cliente podría falsificar su dirección.
+    """
+    if getattr(settings, 'AFO_TRUST_X_FORWARDED_FOR', False):
+        forwarded = request.META.get('HTTP_X_FORWARDED_FOR', '')
+        if forwarded:
+            return forwarded.split(',')[0].strip() or 'desconocida'
     return request.META.get('REMOTE_ADDR', '') or 'desconocida'
 
 
@@ -155,6 +145,7 @@ def index(request):
         'campeonatos': campeonatos,
         'clubes_destacados': clubes_destacados,
         'resultados_recientes': resultados_recientes,
+        'canchas': Cancha.objects.filter(activa=True)[:6],
         'total_clubes': Club.objects.count(),
         'total_equipos': Equipo.objects.count(),
         'total_deportistas': Deportista.objects.count(),
@@ -189,6 +180,12 @@ def login_view(request):
             error = (
                 'Demasiados intentos fallidos. Espere 15 minutos o contacte '
                 'a Secretaría General.'
+            )
+            registrar_acceso(
+                'BLOQUEO',
+                request=request,
+                username=username,
+                detalle='Límite de intentos alcanzado',
             )
         else:
             user = authenticate(request, username=username, password=password)
@@ -551,6 +548,140 @@ def _registrar_pago(request):
     return None
 
 
+def _clave_fecha(valor):
+    """Normaliza fechas y datetimes para ordenar la actividad reciente."""
+    if not valor:
+        return datetime.min
+    if isinstance(valor, datetime):
+        if timezone.is_aware(valor):
+            return timezone.localtime(valor).replace(tzinfo=None)
+        return valor
+    return datetime.combine(valor, time(12, 0))
+
+
+def _panel_actividad(request, rol, puede_ver_finanzas):
+    """Mezcla real de novedades del padrón, competencia, caja y auditoría.
+
+    No se inventan fechas: cada evento usa la fecha que ya guarda su modelo.
+    Los clubes sin fecha de alta aparecen únicamente a través de su registro
+    en el historial de operaciones.
+    """
+    eventos = []
+
+    for operacion in (
+        HistorialOperacion.objects.select_related('usuario')
+        .filter(usuario=request.user)
+        if rol not in ROLES_AUDITORIA
+        else HistorialOperacion.objects.select_related('usuario')
+    ).order_by('-fecha', '-id')[:5]:
+        texto = operacion.operacion or 'Operación registrada'
+        bajo = texto.lower()
+        if 'pago' in bajo or 'caja' in bajo:
+            icono, tono = 'payments', 'money'
+        elif 'partido' in bajo or 'resultado' in bajo:
+            icono, tono = 'sports_soccer', 'match'
+        elif 'campeonato' in bajo or 'inscripci' in bajo:
+            icono, tono = 'emoji_events', 'trophy'
+        elif 'sanci' in bajo:
+            icono, tono = 'gavel', 'alert'
+        elif 'club' in bajo:
+            icono, tono = 'shield', 'info'
+        elif 'deportista' in bajo or 'fichaje' in bajo:
+            icono, tono = 'person_add', 'ok'
+        elif 'usuario' in bajo:
+            icono, tono = 'manage_accounts', 'info'
+        else:
+            icono, tono = 'history', 'info'
+        eventos.append({
+            'icono': icono,
+            'tono': tono,
+            'titulo': texto,
+            'detalle': (
+                operacion.usuario.get_full_name() or operacion.usuario.username
+                if operacion.usuario else 'Sistema'
+            ),
+            'fecha': operacion.fecha,
+            'url': reverse('auditoria') if rol in ROLES_AUDITORIA else '',
+        })
+
+    for deportista in (
+        Deportista.objects.select_related('club')
+        .order_by('-fecha_registro', '-id')[:4]
+    ):
+        eventos.append({
+            'icono': 'person_add',
+            'tono': 'ok',
+            'titulo': f'Nuevo fichaje · {deportista.apellido}, {deportista.nombre}',
+            'detalle': deportista.club.nombre if deportista.club else 'Sin club asignado',
+            'fecha': deportista.fecha_registro,
+            'url': reverse('deportista_detalle', args=[deportista.pk]),
+        })
+
+    for inscripcion in (
+        Inscripcion.objects.select_related('equipo', 'campeonato')
+        .order_by('-fecha_registro', '-id')[:4]
+    ):
+        eventos.append({
+            'icono': 'fact_check',
+            'tono': 'info',
+            'titulo': 'Inscripción registrada',
+            'detalle': (
+                f'{inscripcion.equipo or "Sin equipo"} · '
+                f'{inscripcion.campeonato or "Sin campeonato"}'
+            ),
+            'fecha': inscripcion.fecha_registro,
+            'url': reverse('inscripciones'),
+        })
+
+    for partido in (
+        Partido.objects.select_related(
+            'equipo_local', 'equipo_visitante', 'campeonato'
+        ).order_by('-id')[:4]
+    ):
+        eventos.append({
+            'icono': 'sports_soccer',
+            'tono': 'match',
+            'titulo': 'Partido programado',
+            'detalle': (
+                f'{partido.equipo_local or "Local"} vs '
+                f'{partido.equipo_visitante or "Visitante"} · '
+                f'{partido.campeonato or "Sin campeonato"}'
+            ),
+            'fecha': partido.fecha,
+            'url': reverse('partido_detalle', args=[partido.pk]),
+        })
+
+    for campeonato in Campeonato.objects.order_by('-id')[:3]:
+        eventos.append({
+            'icono': 'emoji_events',
+            'tono': 'trophy',
+            'titulo': f'Campeonato · {campeonato.nombre}',
+            'detalle': campeonato.disciplina or 'Torneo oficial de la A.F.O.',
+            'fecha': campeonato.fecha_inicio,
+            'url': reverse('campeonato_detalle', args=[campeonato.pk]),
+        })
+
+    if puede_ver_finanzas:
+        for pago in Pago.objects.select_related('deportista').order_by(
+            '-fecha', '-id'
+        )[:3]:
+            eventos.append({
+                'icono': 'payments',
+                'tono': 'money',
+                'titulo': f'Pago registrado · Bs {pago.monto or 0}',
+                'detalle': pago.tipo or 'Movimiento de caja',
+                'fecha': pago.fecha,
+                'url': reverse('tesoreria'),
+            })
+
+    eventos.sort(key=lambda evento: _clave_fecha(evento['fecha']), reverse=True)
+    # La plantilla distingue fechas puras de marcas con hora para no forzar
+    # un formato de tiempo sobre un DateField.
+    for evento in eventos:
+        evento['con_hora'] = isinstance(evento['fecha'], datetime)
+    return eventos[:8]
+
+
 @login_required
 def panel(request):
     """Panel general: resumen operativo con datos reales del sistema."""
@@ -801,11 +932,8 @@ def panel(request):
         }
 
     # --- Actividad reciente ----------------------------------------------------
-    actividad = HistorialOperacion.objects.select_related('usuario')
-    if rol not in ROLES_AUDITORIA:
-        # Cada rol consulta únicamente su propia huella operativa.
-        actividad = actividad.filter(usuario=request.user)
-    actividad_reciente = list(actividad.order_by('-fecha', '-id')[:6])
+    # Mezcla de novedades reales: padrón, competencia, caja y auditoría.
+    actividad_reciente = _panel_actividad(request, rol, puede_ver_finanzas)
 
     # Orden de bloques resuelto por rol: la plantilla solo recorre la lista.
     bloques = ORDEN_PANEL.get(rol, ORDEN_PANEL['DIRIGENTE'])
@@ -1315,3 +1443,350 @@ def auditoria(request):
             'Administración General.',
         )
     return _shell(request, 'auditoria_usuarios.html')
+
+# ===========================================================================
+# Centros de sección · Gestión Deportiva, Competencia y Administración
+# ===========================================================================
+
+@login_required
+def gestion_deportiva(request):
+    """Centro visual del padrón: clubes, equipos, fichajes y árbitros."""
+    from .permisos import contexto as contexto_admin
+
+    hoy = timezone.localdate()
+    club_stats = Club.objects.aggregate(
+        total=Count('pk'),
+        activos=Count('pk', filter=Q(estado='ACTIVO')),
+    )
+    equipo_stats = Equipo.objects.aggregate(
+        total=Count('pk'),
+        activos=Count('pk', filter=Q(estado='ACTIVO')),
+        con_club=Count('pk', filter=Q(club__isnull=False)),
+    )
+    deportista_stats = Deportista.objects.aggregate(
+        total=Count('pk'),
+        activos=Count('pk', filter=Q(estado='ACTIVO')),
+        del_anio=Count('pk', filter=Q(fecha_registro__year=hoy.year)),
+    )
+    arbitro_stats = Arbitro.objects.aggregate(
+        total=Count('pk'),
+        disponibles=Count('pk', filter=Q(disponible=True)),
+        activos=Count('pk', filter=Q(estado='ACTIVO')),
+    )
+    total_categorias = Categoria.objects.count()
+    total_canchas = Cancha.objects.count()
+    canchas_activas = Cancha.objects.filter(activa=True).count()
+
+    modulos = [
+        {
+            'clave': 'clubes', 'nombre': 'Clubes',
+            'descripcion': 'Instituciones afiliadas, personería y dirigencia.',
+            'icono': 'shield', 'tono': 'blue',
+            'url': reverse('clubes'),
+            'total': club_stats['total'],
+            'detalle': f"{club_stats['activos']} activos",
+            'unidad': 'clubes',
+        },
+        {
+            'clave': 'equipos', 'nombre': 'Equipos',
+            'descripcion': 'Planteles por club, categoría y temporada.',
+            'icono': 'groups', 'tono': 'teal',
+            'url': reverse('equipos'),
+            'total': equipo_stats['total'],
+            'detalle': f"{equipo_stats['con_club']} con club asignado",
+            'unidad': 'equipos',
+        },
+        {
+            'clave': 'deportistas', 'nombre': 'Deportistas',
+            'descripcion': 'Fichajes, habilitaciones y padrón federativo.',
+            'icono': 'person_search', 'tono': 'violet',
+            'url': reverse('deportistas'),
+            'total': deportista_stats['total'],
+            'detalle': f"{deportista_stats['del_anio']} altas en {hoy.year}",
+            'unidad': 'deportistas',
+        },
+        {
+            'clave': 'categorias', 'nombre': 'Categorías',
+            'descripcion': 'Divisiones, edades y estructura competitiva.',
+            'icono': 'category', 'tono': 'gold',
+            'url': reverse('categorias'),
+            'total': total_categorias,
+            'detalle': 'Divisiones oficiales',
+            'unidad': 'categorías',
+        },
+        {
+            'clave': 'arbitros', 'nombre': 'Árbitros',
+            'descripcion': 'Plantel arbitral, licencias y disponibilidad.',
+            'icono': 'sports', 'tono': 'green',
+            'url': reverse('arbitros'),
+            'total': arbitro_stats['total'],
+            'detalle': f"{arbitro_stats['disponibles']} disponibles",
+            'unidad': 'árbitros',
+        },
+        {
+            'clave': 'canchas', 'nombre': 'Canchas',
+            'descripcion': 'Estadios y escenarios oficiales con ubicación.',
+            'icono': 'stadium', 'tono': 'teal',
+            'url': reverse('canchas'),
+            'total': total_canchas,
+            'detalle': f"{canchas_activas} visibles en el portal",
+            'unidad': 'canchas',
+        },
+    ]
+
+    categorias = list(
+        Categoria.objects.annotate(
+            equipos=Count('equipo', distinct=True),
+            deportistas=Count('deportista', distinct=True),
+        ).order_by('-equipos', 'nombre')[:8]
+    )
+    maximo = max([c.equipos for c in categorias], default=0) or 1
+    for categoria in categorias:
+        categoria.pct_equipos = round(categoria.equipos * 100 / maximo)
+
+    ultimos_deportistas = list(
+        Deportista.objects.select_related('club', 'equipo', 'categoria')
+        .order_by('-fecha_registro', '-id')[:6]
+    )
+    ultimos_clubes = list(Club.objects.order_by('-id')[:4])
+
+    return render(
+        request,
+        'admin/gestion_deportiva.html',
+        contexto_admin(
+            request,
+            modulos=modulos,
+            total_modulos=sum(m['total'] for m in modulos),
+            categorias=categorias,
+            ultimos_deportistas=ultimos_deportistas,
+            ultimos_clubes=ultimos_clubes,
+            clubes_activos=club_stats['activos'],
+            equipos_activos=equipo_stats['activos'],
+            deportistas_activos=deportista_stats['activos'],
+            arbitros_disponibles=arbitro_stats['disponibles'],
+            puede_crear_deportista=_user_role(request) in {'ADMIN', 'DIRIGENTE'},
+            puede_crear_club=_user_role(request) == 'ADMIN',
+        ),
+    )
+
+
+@login_required
+def competencia(request):
+    """Centro de torneos: calendario, posiciones y resultados reales."""
+    from .permisos import contexto as contexto_admin
+
+    ahora = timezone.now()
+    hoy = timezone.localdate()
+
+    campeonatos_qs = (
+        Campeonato.objects.select_related('categoria')
+        .annotate(
+            total_equipos=Count('inscripcion__equipo', distinct=True),
+            total_partidos=Count('partido', distinct=True),
+            jugados=Count(
+                'partido',
+                filter=Q(
+                    partido__goles_local__isnull=False,
+                    partido__goles_visitante__isnull=False,
+                ),
+                distinct=True,
+            ),
+        )
+        .order_by('-fecha_inicio', '-id')
+    )
+    campeonatos_lista = list(campeonatos_qs[:8])
+    for torneo in campeonatos_lista:
+        torneo.avance_partidos = (
+            round(torneo.jugados * 100 / torneo.total_partidos)
+            if torneo.total_partidos else 0
+        )
+
+    solicitado = (request.GET.get('campeonato') or '').strip()
+    actual = None
+    if solicitado.isdigit():
+        actual = campeonatos_qs.filter(pk=int(solicitado)).first()
+    if actual is None:
+        actual = (
+            campeonatos_qs.filter(
+                Q(estado='ACTIVO')
+                | (
+                    Q(estado__isnull=True)
+                    & Q(fecha_inicio__lte=hoy)
+                    & (
+                        Q(fecha_conclusion__isnull=True)
+                        | Q(fecha_conclusion__gte=hoy)
+                    )
+                )
+            ).first()
+            or (campeonatos_lista[0] if campeonatos_lista else None)
+        )
+
+    partidos_qs = Partido.objects.select_related(
+        'campeonato__categoria', 'equipo_local__club', 'equipo_visitante__club'
+    )
+    if actual is not None:
+        partidos_qs = partidos_qs.filter(campeonato=actual)
+
+    proximos = list(
+        partidos_qs.filter(fecha__gte=ahora).order_by('fecha')[:24]
+    )
+    if not proximos:
+        proximos = list(partidos_qs.order_by('-fecha', '-id')[:12])
+
+    calendario = []
+    for partido in proximos:
+        fecha = timezone.localtime(partido.fecha).date() if partido.fecha else None
+        if not calendario or calendario[-1]['fecha'] != fecha:
+            calendario.append({'fecha': fecha, 'partidos': []})
+        calendario[-1]['partidos'].append(partido)
+
+    resultados = list(
+        _partidos_disputados()
+        .select_related(
+            'campeonato', 'equipo_local__club', 'equipo_visitante__club'
+        )
+        .order_by('-fecha', '-id')[:4]
+    )
+
+    tabla = tabla_posiciones(actual)[:10] if actual is not None else []
+    sanciones_vigentes = Sancion.objects.filter(estado='VIGENTE').count()
+    inscripciones_pendientes = Inscripcion.objects.filter(
+        estado='PENDIENTE'
+    ).count()
+
+    return render(
+        request,
+        'admin/competencia.html',
+        contexto_admin(
+            request,
+            campeonatos=campeonatos_lista,
+            campeonato_actual=actual,
+            calendario=calendario,
+            proximos_total=len(proximos),
+            resultados=resultados,
+            tabla=tabla,
+            sanciones_vigentes=sanciones_vigentes,
+            inscripciones_pendientes=inscripciones_pendientes,
+            total_campeonatos=Campeonato.objects.count(),
+            total_partidos=Partido.objects.count(),
+            partidos_jugados=_partidos_disputados().count(),
+            total_inscripciones=Inscripcion.objects.count(),
+        ),
+    )
+
+
+@login_required
+def administracion(request):
+    """Centro institucional: caja, usuarios, reportes y auditoría."""
+    from .permisos import contexto as contexto_admin
+
+    rol = _user_role(request)
+    hoy = timezone.localdate()
+
+    finanzas = None
+    ingresos_mensuales = []
+    ultimos_pagos = []
+    if rol in ROLES_FINANZAS:
+        inicio_mes_anterior = (
+            hoy.replace(day=1) - timedelta(days=1)
+        ).replace(day=1)
+        stats = Pago.objects.aggregate(
+            total=Sum('monto'),
+            registros=Count('pk'),
+            mes=Sum(
+                'monto',
+                filter=Q(fecha__year=hoy.year, fecha__month=hoy.month),
+            ),
+            anterior=Sum(
+                'monto',
+                filter=Q(
+                    fecha__year=inicio_mes_anterior.year,
+                    fecha__month=inicio_mes_anterior.month,
+                ),
+            ),
+            pendientes=Count(
+                'pk',
+                filter=Q(monto__isnull=True) | Q(monto=0),
+            ),
+        )
+        total = stats['total'] or 0
+        mes = stats['mes'] or 0
+        anterior = stats['anterior'] or 0
+        variacion = None
+        if anterior:
+            variacion = round(
+                (float(mes) - float(anterior)) / float(anterior) * 100, 1
+            )
+        finanzas = {
+            'total': total,
+            'mes': mes,
+            'anterior': anterior,
+            'variacion': variacion,
+            'registros': stats['registros'] or 0,
+            'pendientes': stats['pendientes'] or 0,
+        }
+
+        serie = _serie_mensual(
+            Pago.objects.all(), 'fecha', Sum('monto'), hoy.year
+        )
+        maximo = max(serie) or 1
+        ingresos_mensuales = [
+            {
+                'mes': MESES_ABREV[indice],
+                'valor': valor,
+                'pct': round(valor * 100 / maximo),
+            }
+            for indice, valor in enumerate(serie)
+        ]
+        ultimos_pagos = list(
+            Pago.objects.select_related('deportista', 'club')
+            .order_by('-fecha', '-id')[:5]
+        )
+
+    usuarios = []
+    total_usuarios = 0
+    usuarios_activos = 0
+    if rol in ROLES_AUDITORIA:
+        User = get_user_model()
+        total_usuarios = User.objects.count()
+        usuarios_activos = User.objects.filter(is_active=True).count()
+        usuarios = list(
+            User.objects.prefetch_related('groups').order_by('username')[:8]
+        )
+
+    auditoria = []
+    if rol in ROLES_AUDITORIA:
+        auditoria = list(
+            HistorialOperacion.objects.select_related('usuario')
+            .order_by('-fecha', '-id')[:7]
+        )
+
+    reportes = [
+        ('clubes', 'Clubes', 'shield', 'Padrón institucional y afiliación.'),
+        ('deportistas', 'Deportistas', 'person_search', 'Fichajes y habilitaciones.'),
+        ('campeonatos', 'Campeonatos', 'emoji_events', 'Torneos, fechas y participantes.'),
+        ('partidos', 'Partidos', 'sports_soccer', 'Fixture, marcadores y escenarios.'),
+        ('arbitros', 'Árbitros', 'sports', 'Plantel arbitral y especialidades.'),
+        ('pagos', 'Pagos', 'payments', 'Movimientos de caja y comprobantes.'),
+    ]
+    if rol not in ROLES_FINANZAS:
+        reportes = [r for r in reportes if r[0] != 'pagos']
+
+    return render(
+        request,
+        'admin/administracion.html',
+        contexto_admin(
+            request,
+            finanzas=finanzas,
+            ingresos_mensuales=ingresos_mensuales,
+            ultimos_pagos=ultimos_pagos,
+            usuarios=usuarios,
+            total_usuarios=total_usuarios,
+            usuarios_activos=usuarios_activos,
+            auditoria=auditoria,
+            reportes=reportes,
+            total_reportes=len(reportes),
+            total_pagos=Pago.objects.count() if rol in ROLES_FINANZAS else 0,
+            anio=hoy.year,
+        ),
+    )

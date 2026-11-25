@@ -1,0 +1,355 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}administracion{% endblock %}
+
+{% block miga %}Administración{% endblock %}
+{% block encabezado %}Centro de Administración{% endblock %}
+{% block descripcion %}
+  La gestión institucional de la A.F.O.: caja, comprobantes, cuentas de acceso,
+  reportes oficiales e historial de operaciones.
+{% endblock %}
+
+{% block acciones %}
+  {% if puede_ver_finanzas %}
+    <a href="{% url 'pago_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">add_card</span>
+      Registrar pago
+    </a>
+  {% endif %}
+  <a href="{% url 'reportes' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+    <span class="material-symbols-outlined text-[18px]">summarize</span>
+    Reportes
+  </a>
+{% endblock %}
+
+{% block contenido %}
+
+<!-- ===================== PULSO INSTITUCIONAL ===================== -->
+<section class="afo-stat-strip" aria-label="Pulso institucional">
+  {% if finanzas %}
+    <div class="afo-stat" style="--stat:#147A9C;--stat-2:#75D1F0">
+      <p class="afo-stat-label">Ingresos históricos</p>
+      <p class="afo-stat-value"><span data-counter="{{ finanzas.total|floatformat:2 }}" data-counter-prefix="Bs " data-counter-decimals="2">{{ finanzas.total|floatformat:2 }}</span></p>
+      <p class="afo-stat-meta">{{ finanzas.registros }} comprobantes registrados</p>
+    </div>
+    <div class="afo-stat" style="--stat:#1D428A;--stat-2:#75D1F0">
+      <p class="afo-stat-label">Ingresos del mes</p>
+      <p class="afo-stat-value"><span data-counter="{{ finanzas.mes|floatformat:2 }}" data-counter-prefix="Bs " data-counter-decimals="2">{{ finanzas.mes|floatformat:2 }}</span></p>
+      <p class="afo-stat-meta">
+        {% if finanzas.variacion is not None %}
+          {{ finanzas.variacion }}% frente al mes anterior
+        {% else %}
+          Sin comparativo del mes anterior
+        {% endif %}
+      </p>
+    </div>
+    <div class="afo-stat" style="--stat:#1D428A;--stat-2:#75D1F0">
+      <p class="afo-stat-label">Pagos pendientes</p>
+      <p class="afo-stat-value"><span data-counter="{{ finanzas.pendientes }}">{{ finanzas.pendientes }}</span></p>
+      <p class="afo-stat-meta">Registros sin monto asignado</p>
+    </div>
+  {% endif %}
+  {% if puede_ver_usuarios %}
+    <div class="afo-stat" style="--stat:#1D428A;--stat-2:#75D1F0">
+      <p class="afo-stat-label">Usuarios activos</p>
+      <p class="afo-stat-value"><span data-counter="{{ usuarios_activos }}">{{ usuarios_activos }}</span></p>
+      <p class="afo-stat-meta">De {{ total_usuarios }} cuentas institucionales</p>
+    </div>
+  {% endif %}
+  <div class="afo-stat" style="--stat:#147A9C;--stat-2:#75D1F0">
+    <p class="afo-stat-label">Reportes disponibles</p>
+    <p class="afo-stat-value"><span data-counter="{{ total_reportes }}">{{ total_reportes }}</span></p>
+    <p class="afo-stat-meta">Exportables en PDF, Excel y CSV</p>
+  </div>
+</section>
+
+<!-- ===================== FINANZAS ===================== -->
+{% if finanzas %}
+<section class="mt-6" aria-labelledby="titulo-finanzas-admin">
+  <div class="afo-section-head">
+    <div>
+      <h2 id="titulo-finanzas-admin" class="afo-section-title">
+        <span class="material-symbols-outlined">payments</span>
+        Caja institucional
+      </h2>
+      <p class="afo-section-sub">Recaudación del año {{ anio }} calculada con los pagos reales.</p>
+    </div>
+    <a href="{% url 'tesoreria' %}" class="afo-section-link">
+      Ir a Tesorería <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+    </a>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
+
+    <article class="afo-chart-card xl:col-span-2">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h3 class="text-sm font-bold text-on-surface">Ingresos por mes</h3>
+          <p class="mt-0.5 text-[11px] text-on-surface-variant">Comprobantes con monto del año {{ anio }}.</p>
+        </div>
+        <span class="afo-chart-icon material-symbols-outlined">bar_chart</span>
+      </div>
+      {% if ingresos_mensuales %}
+        <div class="afo-bars mt-4">
+          {% for barra in ingresos_mensuales %}
+            <div class="afo-bar" title="{{ barra.mes }} · Bs {{ barra.valor|floatformat:2 }}">
+              <div class="afo-bar-track">
+                <div class="afo-bar-fill" style="height: {{ barra.pct }}%"></div>
+              </div>
+              <span class="afo-bar-label">{{ barra.mes }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="afo-empty mt-4">
+          <span class="material-symbols-outlined">bar_chart</span>
+          <p>Sin movimientos en el año</p>
+          <small>Los ingresos aparecerán al registrar pagos.</small>
+        </div>
+      {% endif %}
+    </article>
+
+    <article class="afo-surface">
+      <div class="afo-card-head">
+        <div>
+          <h3 class="afo-card-title text-sm"><span class="material-symbols-outlined">receipt_long</span> Movimientos recientes</h3>
+          <p class="afo-card-sub">Últimos comprobantes de caja.</p>
+        </div>
+      </div>
+      {% if ultimos_pagos %}
+        <ul class="divide-y divide-surface-container">
+          {% for pago in ultimos_pagos %}
+            <li class="flex items-start justify-between gap-3 px-4 py-3">
+              <div class="min-w-0">
+                <p class="truncate text-[12.5px] font-bold text-on-surface" title="{{ pago.tipo }}">{{ pago.tipo|default:"Pago registrado"|short_name:28 }}</p>
+                <p class="mt-0.5 text-[10.5px] text-on-surface-variant">
+                  {% if pago.fecha %}{{ pago.fecha|date:"d M Y" }}{% else %}Sin fecha{% endif %}
+                  {% if pago.deportista %}· {{ pago.deportista.apellido }}{% elif pago.club %}· {{ pago.club.nombre|short_name:18 }}{% endif %}
+                </p>
+              </div>
+              <span class="shrink-0 text-[12.5px] font-bold text-primary">Bs {{ pago.monto|floatformat:2 }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="afo-empty m-4">
+          <span class="material-symbols-outlined">receipt_long</span>
+          <p>Sin movimientos</p>
+          <small>Registre un pago para verlo aquí.</small>
+        </div>
+      {% endif %}
+    </article>
+  </div>
+</section>
+{% endif %}
+
+<!-- ===================== USUARIOS ===================== -->
+{% if puede_ver_usuarios and usuarios %}
+<section class="mt-6" aria-labelledby="titulo-usuarios-admin">
+  <div class="afo-section-head">
+    <div>
+      <h2 id="titulo-usuarios-admin" class="afo-section-title">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        Cuentas institucionales
+      </h2>
+      <p class="afo-section-sub">{{ usuarios_activos }} de {{ total_usuarios }} cuentas activas en el sistema.</p>
+    </div>
+    <a href="{% url 'usuarios' %}" class="afo-section-link">
+      Gestionar usuarios <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+    </a>
+  </div>
+
+  <div class="mt-4 overflow-hidden afo-surface">
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[560px] text-sm">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Último acceso</th>
+            <th class="text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cuenta in usuarios %}
+            <tr>
+              <td>
+                <div class="flex items-center gap-3">
+                  <span class="afo-avatar !h-9 !w-9 !rounded-xl">{{ cuenta.get_full_name|default:cuenta.username|initials:2 }}</span>
+                  <span class="min-w-0">
+                    <span class="block truncate font-semibold text-on-surface">{{ cuenta.get_full_name|default:cuenta.username|short_name:28 }}</span>
+                    <span class="block truncate text-[10.5px] text-on-surface-variant">{{ cuenta.email|default:cuenta.username }}</span>
+                  </span>
+                </div>
+              </td>
+              <td>
+                {% with grupo=cuenta.groups.first %}
+                  {% if grupo %}
+                    <span class="rounded-full bg-secondary-fixed/50 px-2.5 py-1 text-[10px] font-bold text-on-secondary-fixed">{{ grupo.name|short_name:24 }}</span>
+                  {% else %}
+                    <span class="rounded-full bg-surface-container px-2.5 py-1 text-[10px] font-bold text-on-surface-variant">Sin rol</span>
+                  {% endif %}
+                {% endwith %}
+              </td>
+              <td>
+                <span class="afo-status {% if cuenta.is_active %}afo-status--live{% else %}afo-status--muted{% endif %}">
+                  {% if cuenta.is_active %}Activo{% else %}Inactivo{% endif %}
+                </span>
+              </td>
+              <td class="text-[11px] text-on-surface-variant">
+                {% if cuenta.last_login %}{{ cuenta.last_login|date:"d M Y · H:i" }}{% else %}Sin registro{% endif %}
+              </td>
+              <td class="text-right">
+                <a href="{% url 'usuario_editar' cuenta.pk %}" class="inline-flex h-8 items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[11px] font-bold text-primary transition hover:bg-primary/5">
+                  <span class="material-symbols-outlined text-[15px]">edit</span> Editar
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ===================== REPORTES ===================== -->
+<section class="mt-6" aria-labelledby="titulo-reportes-admin">
+  <div class="afo-section-head">
+    <div>
+      <h2 id="titulo-reportes-admin" class="afo-section-title">
+        <span class="material-symbols-outlined">summarize</span>
+        Reportes oficiales
+      </h2>
+      <p class="afo-section-sub">Documentos institucionales listos para exportar y presentar.</p>
+    </div>
+    <a href="{% url 'reportes' %}" class="afo-section-link">
+      Ver todos <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+    </a>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+    {% for clave, nombre, icono, descripcion in reportes %}
+      <article class="afo-module-card afo-module-card--blue">
+        <div class="afo-module-top">
+          <span class="afo-module-icon material-symbols-outlined">{{ icono }}</span>
+          <span class="material-symbols-outlined text-[20px] text-outline">description</span>
+        </div>
+        <h3 class="afo-module-name">{{ nombre }}</h3>
+        <p class="afo-module-desc">{{ descripcion }}</p>
+        <div class="mt-auto flex flex-wrap items-center gap-1.5 border-t border-[var(--afo-line)] pt-3">
+          <a href="{% url 'reporte_detalle' clave %}" class="inline-flex h-8 items-center gap-1 rounded-lg bg-primary px-2.5 text-[10.5px] font-bold text-on-primary transition hover:bg-primary-container">
+            <span class="material-symbols-outlined text-[15px]">visibility</span> Ver
+          </a>
+          <a href="{% url 'reporte_pdf' clave %}" class="inline-flex h-8 items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[10.5px] font-bold text-primary transition hover:bg-primary/5">PDF</a>
+          <a href="{% url 'reporte_xlsx' clave %}" class="inline-flex h-8 items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[10.5px] font-bold text-primary transition hover:bg-primary/5">Excel</a>
+          <a href="{% url 'reporte_csv' clave %}" class="inline-flex h-8 items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[10.5px] font-bold text-primary transition hover:bg-primary/5">CSV</a>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ===================== AUDITORÍA ===================== -->
+{% if puede_ver_auditoria and auditoria %}
+<section class="mt-6" aria-labelledby="titulo-auditoria-admin">
+  <div class="afo-section-head">
+    <div>
+      <h2 id="titulo-auditoria-admin" class="afo-section-title">
+        <span class="material-symbols-outlined">history</span>
+        Historial de operaciones
+      </h2>
+      <p class="afo-section-sub">Trazabilidad de las últimas acciones administrativas.</p>
+    </div>
+    <a href="{% url 'auditoria' %}" class="afo-section-link">
+      Ver auditoría <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+    </a>
+  </div>
+
+  <div class="mt-4 afo-surface p-5">
+    <ol class="afo-timeline">
+      {% for evento in auditoria %}
+        <li class="afo-timeline-item">
+          <span class="afo-timeline-icon afo-timeline-icon--info material-symbols-outlined">
+            {% if 'pago' in evento.operacion|lower %}payments
+            {% elif 'partido' in evento.operacion|lower %}sports_soccer
+            {% elif 'club' in evento.operacion|lower %}shield
+            {% elif 'deportista' in evento.operacion|lower %}person_search
+            {% elif 'campeonato' in evento.operacion|lower %}emoji_events
+            {% elif 'usuario' in evento.operacion|lower %}manage_accounts
+            {% elif 'sanci' in evento.operacion|lower %}gavel
+            {% else %}history{% endif %}
+          </span>
+          <div class="min-w-0">
+            <p class="afo-timeline-title">{{ evento.operacion|default:"Operación registrada"|truncatechars:120 }}</p>
+            <p class="afo-timeline-detail">
+              {% if evento.usuario %}{{ evento.usuario.get_full_name|default:evento.usuario.username }}{% else %}Sistema{% endif %}
+              {% if evento.modulo %}· {{ evento.modulo|capfirst }}{% endif %}
+            </p>
+            {% if evento.fecha %}<p class="afo-timeline-date">{{ evento.fecha|date:"d M Y · H:i" }}</p>{% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% endif %}
+
+<!-- ===================== ACCESOS INSTITUCIONALES ===================== -->
+<section class="mt-6" aria-labelledby="titulo-accesos-admin">
+  <div class="afo-section-head">
+    <div>
+      <h2 id="titulo-accesos-admin" class="afo-section-title">
+        <span class="material-symbols-outlined">account_balance</span>
+        Accesos institucionales
+      </h2>
+      <p class="afo-section-sub">Administración, control y configuración de la plataforma.</p>
+    </div>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    {% if puede_ver_finanzas %}
+      <a href="{% url 'tesoreria' %}" class="afo-module-card afo-module-card--green">
+        <div class="afo-module-top">
+          <span class="afo-module-icon material-symbols-outlined">payments</span>
+          <span class="afo-module-value"><span data-counter="{{ total_pagos }}">{{ total_pagos }}</span><small>pagos</small></span>
+        </div>
+        <h3 class="afo-module-name">Tesorería y pagos</h3>
+        <p class="afo-module-desc">Caja, comprobantes y movimientos institucionales.</p>
+        <span class="afo-module-detail"><span class="material-symbols-outlined">open_in_new</span> Abrir caja</span>
+      </a>
+    {% endif %}
+    {% if puede_ver_usuarios %}
+      <a href="{% url 'usuarios' %}" class="afo-module-card afo-module-card--violet">
+        <div class="afo-module-top">
+          <span class="afo-module-icon material-symbols-outlined">manage_accounts</span>
+          <span class="afo-module-value"><span data-counter="{{ total_usuarios }}">{{ total_usuarios }}</span><small>cuentas</small></span>
+        </div>
+        <h3 class="afo-module-name">Usuarios y roles</h3>
+        <p class="afo-module-desc">Accesos, permisos y responsabilidades por rol.</p>
+        <span class="afo-module-detail"><span class="material-symbols-outlined">open_in_new</span> Gestionar accesos</span>
+      </a>
+      <a href="{% url 'auditoria' %}" class="afo-module-card afo-module-card--gold">
+        <div class="afo-module-top">
+          <span class="afo-module-icon material-symbols-outlined">history</span>
+          <span class="afo-module-value"><span class="material-symbols-outlined text-[26px] text-[#147A9C]">timeline</span></span>
+        </div>
+        <h3 class="afo-module-name">Historial de operaciones</h3>
+        <p class="afo-module-desc">Auditoría completa de la actividad del sistema.</p>
+        <span class="afo-module-detail"><span class="material-symbols-outlined">open_in_new</span> Ver trazabilidad</span>
+      </a>
+    {% endif %}
+    <a href="{% url 'perfil' %}" class="afo-module-card afo-module-card--teal">
+      <div class="afo-module-top">
+        <span class="afo-module-icon material-symbols-outlined">settings</span>
+        <span class="afo-module-value"><span class="material-symbols-outlined text-[26px] text-[#147A9C]">tune</span></span>
+      </div>
+      <h3 class="afo-module-name">Configuración</h3>
+      <p class="afo-module-desc">Perfil, seguridad y contraseña de la cuenta.</p>
+      <span class="afo-module-detail"><span class="material-symbols-outlined">open_in_new</span> Mi perfil</span>
+    </a>
+  </div>
+</section>
+
+{% endblock %}

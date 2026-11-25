@@ -22,6 +22,7 @@ TODOS = {'ADMIN', 'DIRIGENTE', 'ARBITRO', 'TESORERO'}
 # Quién puede crear, editar y eliminar en cada módulo.
 ESCRITURA = {
     'clubes': {'ADMIN'},
+    'canchas': {'ADMIN'},
     'equipos': {'ADMIN', 'DIRIGENTE'},
     'deportistas': {'ADMIN', 'DIRIGENTE'},
     'categorias': {'ADMIN'},
@@ -44,6 +45,7 @@ LECTURA_RESTRINGIDA = {
 
 ETIQUETAS_MODULO = {
     'clubes': 'Clubes',
+    'canchas': 'Canchas',
     'equipos': 'Equipos',
     'deportistas': 'Deportistas',
     'categorias': 'Categorías',

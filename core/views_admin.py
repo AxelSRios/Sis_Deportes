@@ -13,6 +13,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.utils.dateparse import parse_date
 from django.views import View
 
 from . import forms
@@ -29,6 +30,7 @@ from .models import (
     Inscripcion,
     Pago,
     Partido,
+    RegistroAcceso,
     Sancion,
 )
 from .permisos import (
@@ -940,6 +942,68 @@ def auditoria(request):
             usuario_actual=usuario_id,
             modulos=modulos,
             modulo_actual=modulo,
+            desde=desde,
+            hasta=hasta,
+        ),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Accesos y sesiones
+# ---------------------------------------------------------------------------
+
+
+@modulo_requerido('auditoria')
+def accesos(request):
+    """Historial estructurado de inicios, cierres e intentos fallidos."""
+    busqueda = normalizar_busqueda(request)
+    evento = (request.GET.get('evento') or '').strip().upper()
+    desde = (request.GET.get('desde') or '').strip()
+    hasta = (request.GET.get('hasta') or '').strip()
+    eventos_validos = {clave for clave, _ in RegistroAcceso.EVENTOS}
+
+    consulta = RegistroAcceso.objects.select_related('usuario')
+    consulta = buscar(
+        consulta,
+        busqueda,
+        ['username', 'ip', 'ip_proxy', 'detalle', 'usuario__username',
+         'usuario__first_name', 'usuario__last_name'],
+    )
+    if evento in eventos_validos:
+        consulta = consulta.filter(evento=evento)
+    else:
+        evento = ''
+    if desde:
+        fecha = parse_date(desde)
+        if fecha:
+            consulta = consulta.filter(fecha__date__gte=fecha)
+    if hasta:
+        fecha = parse_date(hasta)
+        if fecha:
+            consulta = consulta.filter(fecha__date__lte=fecha)
+
+    base = RegistroAcceso.objects.all()
+    resumen = {
+        'total': base.count(),
+        'exitosos': base.filter(evento='LOGIN').count(),
+        'fallidos': base.filter(evento__in=['LOGIN_FALLIDO', 'BLOQUEO']).count(),
+        'bloqueos': base.filter(evento='BLOQUEO').count(),
+        'usuarios': base.filter(evento='LOGIN', usuario__isnull=False)
+        .values('usuario_id').distinct().count(),
+        'ultimo': base.filter(evento='LOGIN').order_by('-fecha').first(),
+    }
+
+    return render(
+        request,
+        'admin/accesos.html',
+        contexto(
+            request,
+            pagina=paginar(request, consulta, 25),
+            total=consulta.count(),
+            busqueda=busqueda,
+            evento_actual=evento,
+            eventos=RegistroAcceso.EVENTOS,
+            eventos_resumen=resumen,
             desde=desde,
             hasta=hasta,
         ),

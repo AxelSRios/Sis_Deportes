@@ -1,8 +1,33 @@
 from datetime import date
+from urllib.parse import quote
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
+
+from .validadores import (
+    validar_ci_boliviana,
+    validar_correo,
+    validar_direccion,
+    validar_fecha_nacimiento,
+    validar_fecha_pasada,
+    validar_nombre_organizacion,
+    validar_nombre_persona,
+    validar_telefono_boliviano,
+    validar_texto_libre,
+)
+
+
+def _validar_campo(errores, campo, funcion, valor, *args, **kwargs):
+    """Aplica un validador y acumula el mensaje sin cortar el resto."""
+    if not valor:
+        return valor
+    try:
+        return funcion(valor, *args, **kwargs)
+    except ValidationError as error:
+        errores[campo] = error.messages
+        return valor
 
 
 class Club(models.Model):
@@ -32,6 +57,45 @@ class Club(models.Model):
     def __str__(self):
         return self.nombre
 
+    def clean(self):
+        errores = {}
+        self.nombre = _validar_campo(
+            errores, 'nombre', validar_nombre_organizacion, self.nombre,
+            'nombre del club', 2, 150,
+        )
+        self.presidente = _validar_campo(
+            errores, 'presidente', validar_nombre_persona, self.presidente,
+            'nombre del presidente',
+        )
+        self.telefono = _validar_campo(
+            errores, 'telefono', validar_telefono_boliviano, self.telefono
+        )
+        self.email = _validar_campo(
+            errores, 'email', validar_correo, self.email
+        )
+        self.direccion = _validar_campo(
+            errores, 'direccion', validar_direccion, self.direccion
+        )
+        self.nit_personeria = _validar_campo(
+            errores, 'nit_personeria', validar_texto_libre,
+            self.nit_personeria, 'NIT o personería jurídica', 100,
+        )
+        self.estado_juridico = _validar_campo(
+            errores, 'estado_juridico', validar_texto_libre,
+            self.estado_juridico, 'estado jurídico', 100,
+        )
+        self.observaciones = _validar_campo(
+            errores, 'observaciones', validar_texto_libre,
+            self.observaciones, 'observaciones', 2000,
+        )
+        if self.fundacion:
+            self.fundacion = _validar_campo(
+                errores, 'fundacion', validar_fecha_pasada,
+                self.fundacion, 'fecha de fundación',
+            )
+        if errores:
+            raise ValidationError(errores)
+
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -49,14 +113,29 @@ class Categoria(models.Model):
         return self.nombre
 
     def clean(self):
+        errores = {}
+        self.nombre = _validar_campo(
+            errores, 'nombre', validar_nombre_organizacion, self.nombre,
+            'nombre de la categoría', 2, 100,
+        )
+        self.descripcion = _validar_campo(
+            errores, 'descripcion', validar_texto_libre,
+            self.descripcion, 'descripción de la categoría', 1000,
+        )
         if (
-            self.edad_min is not None
-            and self.edad_max is not None
+            isinstance(self.edad_min, int)
+            and isinstance(self.edad_max, int)
             and self.edad_min > self.edad_max
         ):
-            raise ValidationError(
-                {'edad_max': 'La edad máxima no puede ser menor que la mínima.'}
-            )
+            errores['edad_max'] = [
+                'La edad máxima no puede ser menor que la mínima.'
+            ]
+        for campo in ('edad_min', 'edad_max'):
+            valor = getattr(self, campo)
+            if isinstance(valor, int) and valor > 100:
+                errores[campo] = ['La edad no puede superar los 100 años.']
+        if errores:
+            raise ValidationError(errores)
 
 
 class Campeonato(models.Model):
@@ -121,14 +200,36 @@ class Campeonato(models.Model):
         return (self.fecha_conclusion - date.today()).days
 
     def clean(self):
+        errores = {}
+        self.nombre = _validar_campo(
+            errores, 'nombre', validar_nombre_organizacion, self.nombre,
+            'nombre del campeonato', 2, 150,
+        )
+        self.disciplina = _validar_campo(
+            errores, 'disciplina', validar_nombre_organizacion,
+            self.disciplina, 'disciplina', 2, 100,
+        )
+        self.reglamento = _validar_campo(
+            errores, 'reglamento', validar_texto_libre, self.reglamento,
+            'reglamento', 5000,
+        )
+        if self.temporada is not None and not (
+            isinstance(self.temporada, int)
+            and 1900 <= self.temporada <= 2100
+        ):
+            errores['temporada'] = [
+                'La temporada debe estar entre 1900 y 2100.'
+            ]
         if (
-            self.fecha_inicio
-            and self.fecha_conclusion
+            isinstance(self.fecha_inicio, date)
+            and isinstance(self.fecha_conclusion, date)
             and self.fecha_conclusion < self.fecha_inicio
         ):
-            raise ValidationError(
-                {'fecha_conclusion': 'La conclusión no puede ser anterior al inicio.'}
-            )
+            errores['fecha_conclusion'] = [
+                'La conclusión no puede ser anterior al inicio.'
+            ]
+        if errores:
+            raise ValidationError(errores)
 
 
 class Equipo(models.Model):
@@ -157,6 +258,30 @@ class Equipo(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def clean(self):
+        errores = {}
+        self.nombre = _validar_campo(
+            errores, 'nombre', validar_nombre_organizacion, self.nombre,
+            'nombre del equipo', 2, 150,
+        )
+        self.entrenador = _validar_campo(
+            errores, 'entrenador', validar_nombre_persona, self.entrenador,
+            'nombre del entrenador',
+        )
+        self.division = _validar_campo(
+            errores, 'division', validar_nombre_organizacion, self.division,
+            'división', 2, 50,
+        )
+        if self.temporada is not None and not (
+            isinstance(self.temporada, int)
+            and 1900 <= self.temporada <= 2100
+        ):
+            errores['temporada'] = [
+                'La temporada debe estar entre 1900 y 2100.'
+            ]
+        if errores:
+            raise ValidationError(errores)
 
 
 class Deportista(models.Model):
@@ -212,6 +337,32 @@ class Deportista(models.Model):
 
     def __str__(self):
         return f'{self.apellido}, {self.nombre}'
+
+    def clean(self):
+        errores = {}
+        self.nombre = _validar_campo(
+            errores, 'nombre', validar_nombre_persona, self.nombre, 'nombre'
+        )
+        self.apellido = _validar_campo(
+            errores, 'apellido', validar_nombre_persona, self.apellido,
+            'apellido',
+        )
+        self.ci = _validar_campo(
+            errores, 'ci', validar_ci_boliviana, self.ci
+        )
+        self.telefono = _validar_campo(
+            errores, 'telefono', validar_telefono_boliviano, self.telefono
+        )
+        self.direccion = _validar_campo(
+            errores, 'direccion', validar_direccion, self.direccion, 200
+        )
+        if self.fecha_nacimiento:
+            self.fecha_nacimiento = _validar_campo(
+                errores, 'fecha_nacimiento', validar_fecha_nacimiento,
+                self.fecha_nacimiento,
+            )
+        if errores:
+            raise ValidationError(errores)
 
 
 class Arbitro(models.Model):
@@ -287,6 +438,36 @@ class Arbitro(models.Model):
 
     def __str__(self):
         return f'{self.apellido}, {self.nombre}'
+
+    def clean(self):
+        errores = {}
+        self.nombre = _validar_campo(
+            errores, 'nombre', validar_nombre_persona, self.nombre, 'nombre'
+        )
+        self.apellido = _validar_campo(
+            errores, 'apellido', validar_nombre_persona, self.apellido,
+            'apellido',
+        )
+        self.ci = _validar_campo(
+            errores, 'ci', validar_ci_boliviana, self.ci
+        )
+        self.telefono = _validar_campo(
+            errores, 'telefono', validar_telefono_boliviano, self.telefono
+        )
+        self.correo = _validar_campo(
+            errores, 'correo', validar_correo, self.correo
+        )
+        self.licencia = _validar_campo(
+            errores, 'licencia', validar_texto_libre, self.licencia,
+            'licencia', 50,
+        )
+        if self.fecha_nacimiento:
+            self.fecha_nacimiento = _validar_campo(
+                errores, 'fecha_nacimiento', validar_fecha_nacimiento,
+                self.fecha_nacimiento,
+            )
+        if errores:
+            raise ValidationError(errores)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -486,14 +667,25 @@ class Sancion(models.Model):
         return f'{self.get_tipo_display()} · {self.deportista or self.club}'
 
     def clean(self):
+        errores = {}
+        self.descripcion = _validar_campo(
+            errores, 'descripcion', validar_texto_libre, self.descripcion,
+            'descripción de la sanción', 2000,
+        )
+        self.observaciones = _validar_campo(
+            errores, 'observaciones', validar_texto_libre, self.observaciones,
+            'observaciones', 2000,
+        )
         if (
-            self.fecha_inicio
-            and self.fecha_fin
+            isinstance(self.fecha_inicio, date)
+            and isinstance(self.fecha_fin, date)
             and self.fecha_fin < self.fecha_inicio
         ):
-            raise ValidationError(
-                {'fecha_fin': 'La fecha final no puede ser anterior al inicio.'}
-            )
+            errores['fecha_fin'] = [
+                'La fecha final no puede ser anterior al inicio.'
+            ]
+        if errores:
+            raise ValidationError(errores)
 
 
 class Pago(models.Model):
@@ -529,6 +721,137 @@ class Pago(models.Model):
     def __str__(self):
         return f'{self.tipo or "Pago"} · Bs {self.monto or 0} · {self.fecha}'
 
+    def clean(self):
+        errores = {}
+        self.tipo = _validar_campo(
+            errores, 'tipo', validar_texto_libre, self.tipo,
+            'tipo de pago', 100,
+        )
+        self.comprobante = _validar_campo(
+            errores, 'comprobante', validar_texto_libre, self.comprobante,
+            'comprobante', 50,
+        )
+        if self.monto is not None:
+            try:
+                monto = float(self.monto)
+            except (TypeError, ValueError):
+                monto = None
+            if monto is not None and monto <= 0:
+                errores['monto'] = ['El monto debe ser mayor que cero.']
+        if errores:
+            raise ValidationError(errores)
+
+
+class Cancha(models.Model):
+    """Escenario deportivo oficial: estadio, complejo o cancha auxiliar."""
+
+    TIPOS = [
+        ('ESTADIO', 'Estadio'),
+        ('COMPLEJO', 'Complejo deportivo'),
+        ('SINTETICA', 'Cancha sintética'),
+        ('AUXILIAR', 'Cancha auxiliar'),
+    ]
+
+    nombre = models.CharField(max_length=150)
+    tipo = models.CharField(max_length=20, choices=TIPOS, default='ESTADIO')
+    descripcion = models.CharField(
+        max_length=200, blank=True,
+        help_text='Capacidad, superficie o uso principal del escenario.',
+    )
+    direccion = models.CharField(max_length=220, blank=True)
+    ciudad = models.CharField(max_length=100, blank=True, default='Oruro')
+    latitud = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True,
+        help_text='Latitud en grados decimales. Ej. -17.964000',
+    )
+    longitud = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True,
+        help_text='Longitud en grados decimales. Ej. -67.106000',
+    )
+    imagen = models.ImageField(
+        upload_to='canchas/', null=True, blank=True,
+        help_text='Imagen del escenario (JPG, PNG o WebP).',
+    )
+    imagen_url = models.URLField(
+        max_length=400, blank=True,
+        help_text='Alternativa: enlace público a la imagen.',
+    )
+    activa = models.BooleanField(default=True)
+    orden = models.PositiveSmallIntegerField(
+        default=0, help_text='Orden de aparición en el portal público.',
+    )
+    creada = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    class Meta:
+        db_table = 'canchas'
+        ordering = ['orden', 'nombre']
+        verbose_name = 'cancha'
+        verbose_name_plural = 'canchas'
+
+    def __str__(self):
+        return self.nombre
+
+    @property
+    def imagen_mostrar(self):
+        """Imagen cargada o, en su defecto, el enlace externo."""
+        if self.imagen:
+            return self.imagen.url
+        return self.imagen_url
+
+    @property
+    def mapa_url(self):
+        """Enlace a Google Maps con coordenadas o, si faltan, la dirección."""
+        if self.latitud is not None and self.longitud is not None:
+            return (
+                'https://www.google.com/maps/search/?api=1&query='
+                f'{self.latitud},{self.longitud}'
+            )
+        destino = ', '.join(
+            parte for parte in [self.nombre, self.direccion, self.ciudad] if parte
+        )
+        if not destino:
+            return ''
+        return (
+            'https://www.google.com/maps/search/?api=1&query='
+            + quote(destino)
+        )
+
+    def clean(self):
+        errores = {}
+        self.nombre = _validar_campo(
+            errores, 'nombre', validar_nombre_organizacion, self.nombre,
+            'nombre del escenario', 2, 150,
+        )
+        self.direccion = _validar_campo(
+            errores, 'direccion', validar_direccion, self.direccion
+        )
+        self.ciudad = _validar_campo(
+            errores, 'ciudad', validar_nombre_organizacion, self.ciudad,
+            'ciudad', 2, 100,
+        )
+        self.descripcion = _validar_campo(
+            errores, 'descripcion', validar_texto_libre, self.descripcion,
+            'descripción del escenario', 200,
+        )
+        if (self.latitud is None) != (self.longitud is None):
+            errores['latitud'] = [
+                'Registre la latitud y la longitud juntas, o deje ambas vacías.'
+            ]
+        try:
+            latitud = float(self.latitud)
+        except (TypeError, ValueError):
+            latitud = None
+        try:
+            longitud = float(self.longitud)
+        except (TypeError, ValueError):
+            longitud = None
+        if latitud is not None and not (-90 <= latitud <= 90):
+            errores['latitud'] = ['La latitud debe estar entre -90 y 90.']
+        if longitud is not None and not (-180 <= longitud <= 180):
+            errores['longitud'] = ['La longitud debe estar entre -180 y 180.']
+        if errores:
+            raise ValidationError(errores)
+
 
 class HistorialOperacion(models.Model):
     usuario = models.ForeignKey(
@@ -549,3 +872,52 @@ class HistorialOperacion(models.Model):
 
     def __str__(self):
         return f'{self.fecha:%d/%m/%Y %H:%M} · {self.operacion}'
+
+
+class RegistroAcceso(models.Model):
+    """Trazabilidad de sesiones: ingreso, salida e intentos fallidos.
+
+    No se almacenan contraseñas ni tokens. `username` conserva el nombre
+    intentado aunque la cuenta no exista; `usuario` solo se enlaza cuando la
+    autenticación fue válida (o al cerrar una sesión existente).
+    """
+
+    EVENTOS = [
+        ('LOGIN', 'Inicio de sesión'),
+        ('LOGIN_FALLIDO', 'Intento fallido'),
+        ('LOGOUT', 'Cierre de sesión'),
+        ('BLOQUEO', 'Bloqueo por intentos'),
+    ]
+
+    evento = models.CharField(max_length=20, choices=EVENTOS, db_index=True)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='accesos',
+    )
+    username = models.CharField(max_length=150, blank=True)
+    rol = models.CharField(max_length=24, blank=True)
+    ip = models.CharField(max_length=64, blank=True)
+    ip_proxy = models.CharField(max_length=255, blank=True)
+    user_agent = models.CharField(max_length=300, blank=True)
+    detalle = models.CharField(max_length=255, blank=True)
+    fecha = models.DateTimeField(default=timezone.now, db_index=True)
+
+    class Meta:
+        db_table = 'registros_acceso'
+        ordering = ['-fecha', '-id']
+        verbose_name = 'registro de acceso'
+        verbose_name_plural = 'registros de acceso'
+        indexes = [
+            models.Index(fields=['evento', 'fecha'], name='acceso_evento_fecha_idx'),
+            models.Index(fields=['username', 'fecha'], name='acceso_usuario_fecha_idx'),
+        ]
+
+    def __str__(self):
+        return f'{self.fecha:%d/%m/%Y %H:%M} · {self.get_evento_display()} · {self.username or "—"}'
+
+    @property
+    def es_fallido(self):
+        return self.evento in {'LOGIN_FALLIDO', 'BLOQUEO'}

@@ -1,6 +1,7 @@
+{% load afo_extras %}
 {% if pagina.paginator.count %}
-  <div class="flex flex-col gap-2 border-t border-surface-container px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-    <p class="text-[11px] text-on-surface-variant">
+  <div class="flex flex-col gap-3 border-t border-surface-container px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-[11.5px] text-on-surface-variant">
       Mostrando <strong class="text-on-surface">{{ pagina.start_index }}</strong>–<strong class="text-on-surface">{{ pagina.end_index }}</strong>
       de <strong class="text-on-surface">{{ pagina.paginator.count }}</strong> registro{{ pagina.paginator.count|pluralize:"s" }}
     </p>
@@ -8,38 +9,42 @@
     {% if pagina.paginator.num_pages > 1 %}
       <nav class="flex flex-wrap items-center gap-1" aria-label="Paginación">
         {% if pagina.has_previous %}
-          <a href="{% querystring page=pagina.previous_page_number %}"
-             class="inline-flex h-8 items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[11px] font-semibold text-primary transition hover:bg-primary/5">
-            <span class="material-symbols-outlined text-[15px]">chevron_left</span>
-            Anterior
+          <a href="{% querystring page=pagina.previous_page_number %}" aria-label="Página anterior"
+             class="afo-page-step inline-flex h-9 items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[11.5px] font-semibold text-primary transition hover:bg-primary/5">
+            <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+            <span class="afo-page-text">Anterior</span>
           </a>
         {% else %}
-          <span class="inline-flex h-8 cursor-not-allowed items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[11px] font-semibold text-outline">
-            <span class="material-symbols-outlined text-[15px]">chevron_left</span>
-            Anterior
+          <span aria-disabled="true"
+                class="afo-page-step inline-flex h-9 cursor-not-allowed items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[11.5px] font-semibold text-outline">
+            <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+            <span class="afo-page-text">Anterior</span>
           </span>
         {% endif %}
 
-        {% for numero in pagina.paginator.page_range %}
-          {% if numero == pagina.number %}
+        {% for numero in pagina|rango_paginas %}
+          {% if numero == '…' %}
+            <span class="afo-page-gap inline-flex h-9 min-w-9 items-center justify-center px-1 text-[11.5px] font-bold text-outline" aria-hidden="true">…</span>
+          {% elif numero == pagina.number %}
             <span aria-current="page"
-                  class="inline-flex h-8 min-w-8 items-center justify-center rounded-lg bg-primary px-2 text-[11px] font-bold text-on-primary">{{ numero }}</span>
+                  class="afo-page-number is-current inline-flex h-9 min-w-9 items-center justify-center rounded-lg bg-primary px-2 text-[11.5px] font-bold text-on-primary">{{ numero }}</span>
           {% else %}
-            <a href="{% querystring page=numero %}"
-               class="inline-flex h-8 min-w-8 items-center justify-center rounded-lg border border-surface-container px-2 text-[11px] font-semibold text-on-surface-variant transition hover:bg-surface-container">{{ numero }}</a>
+            <a href="{% querystring page=numero %}" aria-label="Página {{ numero }}"
+               class="afo-page-number inline-flex h-9 min-w-9 items-center justify-center rounded-lg border border-surface-container px-2 text-[11.5px] font-semibold text-on-surface-variant transition hover:bg-surface-container">{{ numero }}</a>
           {% endif %}
         {% endfor %}
 
         {% if pagina.has_next %}
-          <a href="{% querystring page=pagina.next_page_number %}"
-             class="inline-flex h-8 items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[11px] font-semibold text-primary transition hover:bg-primary/5">
-            Siguiente
-            <span class="material-symbols-outlined text-[15px]">chevron_right</span>
+          <a href="{% querystring page=pagina.next_page_number %}" aria-label="Página siguiente"
+             class="afo-page-step inline-flex h-9 items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[11.5px] font-semibold text-primary transition hover:bg-primary/5">
+            <span class="afo-page-text">Siguiente</span>
+            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
           </a>
         {% else %}
-          <span class="inline-flex h-8 cursor-not-allowed items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[11px] font-semibold text-outline">
-            Siguiente
-            <span class="material-symbols-outlined text-[15px]">chevron_right</span>
+          <span aria-disabled="true"
+                class="afo-page-step inline-flex h-9 cursor-not-allowed items-center gap-1 rounded-lg border border-surface-container px-2.5 text-[11.5px] font-semibold text-outline">
+            <span class="afo-page-text">Siguiente</span>
+            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
           </span>
         {% endif %}
       </nav>

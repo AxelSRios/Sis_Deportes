@@ -1,0 +1,349 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}competencia{% endblock %}
+
+{% block miga %}Competencia{% endblock %}
+{% block encabezado %}Centro de Competencia{% endblock %}
+{% block descripcion %}
+  El corazón futbolístico de la A.F.O.: torneos, calendario oficial, tablas de
+  posiciones y resultados homologados por la Comisión Técnica.
+{% endblock %}
+
+{% block tabs %}
+  <div class="afo-section-tabs">
+    <a href="#torneos" class="afo-section-tab is-active"><span class="material-symbols-outlined">emoji_events</span> Torneos</a>
+    <a href="#calendario" class="afo-section-tab"><span class="material-symbols-outlined">calendar_month</span> Calendario</a>
+    <a href="#posiciones" class="afo-section-tab"><span class="material-symbols-outlined">leaderboard</span> Posiciones</a>
+    <a href="#resultados" class="afo-section-tab"><span class="material-symbols-outlined">scoreboard</span> Resultados</a>
+  </div>
+{% endblock %}
+
+{% block acciones %}
+  {% if rol == 'ADMIN' %}
+    <a href="{% url 'campeonato_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">add</span>
+      Nuevo campeonato
+    </a>
+  {% endif %}
+  {% if rol == 'ADMIN' or rol == 'ARBITRO' %}
+    <a href="{% url 'partido_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+      <span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+      Programar partido
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+
+<!-- ===================== PULSO COMPETITIVO ===================== -->
+<section class="afo-stat-strip" aria-label="Pulso competitivo">
+  <div class="afo-stat" style="--stat:#147A9C;--stat-2:#75D1F0">
+    <p class="afo-stat-label">Campeonatos</p>
+    <p class="afo-stat-value"><span data-counter="{{ total_campeonatos }}">{{ total_campeonatos }}</span></p>
+    <p class="afo-stat-meta">Torneos oficiales registrados</p>
+  </div>
+  <div class="afo-stat" style="--stat:#1D428A;--stat-2:#75D1F0">
+    <p class="afo-stat-label">Partidos jugados</p>
+    <p class="afo-stat-value"><span data-counter="{{ partidos_jugados }}">{{ partidos_jugados }}</span></p>
+    <p class="afo-stat-meta">De {{ total_partidos }} programados</p>
+  </div>
+  <div class="afo-stat" style="--stat:#147A9C;--stat-2:#75D1F0">
+    <p class="afo-stat-label">Inscripciones</p>
+    <p class="afo-stat-value"><span data-counter="{{ total_inscripciones }}">{{ total_inscripciones }}</span></p>
+    <p class="afo-stat-meta">{{ inscripciones_pendientes }} pendiente{{ inscripciones_pendientes|pluralize:"s" }} de aprobación</p>
+  </div>
+  <div class="afo-stat" style="--stat:#1D428A;--stat-2:#75D1F0">
+    <p class="afo-stat-label">Sanciones vigentes</p>
+    <p class="afo-stat-value"><span data-counter="{{ sanciones_vigentes }}">{{ sanciones_vigentes }}</span></p>
+    <p class="afo-stat-meta">Tribunal de penas</p>
+  </div>
+</section>
+
+<!-- ===================== TORNEOS ===================== -->
+<section class="mt-6" id="torneos" aria-labelledby="titulo-torneos">
+  <div class="afo-section-head">
+    <div>
+      <h2 id="titulo-torneos" class="afo-section-title">
+        <span class="material-symbols-outlined">emoji_events</span>
+        Campeonatos oficiales
+      </h2>
+      <p class="afo-section-sub">Estado y avance real de cada torneo según su calendario.</p>
+    </div>
+    <a href="{% url 'campeonatos' %}" class="afo-section-link">
+      Gestionar torneos <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+    </a>
+  </div>
+
+  {% if campeonatos %}
+    <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+      {% for torneo in campeonatos %}
+        <a href="?campeonato={{ torneo.pk }}#calendario" class="afo-champ group{% if campeonato_actual and torneo.pk == campeonato_actual.pk %} ring-2 ring-secondary/40{% endif %}">
+          <div class="afo-champ-top">
+            <span class="afo-champ-icon material-symbols-outlined">emoji_events</span>
+            <span class="afo-status {% if torneo.estado == 'ACTIVO' %}afo-status--live{% elif torneo.estado == 'PLANIFICADO' %}afo-status--next{% else %}afo-status--muted{% endif %}">
+              {% if torneo.estado == 'ACTIVO' %}<span class="afo-live-dot" aria-hidden="true"></span>{% endif %}
+              {{ torneo.estado|estado_label|default:"Sin estado" }}
+            </span>
+          </div>
+          <h3 class="afo-champ-name" title="{{ torneo.nombre }}">{{ torneo.nombre|short_name:38 }}</h3>
+          <p class="afo-champ-sub">
+            {{ torneo.categoria.nombre|default:"Categoría libre" }}
+            {% if torneo.temporada %}· Temporada {{ torneo.temporada }}{% endif %}
+          </p>
+          <div class="afo-champ-metrics">
+            <span><strong>{{ torneo.total_equipos }}</strong> equipos</span>
+            <span><strong>{{ torneo.jugados }}</strong>/{{ torneo.total_partidos }} jugados</span>
+          </div>
+          <div class="afo-champ-progress">
+            <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.06em] text-on-surface-variant">
+              <span>Avance</span>
+              <span class="text-primary">{{ torneo.avance_partidos }}%</span>
+            </div>
+            <div class="afo-progress-track"><span style="width: {{ torneo.avance_partidos }}%"></span></div>
+          </div>
+          <div class="afo-champ-foot">
+            <span class="inline-flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">event</span>
+              {{ torneo.fecha_inicio|date:"d M Y"|default:"Inicio por definir" }}
+            </span>
+            <span class="afo-champ-cta">
+              Ver tabla
+              <span class="material-symbols-outlined text-[14px] transition group-hover:translate-x-0.5">chevron_right</span>
+            </span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="afo-empty mt-4">
+      <span class="material-symbols-outlined">emoji_events</span>
+      <p>Sin campeonatos registrados</p>
+      <small>Registre un torneo para habilitar calendario y posiciones.</small>
+    </div>
+  {% endif %}
+</section>
+
+<!-- ===================== CALENDARIO + POSICIONES ===================== -->
+<div class="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-5">
+
+  <!-- Calendario -->
+  <section class="afo-surface xl:col-span-3" id="calendario" aria-labelledby="titulo-calendario">
+    <div class="afo-card-head">
+      <div>
+        <h2 id="titulo-calendario" class="afo-card-title">
+          <span class="material-symbols-outlined">calendar_month</span>
+          Calendario oficial
+        </h2>
+        <p class="afo-card-sub">
+          {% if campeonato_actual %}{{ campeonato_actual.nombre|short_name:42 }}{% else %}Fixture general de la A.F.O.{% endif %}
+          · {{ proximos_total }} encuentro{{ proximos_total|pluralize:"s" }}.
+        </p>
+      </div>
+      <form method="get" class="flex items-center gap-2">
+        <label for="filtroCampeonato" class="sr-only">Campeonato</label>
+        <select id="filtroCampeonato" name="campeonato"
+                class="h-9 max-w-[190px] rounded-lg border border-surface-container bg-white px-3 text-xs font-semibold text-primary outline-none transition focus:border-primary/40">
+          {% for torneo in campeonatos %}
+            <option value="{{ torneo.pk }}" {% if campeonato_actual and torneo.pk == campeonato_actual.pk %}selected{% endif %}>{{ torneo.nombre|short_name:30 }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="inline-flex h-9 items-center gap-1 rounded-lg border border-surface-container bg-white px-3 text-[11px] font-bold text-primary transition hover:bg-primary/5">
+          <span class="material-symbols-outlined text-[15px]">filter_alt</span>
+          Filtrar
+        </button>
+      </form>
+    </div>
+
+    {% if calendario %}
+      <div class="afo-calendar p-4">
+        {% for dia in calendario %}
+          <div class="afo-calendar-day">
+            <div class="afo-calendar-date">
+              <strong>{{ dia.fecha|date:"d" }}</strong>
+              <span>{{ dia.fecha|date:"M" }}</span>
+              <small>{{ dia.fecha|date:"D" }}</small>
+            </div>
+            <div class="afo-calendar-games">
+              {% for partido in dia.partidos %}
+                <a href="{% url 'partido_detalle' partido.pk %}" class="afo-calendar-game">
+                  <span class="afo-calendar-match">
+                    <strong>{{ partido.equipo_local.nombre|default:"Local"|short_name:20 }} vs {{ partido.equipo_visitante.nombre|default:"Visitante"|short_name:20 }}</strong>
+                    <small>{{ partido.campeonato.nombre|default:"Partido oficial"|short_name:28 }} · {{ partido.escenario|default:"Escenario por confirmar" }}</small>
+                  </span>
+                  <span class="afo-calendar-time">{{ partido.fecha|time:"H:i" }}</span>
+                  <span class="afo-status {% if partido.estado == 'En juego' %}afo-status--live{% elif partido.estado == 'Finalizado' %}afo-status--muted{% else %}afo-status--next{% endif %}">
+                    {{ partido.estado|default:"Programado" }}
+                  </span>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="afo-empty m-4">
+        <span class="material-symbols-outlined">event_busy</span>
+        <p>Sin encuentros programados</p>
+        <small>El fixture aparecerá cuando se registren partidos.</small>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Tabla de posiciones -->
+  <section class="afo-surface xl:col-span-2" id="posiciones" aria-labelledby="titulo-posiciones">
+    <div class="afo-card-head">
+      <div>
+        <h2 id="titulo-posiciones" class="afo-card-title">
+          <span class="material-symbols-outlined">leaderboard</span>
+          Tabla de posiciones
+        </h2>
+        <p class="afo-card-sub">
+          {% if campeonato_actual %}{{ campeonato_actual.nombre|short_name:34 }}{% else %}Seleccione un campeonato{% endif %}
+        </p>
+      </div>
+      {% if campeonato_actual %}
+        <a href="{% url 'campeonato_detalle' campeonato_actual.pk %}" class="afo-section-link">
+          Ficha <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+        </a>
+      {% endif %}
+    </div>
+
+    {% if tabla %}
+      <div class="overflow-x-auto">
+        <table class="afo-standings w-full min-w-[420px] text-sm">
+          <thead>
+            <tr>
+              <th class="w-9">#</th>
+              <th>Equipo</th>
+              <th class="text-center">PJ</th>
+              <th class="text-center">PG</th>
+              <th class="text-center">PE</th>
+              <th class="text-center">PP</th>
+              <th class="text-center">GF</th>
+              <th class="text-center">GC</th>
+              <th class="text-center">DG</th>
+              <th class="text-center">PTS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in tabla %}
+              <tr>
+                <td><span class="afo-pos">{{ forloop.counter }}</span></td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    {% if fila.equipo.club.logo_url %}
+                      <img class="afo-crest afo-crest--sm" src="{{ fila.equipo.club.logo_url }}" alt="Escudo de {{ fila.equipo.nombre }}" loading="lazy"/>
+                    {% else %}
+                      <span class="afo-crest afo-crest--sm">{{ fila.equipo.nombre|initials }}</span>
+                    {% endif %}
+                    <span class="truncate font-semibold text-on-surface" title="{{ fila.equipo.nombre }}">{{ fila.equipo.nombre|short_name:22 }}</span>
+                  </div>
+                </td>
+                <td class="text-center">{{ fila.pj }}</td>
+                <td class="text-center">{{ fila.pg }}</td>
+                <td class="text-center">{{ fila.pe }}</td>
+                <td class="text-center">{{ fila.pp }}</td>
+                <td class="text-center">{{ fila.gf }}</td>
+                <td class="text-center">{{ fila.gc }}</td>
+                <td class="text-center">{{ fila.dg }}</td>
+                <td class="text-center"><span class="font-bold text-primary">{{ fila.pts }}</span></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="afo-empty m-4">
+        <span class="material-symbols-outlined">leaderboard</span>
+        <p>Tabla sin datos</p>
+        <small>Se calcula automáticamente con los marcadores registrados.</small>
+      </div>
+    {% endif %}
+  </section>
+</div>
+
+<!-- ===================== RESULTADOS ===================== -->
+<section class="mt-6" id="resultados" aria-labelledby="titulo-resultados-competencia">
+  <div class="afo-section-head">
+    <div>
+      <h2 id="titulo-resultados-competencia" class="afo-section-title">
+        <span class="material-symbols-outlined">scoreboard</span>
+        Últimos resultados
+      </h2>
+      <p class="afo-section-sub">Marcadores homologados que alimentan la tabla de posiciones.</p>
+    </div>
+    <a href="{% url 'partidos' %}" class="afo-section-link">
+      Ver fixture completo <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+    </a>
+  </div>
+
+  {% if resultados %}
+    <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+      {% for partido in resultados %}
+        <a href="{% url 'partido_detalle' partido.pk %}" class="afo-result group">
+          <div class="afo-result-head">
+            <span class="afo-result-league">{{ partido.campeonato.nombre|default:"Partido oficial"|short_name:24 }}</span>
+            <span class="afo-result-date">{{ partido.fecha|date:"d M Y"|default:"Sin fecha" }}</span>
+          </div>
+          <div class="afo-result-board">
+            <div class="afo-result-team">
+              <span class="afo-crest afo-crest--sm">{{ partido.equipo_local.nombre|default:"Local"|initials }}</span>
+              <span class="afo-result-name" title="{{ partido.equipo_local.nombre }}">{{ partido.equipo_local.nombre|default:"Local"|short_name:14 }}</span>
+            </div>
+            <span class="afo-result-score">{{ partido.goles_local }} - {{ partido.goles_visitante }}</span>
+            <div class="afo-result-team afo-result-team--right">
+              <span class="afo-crest afo-crest--sm">{{ partido.equipo_visitante.nombre|default:"Visitante"|initials }}</span>
+              <span class="afo-result-name" title="{{ partido.equipo_visitante.nombre }}">{{ partido.equipo_visitante.nombre|default:"Visitante"|short_name:14 }}</span>
+            </div>
+          </div>
+          <div class="afo-result-foot">
+            <span class="inline-flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px] text-secondary">stadium</span>
+              <span class="truncate">{{ partido.escenario|default:"Escenario oficial" }}</span>
+            </span>
+            <span class="afo-result-cta">Ficha <span class="material-symbols-outlined text-[14px] transition group-hover:translate-x-0.5">chevron_right</span></span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="afo-empty mt-4">
+      <span class="material-symbols-outlined">scoreboard</span>
+      <p>Aún no hay resultados registrados</p>
+      <small>Los marcadores aparecerán cuando la Comisión Técnica los homologue.</small>
+    </div>
+  {% endif %}
+</section>
+
+<!-- ===================== ACCESOS DE COMPETENCIA ===================== -->
+<div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+  <a href="{% url 'inscripciones' %}" class="afo-module-card afo-module-card--teal">
+    <div class="afo-module-top">
+      <span class="afo-module-icon material-symbols-outlined">fact_check</span>
+      <span class="afo-module-value"><span data-counter="{{ total_inscripciones }}">{{ total_inscripciones }}</span><small>inscripciones</small></span>
+    </div>
+    <h3 class="afo-module-name">Inscripciones</h3>
+    <p class="afo-module-desc">Habilitación de equipos y deportistas por torneo.</p>
+    <span class="afo-module-detail"><span class="material-symbols-outlined">open_in_new</span> {{ inscripciones_pendientes }} pendientes</span>
+  </a>
+  <a href="{% url 'partidos' %}" class="afo-module-card afo-module-card--blue">
+    <div class="afo-module-top">
+      <span class="afo-module-icon material-symbols-outlined">sports_soccer</span>
+      <span class="afo-module-value"><span data-counter="{{ total_partidos }}">{{ total_partidos }}</span><small>partidos</small></span>
+    </div>
+    <h3 class="afo-module-name">Fixture y resultados</h3>
+    <p class="afo-module-desc">Programación, escenarios y marcadores oficiales.</p>
+    <span class="afo-module-detail"><span class="material-symbols-outlined">open_in_new</span> {{ partidos_jugados }} jugados</span>
+  </a>
+  <a href="{% url 'sanciones' %}" class="afo-module-card afo-module-card--gold">
+    <div class="afo-module-top">
+      <span class="afo-module-icon material-symbols-outlined">gavel</span>
+      <span class="afo-module-value"><span data-counter="{{ sanciones_vigentes }}">{{ sanciones_vigentes }}</span><small>vigentes</small></span>
+    </div>
+    <h3 class="afo-module-name">Tribunal de penas</h3>
+    <p class="afo-module-desc">Sanciones disciplinarias y cumplimiento.</p>
+    <span class="afo-module-detail"><span class="material-symbols-outlined">open_in_new</span> Gestionar sanciones</span>
+  </a>
+</div>
+
+{% endblock %}

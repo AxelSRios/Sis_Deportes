@@ -1,0 +1,148 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}accesos{% endblock %}
+
+{% block acciones %}
+  <a href="{% url 'auditoria' %}"
+     class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+    <span class="material-symbols-outlined text-[18px]">history</span>
+    Operaciones
+  </a>
+{% endblock %}
+
+{% block contenido %}
+<div class="grid grid-cols-2 gap-3 lg:grid-cols-5">
+  <div class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+    <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Eventos</p>
+    <p class="mt-1 text-2xl font-bold text-primary">{{ eventos_resumen.total }}</p>
+    <p class="mt-1 text-[11px] text-on-surface-variant">Registros conservados.</p>
+  </div>
+  <div class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+    <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Ingresos</p>
+    <p class="mt-1 text-2xl font-bold text-secondary">{{ eventos_resumen.exitosos }}</p>
+    <p class="mt-1 text-[11px] text-on-surface-variant">Autenticaciones válidas.</p>
+  </div>
+  <div class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+    <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Fallidos</p>
+    <p class="mt-1 text-2xl font-bold {% if eventos_resumen.fallidos %}text-error{% else %}text-primary{% endif %}">{{ eventos_resumen.fallidos }}</p>
+    <p class="mt-1 text-[11px] text-on-surface-variant">Intentos rechazados o bloqueados.</p>
+  </div>
+  <div class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm">
+    <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Usuarios</p>
+    <p class="mt-1 text-2xl font-bold text-primary">{{ eventos_resumen.usuarios }}</p>
+    <p class="mt-1 text-[11px] text-on-surface-variant">Cuentas con ingreso registrado.</p>
+  </div>
+  <div class="rounded-xl border border-surface-container bg-surface-container-lowest p-4 shadow-sm col-span-2 lg:col-span-1">
+    <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-outline">Último ingreso</p>
+    <p class="mt-1 text-sm font-bold text-on-surface">
+      {% if eventos_resumen.ultimo %}{{ eventos_resumen.ultimo.fecha|date:"d/m/Y H:i" }}{% else %}Sin registros{% endif %}
+    </p>
+    <p class="mt-1 truncate text-[11px] text-on-surface-variant">
+      {% if eventos_resumen.ultimo %}{{ eventos_resumen.ultimo.username|default:"—" }}{% else %}Aún no hay inicios de sesión.{% endif %}
+    </p>
+  </div>
+</div>
+
+<div class="mt-4 overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest shadow-sm">
+  <div class="flex flex-col gap-2 border-b border-surface-container p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="afo-section-heading font-headline-sm text-base font-bold text-on-surface">Registro de accesos</h2>
+      <p class="mt-1 text-xs text-on-surface-variant">
+        {{ total }} evento{{ total|pluralize:"s" }} con los filtros actuales. El historial no se puede modificar desde la aplicación.
+      </p>
+    </div>
+    <span class="inline-flex w-fit items-center gap-1.5 rounded-lg bg-primary/5 px-3 py-1.5 text-[11px] font-semibold text-primary">
+      <span class="material-symbols-outlined text-[15px]">verified_user</span>
+      Trazabilidad de sesiones
+    </span>
+  </div>
+
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-6">
+    <div class="lg:col-span-2">
+      <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
+      <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
+        <span class="material-symbols-outlined text-[18px] text-outline">search</span>
+        <input id="buscar" name="buscar" value="{{ busqueda }}" placeholder="Usuario, IP o detalle"
+               class="h-full w-full border-0 bg-transparent text-sm text-on-surface outline-none"/>
+      </div>
+    </div>
+    <div>
+      <label for="evento" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Evento</label>
+      <select id="evento" name="evento" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm text-on-surface outline-none focus:border-primary/50">
+        <option value="">Todos</option>
+        {% for valor, etiqueta in eventos %}
+          <option value="{{ valor }}" {% if evento_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="desde" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Desde</label>
+      <input id="desde" name="desde" type="date" value="{{ desde }}" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50"/>
+    </div>
+    <div>
+      <label for="hasta" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Hasta</label>
+      <input id="hasta" name="hasta" type="date" value="{{ hasta }}" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm outline-none focus:border-primary/50"/>
+    </div>
+    <div class="flex items-end gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Filtrar
+      </button>
+      <a href="{% url 'accesos' %}" class="inline-flex h-10 items-center justify-center rounded-lg border border-surface-container px-3 text-on-surface-variant transition hover:bg-surface-container" title="Limpiar filtros">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </a>
+    </div>
+  </form>
+
+  {% if pagina.object_list %}
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[900px] text-left">
+        <caption class="sr-only">Registro de accesos al sistema</caption>
+        <thead>
+          <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
+            <th scope="col" class="px-4 py-2.5">Fecha y hora</th>
+            <th scope="col" class="px-3 py-2.5">Evento</th>
+            <th scope="col" class="px-3 py-2.5">Usuario</th>
+            <th scope="col" class="px-3 py-2.5">Rol</th>
+            <th scope="col" class="px-3 py-2.5">IP</th>
+            <th scope="col" class="px-3 py-2.5">Navegador</th>
+            <th scope="col" class="px-4 py-2.5">Detalle</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container">
+          {% for registro in pagina.object_list %}
+            <tr class="transition hover:bg-surface-container-low/60">
+              <td class="whitespace-nowrap px-4 py-3 text-xs text-on-surface-variant">{{ registro.fecha|date:"d/m/Y H:i:s" }}</td>
+              <td class="px-3 py-3">
+                <span class="afo-access-badge is-{% if registro.evento == 'LOGIN' %}ok{% elif registro.evento == 'LOGOUT' %}out{% elif registro.evento == 'BLOQUEO' %}block{% else %}fail{% endif %}">
+                  {{ registro.get_evento_display }}
+                </span>
+              </td>
+              <td class="px-3 py-3">
+                <p class="text-sm font-semibold text-on-surface">{{ registro.username|default:"—" }}</p>
+                {% if registro.usuario and registro.usuario.get_full_name %}
+                  <p class="text-[11px] text-on-surface-variant">{{ registro.usuario.get_full_name }}</p>
+                {% endif %}
+              </td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">{{ registro.rol|rol_label }}</td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">
+                {{ registro.ip|default:"—" }}
+                {% if registro.ip_proxy %}
+                  <span class="block truncate text-[10px] text-outline" title="X-Forwarded-For: {{ registro.ip_proxy }}">proxy: {{ registro.ip_proxy|truncatechars:28 }}</span>
+                {% endif %}
+              </td>
+              <td class="px-3 py-3 text-xs text-on-surface-variant">
+                <span title="{{ registro.user_agent }}">{{ registro.user_agent|default:"—"|truncatechars:48 }}</span>
+              </td>
+              <td class="px-4 py-3 text-xs text-on-surface-variant">{{ registro.detalle|default:"—" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "admin/_paginacion.html" %}
+  {% else %}
+    {% include "admin/_vacio.html" with icono="shield_person" titulo="Sin accesos registrados" detalle="Los inicios de sesión, cierres e intentos fallidos aparecerán aquí automáticamente." %}
+  {% endif %}
+</div>
+{% endblock %}

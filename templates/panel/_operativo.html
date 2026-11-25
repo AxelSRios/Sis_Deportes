@@ -1,6 +1,6 @@
 {% load afo_extras %}
 {# Agenda deportiva + actividad: la columna que se mira a diario. #}
-<div class="mt-5 grid grid-cols-1 gap-4 xl:grid-cols-3">
+<div class="mt-5 grid grid-cols-1 items-start gap-4 xl:grid-cols-3">
 
   <!-- Próxima jornada -->
   <section class="afo-surface xl:col-span-2">
@@ -115,26 +115,21 @@
       <ol class="afo-timeline flex-1 p-4">
         {% for evento in actividad_reciente %}
           <li class="afo-timeline-item">
-            <span class="afo-timeline-icon material-symbols-outlined">
-              {% if 'pago' in evento.operacion|lower or 'caja' in evento.operacion|lower %}payments
-              {% elif 'partido' in evento.operacion|lower or 'resultado' in evento.operacion|lower %}sports_soccer
-              {% elif 'club' in evento.operacion|lower %}shield
-              {% elif 'deportista' in evento.operacion|lower or 'fichaje' in evento.operacion|lower %}person_search
-              {% elif 'campeonato' in evento.operacion|lower or 'inscripci' in evento.operacion|lower %}emoji_events
-              {% elif 'usuario' in evento.operacion|lower %}manage_accounts
-              {% elif 'sanci' in evento.operacion|lower %}gavel
-              {% else %}history{% endif %}
-            </span>
-            <div class="min-w-0">
-              <p class="text-sm font-semibold leading-5 text-on-surface">{{ evento.operacion|default:"Operación registrada"|truncatechars:110 }}</p>
-              <p class="mt-0.5 text-[11px] text-on-surface-variant">
-                {% if evento.usuario %}
-                  {{ evento.usuario.get_full_name|default:evento.usuario.username }}
-                {% else %}
-                  Sistema
-                {% endif %}
-                {% if evento.fecha %}· {{ evento.fecha|date:"d M Y H:i" }}{% endif %}
-              </p>
+            <span class="afo-timeline-icon afo-timeline-icon--{{ evento.tono|default:'info' }} material-symbols-outlined">{{ evento.icono|default:"history" }}</span>
+            <div class="min-w-0 flex-1">
+              {% if evento.url %}
+                <a href="{{ evento.url }}" class="block">
+                  <p class="afo-timeline-title">{{ evento.titulo|default:"Operación registrada"|truncatechars:110 }}</p>
+                </a>
+              {% else %}
+                <p class="afo-timeline-title">{{ evento.titulo|default:"Operación registrada"|truncatechars:110 }}</p>
+              {% endif %}
+              <p class="afo-timeline-detail">{{ evento.detalle|default:"Sistema"|truncatechars:80 }}</p>
+              {% if evento.fecha %}
+                <p class="afo-timeline-date">
+                  {% if evento.con_hora %}{{ evento.fecha|date:"d M Y · H:i" }}{% else %}{{ evento.fecha|date:"d M Y" }}{% endif %}
+                </p>
+              {% endif %}
             </div>
           </li>
         {% endfor %}

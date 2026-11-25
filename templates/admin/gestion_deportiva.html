@@ -1,0 +1,236 @@
+{% extends "base_admin.html" %}
+{% load afo_extras %}
+{% block nav_activo %}gestion{% endblock %}
+
+{% block miga %}Gestión Deportiva{% endblock %}
+{% block encabezado %}Gestión Deportiva{% endblock %}
+{% block descripcion %}
+  El padrón institucional de la A.F.O.: clubes afiliados, planteles, fichajes y
+  cuerpo arbitral, con los conteos reales del sistema.
+{% endblock %}
+
+{% block acciones %}
+  {% if puede_crear_club %}
+    <a href="{% url 'club_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+      <span class="material-symbols-outlined text-[18px]">shield</span>
+      Nuevo club
+    </a>
+  {% endif %}
+  {% if puede_crear_deportista %}
+    <a href="{% url 'deportista_crear' %}" class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-primary-container">
+      <span class="material-symbols-outlined text-[18px]">person_add</span>
+      Nuevo fichaje
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+
+<!-- ===================== PULSO DEL PADRÓN ===================== -->
+<section class="afo-stat-strip" aria-label="Pulso del padrón">
+  <div class="afo-stat" style="--stat:#1D428A;--stat-2:#75D1F0">
+    <p class="afo-stat-label">Clubes activos</p>
+    <p class="afo-stat-value"><span data-counter="{{ clubes_activos }}">{{ clubes_activos }}</span></p>
+    <p class="afo-stat-meta">Instituciones habilitadas</p>
+  </div>
+  <div class="afo-stat" style="--stat:#147A9C;--stat-2:#75D1F0">
+    <p class="afo-stat-label">Equipos activos</p>
+    <p class="afo-stat-value"><span data-counter="{{ equipos_activos }}">{{ equipos_activos }}</span></p>
+    <p class="afo-stat-meta">Planteles en competencia</p>
+  </div>
+  <div class="afo-stat" style="--stat:#1D428A;--stat-2:#75D1F0">
+    <p class="afo-stat-label">Deportistas activos</p>
+    <p class="afo-stat-value"><span data-counter="{{ deportistas_activos }}">{{ deportistas_activos }}</span></p>
+    <p class="afo-stat-meta">Fichas habilitadas</p>
+  </div>
+  <div class="afo-stat" style="--stat:#147A9C;--stat-2:#75D1F0">
+    <p class="afo-stat-label">Árbitros disponibles</p>
+    <p class="afo-stat-value"><span data-counter="{{ arbitros_disponibles }}">{{ arbitros_disponibles }}</span></p>
+    <p class="afo-stat-meta">Terna para designaciones</p>
+  </div>
+</section>
+
+<!-- ===================== MÓDULOS ===================== -->
+<section class="mt-6" aria-labelledby="titulo-modulos-gestion">
+  <div class="afo-section-head">
+    <div>
+      <h2 id="titulo-modulos-gestion" class="afo-section-title">
+        <span class="material-symbols-outlined">sports_soccer</span>
+        Módulos del padrón
+      </h2>
+      <p class="afo-section-sub">
+        {{ total_modulos }} registros distribuidos en cinco áreas de trabajo.
+      </p>
+    </div>
+    <span class="inline-flex w-fit items-center gap-1.5 rounded-full border border-surface-container bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-on-surface-variant">
+      <span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
+      Datos en vivo
+    </span>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    {% for modulo in modulos %}
+      <a href="{{ modulo.url }}" class="afo-module-card afo-module-card--{{ modulo.tono }}">
+        <div class="afo-module-top">
+          <span class="afo-module-icon material-symbols-outlined">{{ modulo.icono }}</span>
+          <span class="afo-module-value">
+            <span data-counter="{{ modulo.total }}">{{ modulo.total }}</span>
+            <small>{{ modulo.unidad }}</small>
+          </span>
+        </div>
+        <h3 class="afo-module-name">{{ modulo.nombre }}</h3>
+        <p class="afo-module-desc">{{ modulo.descripcion }}</p>
+        <span class="afo-module-detail">
+          <span class="material-symbols-outlined">verified</span>
+          {{ modulo.detalle }}
+        </span>
+      </a>
+    {% endfor %}
+
+    <a href="{% url 'competencia' %}" class="afo-module-card afo-module-card--gold">
+      <div class="afo-module-top">
+        <span class="afo-module-icon material-symbols-outlined">emoji_events</span>
+        <span class="afo-module-value">
+          <span class="material-symbols-outlined text-[26px] text-[#147A9C]">arrow_outward</span>
+        </span>
+      </div>
+      <h3 class="afo-module-name">Centro de competencia</h3>
+      <p class="afo-module-desc">Torneos, calendario, posiciones y resultados oficiales.</p>
+      <span class="afo-module-detail">
+        <span class="material-symbols-outlined">open_in_new</span>
+        Abrir centro de torneos
+      </span>
+    </a>
+  </div>
+</section>
+
+<!-- ===================== ESTRUCTURA + ALTAS ===================== -->
+<div class="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-3">
+
+  <!-- Categorías -->
+  <section class="afo-surface xl:col-span-2" aria-labelledby="titulo-categorias-gestion">
+    <div class="afo-card-head">
+      <div>
+        <h2 id="titulo-categorias-gestion" class="afo-card-title">
+          <span class="material-symbols-outlined">category</span>
+          Estructura por categoría
+        </h2>
+        <p class="afo-card-sub">Equipos y deportistas registrados en cada división.</p>
+      </div>
+      <a href="{% url 'categorias' %}" class="afo-section-link">
+        Gestionar <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+      </a>
+    </div>
+
+    {% if categorias %}
+      <div class="flex flex-col gap-4 p-5">
+        {% for categoria in categorias %}
+          <div>
+            <div class="flex items-center justify-between gap-3">
+              <div class="min-w-0">
+                <p class="truncate text-[13px] font-bold text-on-surface">{{ categoria.nombre }}</p>
+                <p class="mt-0.5 text-[10.5px] text-on-surface-variant">
+                  {{ categoria.equipos }} equipo{{ categoria.equipos|pluralize:"s" }} ·
+                  {{ categoria.deportistas }} deportista{{ categoria.deportistas|pluralize:"s" }}
+                </p>
+              </div>
+              <span class="shrink-0 rounded-full bg-surface-container px-2 py-0.5 text-[10px] font-bold text-on-surface-variant">
+                {{ categoria.pct_equipos }}%
+              </span>
+            </div>
+            <div class="afo-progress-track mt-2"><span style="width: {{ categoria.pct_equipos }}%"></span></div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="afo-empty m-5">
+        <span class="material-symbols-outlined">category</span>
+        <p>Sin categorías registradas</p>
+        <small>Cree divisiones para organizar equipos y fichajes.</small>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Últimos fichajes -->
+  <section class="afo-surface" aria-labelledby="titulo-altas-gestion">
+    <div class="afo-card-head">
+      <div>
+        <h2 id="titulo-altas-gestion" class="afo-card-title">
+          <span class="material-symbols-outlined">person_add</span>
+          Últimos fichajes
+        </h2>
+        <p class="afo-card-sub">Altas más recientes del padrón federativo.</p>
+      </div>
+    </div>
+
+    {% if ultimos_deportistas %}
+      <ul class="divide-y divide-surface-container">
+        {% for deportista in ultimos_deportistas %}
+          <li>
+            <a href="{% url 'deportista_detalle' deportista.pk %}" class="flex items-center gap-3 px-4 py-3 transition hover:bg-primary/[0.03]">
+              {% if deportista.foto_url %}
+                <img class="afo-crest afo-crest--sm" src="{{ deportista.foto_url }}" alt="Foto de {{ deportista.nombre }} {{ deportista.apellido }}" loading="lazy"/>
+              {% else %}
+                <span class="afo-crest afo-crest--sm">{{ deportista.nombre|initials:2 }}</span>
+              {% endif %}
+              <span class="min-w-0 flex-1">
+                <span class="block truncate text-[12.5px] font-bold text-on-surface">{{ deportista.apellido }}, {{ deportista.nombre }}</span>
+                <span class="block truncate text-[10.5px] text-on-surface-variant">
+                  {{ deportista.club.nombre|default:"Sin club" }}
+                  {% if deportista.categoria %}· {{ deportista.categoria.nombre }}{% endif %}
+                </span>
+              </span>
+              <span class="afo-status {% if deportista.estado == 'ACTIVO' %}afo-status--live{% else %}afo-status--muted{% endif %}">
+                {{ deportista.estado|estado_label }}
+              </span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="afo-empty m-4">
+        <span class="material-symbols-outlined">person_search</span>
+        <p>Sin fichajes registrados</p>
+        <small>Las altas aparecerán aquí automáticamente.</small>
+      </div>
+    {% endif %}
+  </section>
+
+</div>
+
+<!-- ===================== CLUBES RECIENTES ===================== -->
+{% if ultimos_clubes %}
+<section class="mt-4 afo-surface" aria-labelledby="titulo-clubes-gestion">
+  <div class="afo-card-head">
+    <div>
+      <h2 id="titulo-clubes-gestion" class="afo-card-title">
+        <span class="material-symbols-outlined">shield</span>
+        Clubes del padrón
+      </h2>
+      <p class="afo-card-sub">Instituciones afiliadas registradas recientemente.</p>
+    </div>
+    <a href="{% url 'clubes' %}" class="afo-section-link">
+      Ver todos <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 xl:grid-cols-4">
+    {% for club in ultimos_clubes %}
+      <a href="{% url 'club_detalle' club.pk %}" class="flex items-center gap-3 rounded-xl border border-surface-container bg-white p-3 transition hover:border-primary/25 hover:bg-primary/[0.02]">
+        {% if club.logo_url %}
+          <img class="afo-crest" src="{{ club.logo_url }}" alt="Escudo de {{ club.nombre }}" loading="lazy"/>
+        {% else %}
+          <span class="afo-crest">{{ club.nombre|initials }}</span>
+        {% endif %}
+        <span class="min-w-0 flex-1">
+          <span class="block truncate text-[12.5px] font-bold text-on-surface" title="{{ club.nombre }}">{{ club.nombre|short_name:24 }}</span>
+          <span class="block text-[10.5px] text-on-surface-variant">{{ club.presidente|default:"Dirigencia por registrar"|short_name:26 }}</span>
+        </span>
+        <span class="material-symbols-outlined text-[18px] text-outline">chevron_right</span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

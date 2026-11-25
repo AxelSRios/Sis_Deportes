@@ -11,9 +11,9 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<link rel="stylesheet" href="{% static_v 'css/styles.css' %}"/>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="{% static 'js/tailwind-config.js' %}"></script>
+<script src="{% static_v 'js/tailwind-config.js' %}"></script>
 </head>
 <body class="bg-surface text-on-surface antialiased" data-page="clubes" data-shell="true"><div><main class="w-full bg-surface"><div class="flex flex-col w-full">
 <!-- Dynamic Notification / Top Breadcrumb Bar -->
@@ -296,7 +296,7 @@
     <input type="hidden" name="club_id" value="{{ club.id }}">
 
     <button type="submit"
-            class="whitespace-nowrap px-2.5 py-1.5 rounded bg-red-600 hover:bg-red-700 text-white font-label-md flex items-center gap-1 shadow-xs">
+            class="whitespace-nowrap px-2.5 py-1.5 rounded bg-primary hover:bg-primary-container text-white font-label-md flex items-center gap-1 shadow-xs">
         <span class="material-symbols-outlined text-[16px]">delete</span>
         Eliminar
     </button>

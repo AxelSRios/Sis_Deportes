@@ -10,22 +10,33 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
+# La configuración sensible vive en .env (ignorado por Git).
+load_dotenv(BASE_DIR / '.env', override=True)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '***REMOVED***'
+SECRET_KEY = os.getenv('SECRET_KEY')
+if not SECRET_KEY:
+    raise ImproperlyConfigured(
+        'Falta SECRET_KEY en .env. Copie .env.example y configure una clave.'
+    )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', '1').lower() in {'1', 'true', 'yes', 'si', 'sí'}
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv('ALLOWED_HOSTS', '').split(',')
+    if host.strip()
+]
 
 
 # Application definition
@@ -72,11 +83,7 @@ WSGI_APPLICATION = 'sistema_deportes.wsgi.application'
 
 # Database - Supabase PostgreSQL
 
-import os
 import dj_database_url
-from dotenv import load_dotenv
-
-load_dotenv(BASE_DIR / '.env', override=True)
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -138,6 +145,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+# Archivos subidos (imágenes de canchas, escudos, fichas).
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'panel'
 LOGOUT_REDIRECT_URL = 'index'
@@ -153,3 +164,23 @@ MAILERS = {
 }
 
 DEFAULT_FROM_EMAIL = 'A.F.O. Oruro <no-reply@afo.bo>'
+
+
+# ===========================================================================
+# Seguridad operativa: respaldos y trazabilidad de accesos
+# ===========================================================================
+
+# Carpeta de respaldos y política de conservación.
+AFO_BACKUP_DIR = Path(os.getenv('AFO_BACKUP_DIR', str(BASE_DIR / 'backups')))
+AFO_BACKUP_RETENTION = int(os.getenv('AFO_BACKUP_RETENTION', '14'))
+AFO_BACKUP_TIMEOUT = int(os.getenv('AFO_BACKUP_TIMEOUT', '900'))
+AFO_BACKUP_PG_DUMP = os.getenv('AFO_BACKUP_PG_DUMP', 'pg_dump')
+
+# X-Forwarded-For solo debe confiarse cuando la aplicación está detrás de un
+# proxy controlado. Por defecto se registra REMOTE_ADDR para evitar suplantación.
+AFO_TRUST_X_FORWARDED_FOR = os.getenv('AFO_TRUST_X_FORWARDED_FOR', '0').lower() in {
+    '1', 'true', 'yes', 'si', 'sí',
+}
+
+# Días que se conserva el historial de accesos antes de la limpieza manual.
+AFO_ACCESS_LOG_RETENTION_DAYS = int(os.getenv('AFO_ACCESS_LOG_RETENTION_DAYS', '365'))

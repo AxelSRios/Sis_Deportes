@@ -11,14 +11,28 @@
 {% endblock %}
 
 {% block contenido %}
-<form method="post" novalidate data-afo-form class="mx-auto w-full max-w-4xl">
+<form method="post" enctype="multipart/form-data" novalidate data-afo-form class="mx-auto w-full max-w-4xl">
   {% csrf_token %}
 
-  {% if form.non_field_errors %}
-    <div role="alert" class="afo-alert-error mb-4 flex items-start gap-2.5 rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm text-on-error-container">
-      <span class="material-symbols-outlined mt-0.5 text-[18px]">error</span>
-      <div>
-        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+  {% if form.errors %}
+    <div role="alert" aria-live="assertive" class="afo-form-error-summary">
+      <span class="material-symbols-outlined mt-0.5" aria-hidden="true">error</span>
+      <div class="min-w-0">
+        <strong>Revisa los datos de la planilla</strong>
+        <p>Encontramos observaciones en {{ form.errors|length }} campo{{ form.errors|length|pluralize:"s" }}. Corrige lo indicado y vuelve a guardar.</p>
+        <ul>
+          {% for field in form %}
+            {% if field.errors %}
+              <li>
+                <a href="#{{ field.id_for_label }}">{{ field.label }}:</a>
+                {{ field.errors|striptags }}
+              </li>
+            {% endif %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
       </div>
     </div>
   {% endif %}
@@ -66,6 +80,7 @@
 
     <!-- ===================== CAMPOS ===================== -->
     <div class="grid grid-cols-1 gap-x-5 gap-y-4 p-4 sm:grid-cols-2 sm:p-6">
+      <div class="afo-form-section-label sm:col-span-2">Datos del registro</div>
       {% for field in form %}
         {% if field.field.widget.input_type == 'checkbox' %}
           <div class="afo-field afo-check-card flex items-start gap-3 rounded-lg border border-surface-container bg-surface-container-low px-3.5 py-3 sm:col-span-2" data-reveal>
@@ -86,7 +101,7 @@
             </div>
           </div>
         {% else %}
-          <div class="afo-field {% if field.name == 'direccion' or field.name == 'observaciones' or field.name == 'reglamento' or field.name == 'descripcion' or field.name == 'foto_url' or field.name == 'logo_url' or field.name == 'historial' %}sm:col-span-2{% endif %}" data-reveal>
+          <div class="afo-field {% if field.name == 'nombre' or field.name == 'titulo' or field.name == 'direccion' or field.name == 'observaciones' or field.name == 'reglamento' or field.name == 'descripcion' or field.name == 'foto_url' or field.name == 'logo_url' or field.name == 'imagen' or field.name == 'imagen_url' or field.name == 'historial' %}sm:col-span-2{% endif %}" data-reveal>
             <label for="{{ field.id_for_label }}" class="mb-1.5 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.08em] text-on-surface-variant">
               <span>{{ field.label }}</span>
               {% if field.field.required %}

@@ -11,9 +11,9 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<link rel="stylesheet" href="{% static_v 'css/styles.css' %}"/>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="{% static 'js/tailwind-config.js' %}"></script>
+<script src="{% static_v 'js/tailwind-config.js' %}"></script>
 </head>
 <body class="bg-surface text-on-surface antialiased" data-page="campeonatos" data-shell="true"><div><main class="w-full bg-surface"><div class="flex flex-col w-full">
 <!-- Dynamic Atmospheric Glow Background Layers -->
@@ -266,11 +266,11 @@
 </div>
 </div>
 <div class="flex flex-col items-end gap-1">
-<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold flex items-center gap-1">
-<span class="w-2 h-3 bg-amber-400 rounded-xs inline-block"></span> 94 T. Amarillas
+<span class="px-2 py-0.5 rounded bg-secondary/20 text-primary font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="w-2 h-3 bg-secondary rounded-xs inline-block"></span> 94 T. Amarillas
             </span>
-<span class="px-2 py-0.5 rounded bg-red-100 text-red-900 font-label-sm text-label-sm font-bold flex items-center gap-1">
-<span class="w-2 h-3 bg-red-600 rounded-xs inline-block"></span> 11 T. Rojas
+<span class="px-2 py-0.5 rounded bg-primary/10 text-primary font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="w-2 h-3 bg-primary rounded-xs inline-block"></span> 11 T. Rojas
             </span>
 </div>
 </div>
@@ -337,7 +337,7 @@
             {% elif partido.estado == 'En vivo' %}
                 <div class="absolute top-0 left-0 right-0 h-1.5 bg-secondary animate-pulse"></div>
             {% elif partido.estado == 'Reprogramado' %}
-                <div class="absolute top-0 left-0 right-0 h-1 bg-amber-400"></div>
+                <div class="absolute top-0 left-0 right-0 h-1 bg-secondary"></div>
             {% else %}
                 <div class="absolute top-0 left-0 right-0 h-1 bg-surface-variant"></div>
             {% endif %}
@@ -355,7 +355,7 @@
                             EN VIVO
                         </span>
                     {% elif partido.estado == 'Reprogramado' %}
-                        <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold uppercase">
+                        <span class="px-2 py-0.5 rounded bg-secondary/20 text-primary font-label-sm text-label-sm font-bold uppercase">
                             Reprogramado
                         </span>
                     {% else %}
@@ -545,7 +545,7 @@
 <span class="text-on-surface font-semibold">Zona Descenso Directo Primera B (Puesto 12)</span>
 </div>
 <div class="flex items-center gap-1.5">
-<span class="w-3 h-3 rounded-full bg-amber-400"></span>
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
 <span class="text-on-surface font-semibold">Descenso Indirecto (Puesto 11)</span>
 </div>
 </div>
@@ -595,11 +595,11 @@
 <td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-primary">19</td>
 <td class="py-3 px-space-md text-center">
 <div class="inline-flex items-center gap-1">
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500" title="Victoria"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500" title="Victoria"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500" title="Victoria"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400" title="Empate"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500" title="Victoria"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary" title="Victoria"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary" title="Victoria"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary" title="Victoria"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary" title="Empate"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary" title="Victoria"></span>
 </div>
 </td>
 </tr>
@@ -629,11 +629,11 @@
 <td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-primary">17</td>
 <td class="py-3 px-space-md text-center">
 <div class="inline-flex items-center gap-1">
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
 </div>
 </td>
 </tr>
@@ -663,11 +663,11 @@
 <td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-primary">14</td>
 <td class="py-3 px-space-md text-center">
 <div class="inline-flex items-center gap-1">
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
 </div>
 </td>
 </tr>
@@ -690,11 +690,11 @@
 <td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-on-surface">13</td>
 <td class="py-3 px-space-md text-center">
 <div class="inline-flex items-center gap-1">
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
 </div>
 </td>
 </tr>
@@ -717,11 +717,11 @@
 <td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-on-surface">12</td>
 <td class="py-3 px-space-md text-center">
 <div class="inline-flex items-center gap-1">
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
 </div>
 </td>
 </tr>
@@ -744,11 +744,11 @@
 <td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-on-surface">11</td>
 <td class="py-3 px-space-md text-center">
 <div class="inline-flex items-center gap-1">
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
 </div>
 </td>
 </tr>
@@ -771,18 +771,18 @@
 <td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-on-surface">10</td>
 <td class="py-3 px-space-md text-center">
 <div class="inline-flex items-center gap-1">
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
 </div>
 </td>
 </tr>
 <!-- Pos 11: Descenso Indirecto -->
-<tr class="bg-amber-500/5 hover:bg-amber-500/10 transition-colors">
-<td class="py-3 px-space-md text-center font-bold text-amber-700">
-<div class="w-7 h-7 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center mx-auto font-label-md">
+<tr class="bg-secondary/5 hover:bg-secondary/10 transition-colors">
+<td class="py-3 px-space-md text-center font-bold text-primary">
+<div class="w-7 h-7 rounded-full bg-secondary/20 text-primary flex items-center justify-center mx-auto font-label-md">
                   11
                 </div>
 </td>
@@ -792,7 +792,7 @@
 </div>
 <div class="flex flex-col">
 <span class="font-title-md text-title-md font-bold text-on-surface">Ingenieros</span>
-<span class="font-label-sm text-label-sm text-amber-700 uppercase font-semibold">Descenso Indirecto</span>
+<span class="font-label-sm text-label-sm text-primary uppercase font-semibold">Descenso Indirecto</span>
 </div>
 </td>
 <td class="py-3 px-space-sm text-right font-semibold">7</td>
@@ -802,14 +802,14 @@
 <td class="py-3 px-space-sm text-right">6</td>
 <td class="py-3 px-space-sm text-right">16</td>
 <td class="py-3 px-space-sm text-right font-semibold text-error">-10</td>
-<td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-amber-800">4</td>
+<td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-primary">4</td>
 <td class="py-3 px-space-md text-center">
 <div class="inline-flex items-center gap-1">
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
 </div>
 </td>
 </tr>
@@ -839,11 +839,11 @@
 <td class="py-3 px-space-md text-right font-headline-sm text-title-lg font-bold text-error">2</td>
 <td class="py-3 px-space-md text-center">
 <div class="inline-flex items-center gap-1">
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
 </div>
 </td>
 </tr>
@@ -921,16 +921,16 @@
 </div>
 <!-- Disciplinary Cards Logger -->
 <div class="grid grid-cols-2 gap-space-md">
-<div class="bg-amber-50/50 p-space-sm rounded-lg">
-<label class="font-label-md text-label-md text-amber-900 font-bold mb-1 flex items-center gap-1">
-<span class="w-2.5 h-3.5 bg-amber-400 rounded-2xs inline-block"></span>
+<div class="bg-secondary/10 p-space-sm rounded-lg">
+<label class="font-label-md text-label-md text-primary font-bold mb-1 flex items-center gap-1">
+<span class="w-2.5 h-3.5 bg-secondary rounded-2xs inline-block"></span>
                 Tarjetas Amarillas
               </label>
-<textarea class="w-full p-2 bg-surface-container-lowest rounded font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none" placeholder="Minuto, Jugador, Club..." rows="2">38' Carlos Pérez (Huanuni), 75' Jorge Rocha (Escara)</textarea>
+<textarea class="w-full p-2 bg-surface-container-lowest rounded font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary resize-none" placeholder="Minuto, Jugador, Club..." rows="2">38' Carlos Pérez (Huanuni), 75' Jorge Rocha (Escara)</textarea>
 </div>
-<div class="bg-red-50/50 p-space-sm rounded-lg">
-<label class="font-label-md text-label-md text-red-900 font-bold mb-1 flex items-center gap-1">
-<span class="w-2.5 h-3.5 bg-red-600 rounded-2xs inline-block"></span>
+<div class="bg-primary/5 p-space-sm rounded-lg">
+<label class="font-label-md text-label-md text-primary font-bold mb-1 flex items-center gap-1">
+<span class="w-2.5 h-3.5 bg-primary rounded-2xs inline-block"></span>
                 Tarjetas Rojas / Expulsiones
               </label>
 <textarea class="w-full p-2 bg-surface-container-lowest rounded font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-error resize-none" placeholder="Minuto, Jugador, Causal..." rows="2">88' Cristian Flores (Doble Amonestación)</textarea>
@@ -940,7 +940,7 @@
 <div class="bg-surface-container-low p-space-sm rounded-lg space-y-2">
 <div class="flex items-center justify-between">
 <span class="font-label-sm text-label-sm uppercase font-bold text-outline">Homologación y Cierre de Acta</span>
-<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-label-sm font-bold">Firma Digital Válida</span>
+<span class="px-2 py-0.5 rounded bg-primary/10 text-primary font-label-sm font-bold">Firma Digital Válida</span>
 </div>
 <div class="grid grid-cols-2 gap-space-sm">
 <input class="bg-surface-container-lowest px-space-sm py-1.5 rounded font-body-sm text-body-sm text-on-surface" readonly="" type="text" value="Juan Carlos Alá (Árbitro Principal)"/>

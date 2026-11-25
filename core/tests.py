@@ -19,6 +19,7 @@ from .models import (
     Arbitro,
     AsignacionArbitro,
     Campeonato,
+    Cancha,
     Categoria,
     Club,
     Deportista,
@@ -280,6 +281,86 @@ class ClubesTests(BaseAfoTestCase):
         self.assertTrue(Club.objects.filter(pk=self.club.pk).exists())
         aviso = self.client.get(reverse('club_eliminar', args=[self.club.pk]))
         self.assertContains(aviso, 'Eliminación bloqueada')
+
+
+class CanchasTests(BaseAfoTestCase):
+    def test_admin_crea_cancha_con_ubicacion(self):
+        self.ingresar(self.admin)
+        respuesta = self.client.post(
+            reverse('cancha_crear'),
+            {
+                'nombre': 'Estadio Jesús Bermúdez',
+                'tipo': 'ESTADIO',
+                'descripcion': 'Capacidad 33.000 · Césped natural',
+                'direccion': 'Av. Del Ejército, Oruro',
+                'ciudad': 'Oruro',
+                'latitud': '-17.964000',
+                'longitud': '-67.106000',
+                'activa': 'on',
+                'orden': '0',
+            },
+        )
+        self.assertEqual(respuesta.status_code, 302)
+        cancha = Cancha.objects.get(nombre='Estadio Jesús Bermúdez')
+        self.assertTrue(cancha.activa)
+        self.assertIn('google.com/maps', cancha.mapa_url)
+        self.assertEqual(
+            HistorialOperacion.objects.filter(modulo='canchas').count(), 1
+        )
+
+    def test_nombre_duplicado_se_rechaza(self):
+        Cancha.objects.create(nombre='Cancha Única')
+        self.ingresar(self.admin)
+        respuesta = self.client.post(
+            reverse('cancha_crear'),
+            {'nombre': 'Cancha Única', 'tipo': 'AUXILIAR', 'ciudad': 'Oruro'},
+        )
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(Cancha.objects.filter(nombre='Cancha Única').count(), 1)
+
+    def test_latitud_sin_longitud_no_es_valida(self):
+        self.ingresar(self.admin)
+        respuesta = self.client.post(
+            reverse('cancha_crear'),
+            {
+                'nombre': 'Cancha Incompleta',
+                'tipo': 'AUXILIAR',
+                'latitud': '-17.96',
+                'ciudad': 'Oruro',
+            },
+        )
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertFalse(Cancha.objects.filter(nombre='Cancha Incompleta').exists())
+
+    def test_dirigente_consulta_pero_no_gestiona_canchas(self):
+        self.ingresar(self.dirigente)
+        self.assertEqual(self.client.get(reverse('canchas')).status_code, 200)
+        self.assertEqual(
+            self.client.get(reverse('cancha_crear')).status_code, 403
+        )
+        self.assertEqual(
+            self.client.post(
+                reverse('cancha_crear'),
+                {'nombre': 'Cancha Dirigente', 'tipo': 'AUXILIAR'},
+            ).status_code,
+            403,
+        )
+        self.assertFalse(Cancha.objects.filter(nombre='Cancha Dirigente').exists())
+
+    def test_cancha_activa_aparece_en_el_portal(self):
+        Cancha.objects.create(
+            nombre='Complejo Vinto', activa=True, ciudad='Vinto',
+            descripcion='Sintético FIFA',
+        )
+        respuesta = self.client.get(reverse('index'))
+        self.assertContains(respuesta, 'Complejo Vinto')
+
+    def test_eliminar_cancha(self):
+        cancha = Cancha.objects.create(nombre='Cancha Temporal')
+        self.ingresar(self.admin)
+        respuesta = self.client.post(reverse('cancha_eliminar', args=[cancha.pk]))
+        self.assertEqual(respuesta.status_code, 302)
+        self.assertFalse(Cancha.objects.filter(pk=cancha.pk).exists())
 
 
 class CategoriasEquiposTests(BaseAfoTestCase):

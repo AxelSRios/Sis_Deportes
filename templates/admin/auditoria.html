@@ -3,6 +3,10 @@
 {% block nav_activo %}auditoria{% endblock %}
 
 {% block acciones %}
+  <a href="{% url 'accesos' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
+    <span class="material-symbols-outlined text-[18px]">shield_person</span>
+    Accesos
+  </a>
   <a href="{% url 'usuarios' %}" class="inline-flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-4 text-sm font-semibold text-primary transition hover:bg-primary/5">
     <span class="material-symbols-outlined text-[18px]">manage_accounts</span>
     Usuarios

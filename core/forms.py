@@ -14,6 +14,7 @@ from .models import (
     Arbitro,
     AsignacionArbitro,
     Campeonato,
+    Cancha,
     Categoria,
     Club,
     Deportista,
@@ -22,6 +23,18 @@ from .models import (
     Pago,
     Partido,
     Sancion,
+)
+from .validadores import (
+    validar_ci_unica,
+    validar_correo_unico,
+    validar_direccion,
+    validar_fecha_nacimiento,
+    validar_fecha_pasada,
+    validar_nombre_organizacion,
+    validar_nombre_persona,
+    validar_telefono_boliviano,
+    validar_texto_libre,
+    validar_usuario,
 )
 
 # Grupos institucionales que otorgan rol. Deben coincidir con ROLE_GROUP_ALIASES
@@ -44,22 +57,23 @@ class EstiloFormMixin:
             if isinstance(widget, forms.CheckboxInput):
                 widget.attrs.setdefault(
                     'class',
-                    'h-4 w-4 rounded border-surface-container text-primary '
-                    'focus:ring-primary/30',
+                    'h-4 w-4 rounded border-outline-variant text-primary '
+                    'focus:ring-secondary/40',
                 )
                 continue
             base = (
-                'w-full rounded-lg border border-surface-container '
-                'bg-surface-container-lowest px-3 text-sm text-on-surface '
-                'outline-none transition focus:border-primary/50'
+                'w-full rounded-xl border border-outline-variant '
+                'bg-surface-container-lowest px-3.5 text-sm text-on-surface '
+                'outline-none transition focus:border-secondary/70 '
+                'focus:ring-2 focus:ring-secondary/20'
             )
             if isinstance(widget, forms.Textarea):
-                widget.attrs.setdefault('class', base + ' py-2 min-h-[88px]')
+                widget.attrs.setdefault('class', base + ' py-2.5 min-h-[96px]')
                 widget.attrs.setdefault('rows', 3)
             else:
-                widget.attrs.setdefault('class', base + ' h-10')
+                widget.attrs.setdefault('class', base + ' h-11')
             if isinstance(widget, forms.Select):
-                widget.attrs.setdefault('class', base + ' h-10 pr-8')
+                widget.attrs.setdefault('class', base + ' h-11 pr-8')
 
 
 class FechaFormMixin:
@@ -95,15 +109,128 @@ class ClubForm(EstiloFormMixin, FechaFormMixin, forms.ModelForm):
         }
 
     def clean_nombre(self):
-        nombre = (self.cleaned_data.get('nombre') or '').strip()
-        if not nombre:
-            raise ValidationError('El nombre del club es obligatorio.')
+        nombre = validar_nombre_organizacion(
+            self.cleaned_data.get('nombre'), 'nombre del club', maximo=150
+        )
         repetido = Club.objects.filter(nombre__iexact=nombre)
         if self.instance.pk:
             repetido = repetido.exclude(pk=self.instance.pk)
         if repetido.exists():
             raise ValidationError('Ya existe un club con ese nombre.')
         return nombre
+
+    def clean_presidente(self):
+        valor = self.cleaned_data.get('presidente')
+        if not valor:
+            return valor
+        return validar_nombre_persona(valor, 'nombre del presidente')
+
+    def clean_telefono(self):
+        return validar_telefono_boliviano(self.cleaned_data.get('telefono'))
+
+    def clean_email(self):
+        return validar_correo_unico(
+            self.cleaned_data.get('email'), Club, self.instance.pk
+        )
+
+    def clean_direccion(self):
+        return validar_direccion(self.cleaned_data.get('direccion'))
+
+    def clean_nit_personeria(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('nit_personeria'),
+            'NIT o personería jurídica',
+            maximo=100,
+        )
+
+    def clean_estado_juridico(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('estado_juridico'),
+            'estado jurídico',
+            maximo=100,
+        )
+
+    def clean_fundacion(self):
+        valor = self.cleaned_data.get('fundacion')
+        if not valor:
+            return valor
+        return validar_fecha_pasada(valor, 'fecha de fundación')
+
+    def clean_observaciones(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('observaciones'),
+            'observaciones',
+            maximo=2000,
+        )
+
+
+class CanchaForm(EstiloFormMixin, forms.ModelForm):
+    class Meta:
+        model = Cancha
+        fields = [
+            'nombre', 'tipo', 'descripcion', 'direccion', 'ciudad',
+            'latitud', 'longitud', 'imagen', 'imagen_url', 'activa', 'orden',
+        ]
+        widgets = {
+            'descripcion': forms.TextInput(
+                attrs={'placeholder': 'Ej. Capacidad 33.000 · Césped natural'}
+            ),
+            'direccion': forms.TextInput(
+                attrs={'placeholder': 'Ej. Av. Del Ejército, zona norte'}
+            ),
+            'ciudad': forms.TextInput(attrs={'placeholder': 'Oruro'}),
+            'latitud': forms.NumberInput(
+                attrs={'step': '0.000001', 'placeholder': '-17.964000'}
+            ),
+            'longitud': forms.NumberInput(
+                attrs={'step': '0.000001', 'placeholder': '-67.106000'}
+            ),
+            'imagen_url': forms.URLInput(
+                attrs={'placeholder': 'https://…/imagen.jpg'}
+            ),
+            'orden': forms.NumberInput(attrs={'min': 0, 'step': 1}),
+        }
+
+    def clean_nombre(self):
+        nombre = validar_nombre_organizacion(
+            self.cleaned_data.get('nombre'), 'nombre del escenario', maximo=150
+        )
+        repetido = Cancha.objects.filter(nombre__iexact=nombre)
+        if self.instance.pk:
+            repetido = repetido.exclude(pk=self.instance.pk)
+        if repetido.exists():
+            raise ValidationError('Ya existe un escenario con ese nombre.')
+        return nombre
+
+    def clean_direccion(self):
+        return validar_direccion(self.cleaned_data.get('direccion'))
+
+    def clean_ciudad(self):
+        valor = self.cleaned_data.get('ciudad')
+        if not valor:
+            return valor
+        return validar_nombre_organizacion(valor, 'ciudad', maximo=100)
+
+    def clean_descripcion(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('descripcion'),
+            'descripción del escenario',
+            maximo=200,
+        )
+
+    def clean(self):
+        datos = super().clean()
+        latitud = datos.get('latitud')
+        longitud = datos.get('longitud')
+        if (latitud is None) != (longitud is None):
+            raise ValidationError(
+                'Registre la latitud y la longitud juntas, o deje ambas vacías.'
+            )
+        if latitud is not None and not (-90 <= float(latitud) <= 90):
+            self.add_error('latitud', 'La latitud debe estar entre -90 y 90.')
+        if longitud is not None and not (-180 <= float(longitud) <= 180):
+            self.add_error('longitud', 'La longitud debe estar entre -180 y 180.')
+        return datos
 
 
 class CategoriaForm(EstiloFormMixin, forms.ModelForm):
@@ -113,13 +240,37 @@ class CategoriaForm(EstiloFormMixin, forms.ModelForm):
         widgets = {'descripcion': forms.Textarea(attrs={'rows': 2})}
 
     def clean_nombre(self):
-        nombre = (self.cleaned_data.get('nombre') or '').strip()
+        nombre = validar_nombre_organizacion(
+            self.cleaned_data.get('nombre'), 'nombre de la categoría', maximo=100
+        )
         repetido = Categoria.objects.filter(nombre__iexact=nombre)
         if self.instance.pk:
             repetido = repetido.exclude(pk=self.instance.pk)
         if repetido.exists():
             raise ValidationError('Ya existe una categoría con ese nombre.')
         return nombre
+
+    def clean_descripcion(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('descripcion'),
+            'descripción de la categoría',
+            maximo=1000,
+        )
+
+    def clean(self):
+        datos = super().clean()
+        edad_min = datos.get('edad_min')
+        edad_max = datos.get('edad_max')
+        if edad_min is not None and edad_max is not None and edad_min > edad_max:
+            self.add_error(
+                'edad_max',
+                'La edad máxima no puede ser menor que la mínima.',
+            )
+        for campo in ('edad_min', 'edad_max'):
+            valor = datos.get(campo)
+            if valor is not None and valor > 100:
+                self.add_error(campo, 'La edad no puede superar los 100 años.')
+        return datos
 
 
 class EquipoForm(EstiloFormMixin, forms.ModelForm):
@@ -136,6 +287,31 @@ class EquipoForm(EstiloFormMixin, forms.ModelForm):
         self.fields['categoria'].required = True
         self.fields['nombre'].required = True
         self.fields['temporada'].help_text = 'Año de la temporada (ej. 2026).'
+
+    def clean_nombre(self):
+        return validar_nombre_organizacion(
+            self.cleaned_data.get('nombre'), 'nombre del equipo', maximo=150
+        )
+
+    def clean_entrenador(self):
+        valor = self.cleaned_data.get('entrenador')
+        if not valor:
+            return valor
+        return validar_nombre_persona(valor, 'nombre del entrenador')
+
+    def clean_division(self):
+        valor = self.cleaned_data.get('division')
+        if not valor:
+            return valor
+        return validar_nombre_organizacion(valor, 'división', maximo=50)
+
+    def clean_temporada(self):
+        valor = self.cleaned_data.get('temporada')
+        if valor is not None and not (1900 <= valor <= 2100):
+            raise ValidationError(
+                'La temporada debe estar entre 1900 y 2100.'
+            )
+        return valor
 
     def clean(self):
         datos = super().clean()
@@ -167,6 +343,36 @@ class DeportistaForm(EstiloFormMixin, FechaFormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['fecha_nacimiento'].required = True
+
+    def clean_nombre(self):
+        return validar_nombre_persona(
+            self.cleaned_data.get('nombre'), 'nombre'
+        )
+
+    def clean_apellido(self):
+        return validar_nombre_persona(
+            self.cleaned_data.get('apellido'), 'apellido'
+        )
+
+    def clean_ci(self):
+        valor = self.cleaned_data.get('ci')
+        if not valor:
+            return valor
+        return validar_ci_unica(valor, Deportista, self.instance.pk)
+
+    def clean_telefono(self):
+        return validar_telefono_boliviano(self.cleaned_data.get('telefono'))
+
+    def clean_direccion(self):
+        return validar_direccion(
+            self.cleaned_data.get('direccion'), maximo=200
+        )
+
+    def clean_fecha_nacimiento(self):
+        valor = self.cleaned_data.get('fecha_nacimiento')
+        if not valor:
+            raise ValidationError('La fecha de nacimiento es obligatoria.')
+        return validar_fecha_nacimiento(valor)
 
     def clean(self):
         datos = super().clean()
@@ -221,6 +427,29 @@ class CampeonatoForm(EstiloFormMixin, FechaFormMixin, forms.ModelForm):
         if not self.instance.pk and not self.initial.get('temporada'):
             self.initial['temporada'] = timezone.localdate().year
 
+    def clean_nombre(self):
+        return validar_nombre_organizacion(
+            self.cleaned_data.get('nombre'), 'nombre del campeonato', maximo=150
+        )
+
+    def clean_disciplina(self):
+        return validar_nombre_organizacion(
+            self.cleaned_data.get('disciplina'), 'disciplina', maximo=100
+        )
+
+    def clean_temporada(self):
+        valor = self.cleaned_data.get('temporada')
+        if valor is not None and not (1900 <= valor <= 2100):
+            raise ValidationError(
+                'La temporada debe estar entre 1900 y 2100.'
+            )
+        return valor
+
+    def clean_reglamento(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('reglamento'), 'reglamento', maximo=5000
+        )
+
 
 class PartidoForm(EstiloFormMixin, FechaFormMixin, forms.ModelForm):
     class Meta:
@@ -240,6 +469,23 @@ class PartidoForm(EstiloFormMixin, FechaFormMixin, forms.ModelForm):
         self.fields['equipo_visitante'].required = True
         self.fields['fecha'].required = True
         self.fields['escenario'].required = True
+
+    def clean_escenario(self):
+        return validar_nombre_organizacion(
+            self.cleaned_data.get('escenario'), 'escenario', maximo=150
+        )
+
+    def clean_goles_local(self):
+        valor = self.cleaned_data.get('goles_local')
+        if valor is not None and valor > 99:
+            raise ValidationError('Los goles no pueden superar 99.')
+        return valor
+
+    def clean_goles_visitante(self):
+        valor = self.cleaned_data.get('goles_visitante')
+        if valor is not None and valor > 99:
+            raise ValidationError('Los goles no pueden superar 99.')
+        return valor
 
     def clean(self):
         datos = super().clean()
@@ -300,6 +546,13 @@ class InscripcionForm(EstiloFormMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['campeonato'].required = True
 
+    def clean_observaciones(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('observaciones'),
+            'observaciones',
+            maximo=2000,
+        )
+
     def clean(self):
         datos = super().clean()
         campeonato = datos.get('campeonato')
@@ -318,14 +571,16 @@ class InscripcionForm(EstiloFormMixin, forms.ModelForm):
             if self.instance.pk:
                 repetida = repetida.exclude(pk=self.instance.pk)
             if deportista and repetida.filter(deportista=deportista).exists():
-                raise ValidationError(
-                    'Ese deportista ya está inscrito en este campeonato.'
+                self.add_error(
+                    'deportista',
+                    'Ese deportista ya está inscrito en este campeonato.',
                 )
             if equipo and not deportista and repetida.filter(
                 equipo=equipo, deportista__isnull=True
             ).exists():
-                raise ValidationError(
-                    'Ese equipo ya está inscrito en este campeonato.'
+                self.add_error(
+                    'equipo',
+                    'Ese equipo ya está inscrito en este campeonato.',
                 )
         return datos
 
@@ -339,6 +594,44 @@ class ArbitroForm(EstiloFormMixin, FechaFormMixin, forms.ModelForm):
             'disponible', 'estado',
         ]
         widgets = {'fecha_nacimiento': forms.DateInput(format='%Y-%m-%d')}
+
+    def clean_nombre(self):
+        return validar_nombre_persona(
+            self.cleaned_data.get('nombre'), 'nombre'
+        )
+
+    def clean_apellido(self):
+        return validar_nombre_persona(
+            self.cleaned_data.get('apellido'), 'apellido'
+        )
+
+    def clean_ci(self):
+        valor = self.cleaned_data.get('ci')
+        if not valor:
+            return valor
+        return validar_ci_unica(valor, Arbitro, self.instance.pk)
+
+    def clean_telefono(self):
+        return validar_telefono_boliviano(self.cleaned_data.get('telefono'))
+
+    def clean_correo(self):
+        return validar_correo_unico(
+            self.cleaned_data.get('correo'),
+            Arbitro,
+            self.instance.pk,
+            campo='correo',
+        )
+
+    def clean_fecha_nacimiento(self):
+        valor = self.cleaned_data.get('fecha_nacimiento')
+        if not valor:
+            return valor
+        return validar_fecha_nacimiento(valor)
+
+    def clean_licencia(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('licencia'), 'licencia', maximo=50
+        )
 
     def clean(self):
         datos = super().clean()
@@ -434,6 +727,21 @@ class SancionForm(EstiloFormMixin, FechaFormMixin, forms.ModelForm):
                 '%Y-%m-%dT%H:%M'
             )
 
+    def clean_descripcion(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('descripcion'),
+            'descripción de la sanción',
+            maximo=2000,
+            obligatorio=True,
+        )
+
+    def clean_observaciones(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('observaciones'),
+            'observaciones',
+            maximo=2000,
+        )
+
     def clean(self):
         datos = super().clean()
         if not datos.get('deportista') and not datos.get('club'):
@@ -460,6 +768,21 @@ class PagoForm(EstiloFormMixin, FechaFormMixin, forms.ModelForm):
             self.initial['fecha'] = timezone.localtime().strftime(
                 '%Y-%m-%dT%H:%M'
             )
+
+    def clean_tipo(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('tipo'),
+            'tipo de pago',
+            maximo=100,
+            obligatorio=True,
+        )
+
+    def clean_comprobante(self):
+        return validar_texto_libre(
+            self.cleaned_data.get('comprobante'),
+            'comprobante',
+            maximo=50,
+        )
 
     def clean(self):
         datos = super().clean()
@@ -503,10 +826,23 @@ class UsuarioForm(EstiloFormMixin, forms.ModelForm):
         self.fields['last_name'].required = True
 
     def clean_username(self):
-        username = (self.cleaned_data.get('username') or '').strip()
+        username = validar_usuario(self.cleaned_data.get('username'))
         if User.objects.filter(username__iexact=username).exists():
             raise ValidationError('Ese usuario ya existe.')
         return username
+
+    def clean_first_name(self):
+        return validar_nombre_persona(
+            self.cleaned_data.get('first_name'), 'nombre'
+        )
+
+    def clean_last_name(self):
+        return validar_nombre_persona(
+            self.cleaned_data.get('last_name'), 'apellido'
+        )
+
+    def clean_email(self):
+        return validar_correo_unico(self.cleaned_data.get('email'), User)
 
     def clean(self):
         datos = super().clean()
@@ -565,13 +901,28 @@ class UsuarioEditarForm(EstiloFormMixin, forms.ModelForm):
                 self.fields['grupo'].initial = grupo
 
     def clean_username(self):
-        username = (self.cleaned_data.get('username') or '').strip()
+        username = validar_usuario(self.cleaned_data.get('username'))
         repetido = User.objects.filter(username__iexact=username)
         if self.instance.pk:
             repetido = repetido.exclude(pk=self.instance.pk)
         if repetido.exists():
             raise ValidationError('Ese usuario ya existe.')
         return username
+
+    def clean_first_name(self):
+        return validar_nombre_persona(
+            self.cleaned_data.get('first_name'), 'nombre'
+        )
+
+    def clean_last_name(self):
+        return validar_nombre_persona(
+            self.cleaned_data.get('last_name'), 'apellido'
+        )
+
+    def clean_email(self):
+        return validar_correo_unico(
+            self.cleaned_data.get('email'), User, self.instance.pk
+        )
 
     def save(self, commit=True):
         usuario = super().save(commit=commit)
@@ -589,3 +940,20 @@ class PerfilForm(EstiloFormMixin, forms.ModelForm):
             'last_name': 'Apellidos',
             'email': 'Correo institucional',
         }
+
+    def clean_first_name(self):
+        valor = self.cleaned_data.get('first_name')
+        if not valor:
+            return valor
+        return validar_nombre_persona(valor, 'nombre')
+
+    def clean_last_name(self):
+        valor = self.cleaned_data.get('last_name')
+        if not valor:
+            return valor
+        return validar_nombre_persona(valor, 'apellido')
+
+    def clean_email(self):
+        return validar_correo_unico(
+            self.cleaned_data.get('email'), User, self.instance.pk
+        )

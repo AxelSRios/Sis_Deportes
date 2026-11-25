@@ -1,4 +1,4 @@
-{% load static %}
+{% load static afo_extras %}
 <!DOCTYPE html>
 <html lang="es" class="no-js">
 <head>
@@ -6,17 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{% block title %}A.F.O. Oruro | Fútbol, campeonatos y clubes{% endblock %}</title>
   <meta name="description" content="{% block meta_description %}Portal público de la Asociación de Fútbol Oruro: próximos partidos, campeonatos, clubes afiliados y noticias oficiales.{% endblock %}"/>
-  <meta name="theme-color" content="#002b6d"/>
+  <meta name="theme-color" content="#1D428A"/>
   <meta name="author" content="Asociación de Fútbol Oruro"/>
 
   <link rel="icon" type="image/png" href="{% static 'img/afo-crest.png' %}"/>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Nunito:wght@400..1000&amp;family=Outfit:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+  <link rel="stylesheet" href="{% static_v 'css/styles.css' %}"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="{% static 'js/tailwind-config.js' %}"></script>
+  <script src="{% static_v 'js/tailwind-config.js' %}"></script>
   <script>
     /* Evita que el contenido animado quede oculto si JavaScript no está disponible. */
     document.documentElement.classList.remove('no-js');
@@ -50,17 +50,17 @@
 
     /* ---------- Tipografía de impacto ---------- */
     .font-display {
-      font-family: 'Nunito', 'Outfit', system-ui, sans-serif;
+      font-family: 'Manrope', 'Manrope', system-ui, sans-serif;
       font-weight: 900;
       letter-spacing: .005em;
       text-transform: uppercase;
       text-shadow: 0 1px 0 rgba(0, 0, 0, .10),
-                   0 5px 0 rgba(0, 103, 127, .30),
-                   0 14px 30px rgba(119, 211, 242, .38);
+                   0 5px 0 rgba(20, 122, 156, .30),
+                   0 14px 30px rgba(117, 209, 240, .38);
     }
 
     .title-glow {
-      filter: drop-shadow(0 16px 34px rgba(119, 211, 242, .42));
+      filter: drop-shadow(0 16px 34px rgba(117, 209, 240, .42));
     }
 
     /* ---------- Escudo AFO de fondo ---------- */
@@ -125,7 +125,7 @@
     }
 
     .hero-highlight {
-      background: linear-gradient(100deg, #b6ebff 0%, #ffffff 28%, #77d3f2 52%, #ffffff 74%, #b6ebff 100%);
+      background: linear-gradient(100deg, #9FE0F6 0%, #ffffff 28%, #75D1F0 52%, #ffffff 74%, #9FE0F6 100%);
       background-size: 250% auto;
       -webkit-background-clip: text;
       background-clip: text;
@@ -163,7 +163,7 @@
       height: .28rem;
       width: 100%;
       border-radius: 999px;
-      background: linear-gradient(90deg, currentColor, #77d3f2);
+      background: linear-gradient(90deg, currentColor, #75D1F0);
       transform: scaleX(1);
       transform-origin: left;
       transition: transform .8s cubic-bezier(.16, 1, .3, 1) .55s;
@@ -173,8 +173,8 @@
     html.js .section-title.is-visible::after { transform: scaleX(1); }
 
     .filter-chip.is-active {
-      background: #002b6d;
-      border-color: #002b6d;
+      background: #1D428A;
+      border-color: #1D428A;
       color: #ffffff;
     }
 
