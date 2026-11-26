@@ -10,6 +10,11 @@ proyecto desde cero:
 
 [`docs/MANUAL_USUARIO.md`](docs/MANUAL_USUARIO.md)
 
+También disponible en PDF y LaTeX:
+
+- [`docs/MANUAL_USUARIO.pdf`](docs/MANUAL_USUARIO.pdf)
+- [`docs/MANUAL_USUARIO.tex`](docs/MANUAL_USUARIO.tex)
+
 ## Configuración local
 
 ```powershell

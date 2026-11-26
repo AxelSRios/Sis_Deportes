@@ -1,0 +1,763 @@
+% ============================================================================
+%  Manual de usuario y puesta en marcha --- A.F.O. Oruro
+%  Compilar con pdfLaTeX (dos pasadas) o subir a Overleaf.
+%  Si se compila desde docs/, el escudo se toma de ../static/img/afo-crest.png
+%  En Overleaf, suba static/img/afo-crest.png o deje el recuadro A.F.O.
+% ============================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm,top=2.6cm,bottom=2.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+% ----------------------------------------------------------------------------
+% Colores institucionales
+% ----------------------------------------------------------------------------
+\definecolor{afoAzul}{HTML}{1D428A}
+\definecolor{afoAzulOscuro}{HTML}{0F2654}
+\definecolor{afoCeleste}{HTML}{147A9C}
+\definecolor{afoGris}{HTML}{64748B}
+\definecolor{codigoFondo}{HTML}{F4F6F9}
+\definecolor{codigoBorde}{HTML}{D5DCE5}
+
+% ----------------------------------------------------------------------------
+% Estilo general
+% ----------------------------------------------------------------------------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\renewcommand{\arraystretch}{1.25}
+
+\titleformat{\section}
+  {\Large\bfseries\color{afoAzul}}
+  {\thesection}{0.6em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{afoAzulOscuro}}
+  {\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.6em}{0.7em}
+\titlespacing*{\subsection}{0pt}{1.2em}{0.5em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{afoGris}A.F.O. Oruro}
+\fancyhead[R]{\small\color{afoGris}Manual de usuario}
+\fancyfoot[C]{\small\color{afoGris}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=afoAzul,
+  urlcolor=afoCeleste,
+  pdftitle={Manual de usuario y puesta en marcha --- A.F.O. Oruro},
+  pdfauthor={Asociación de Fútbol Oruro}
+}
+
+% ----------------------------------------------------------------------------
+% Código
+% ----------------------------------------------------------------------------
+\lstdefinestyle{afo}{
+  backgroundcolor=\color{codigoFondo},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  rulecolor=\color{codigoBorde},
+  commentstyle=\color{afoGris}\itshape,
+  keywordstyle=\color{afoAzul}\bfseries,
+  showstringspaces=false,
+  extendedchars=true,
+  inputencoding=utf8,
+  literate=
+    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+    {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+    {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1
+    {¿}{{?`}}1 {¡}{{!`}}1
+}
+\lstset{style=afo}
+
+% Atajos
+\newcommand{\cmd}[1]{\texttt{\small #1}}
+\newcommand{\campo}[1]{\texttt{\small #1}}
+
+% ----------------------------------------------------------------------------
+\begin{document}
+
+% ============================ PORTADA =======================================
+\begin{titlepage}
+  \centering
+  \vspace*{1.2cm}
+
+  \IfFileExists{../static/img/afo-crest.png}{%
+    \includegraphics[width=3.2cm]{../static/img/afo-crest.png}\par
+  }{%
+    \IfFileExists{static/img/afo-crest.png}{%
+      \includegraphics[width=3.2cm]{static/img/afo-crest.png}\par
+    }{%
+      \fbox{\parbox[c][3cm][c]{3cm}{\centering A.F.O.}}\par
+    }%
+  }
+
+  \vspace{1.2cm}
+  {\Large\scshape Asociación de Fútbol Oruro\par}
+  \vspace{0.4cm}
+  {\color{afoGris}\large Sistema de Gestión Deportiva\par}
+
+  \vspace{2.2cm}
+  {\Huge\bfseries\color{afoAzul} Manual de usuario\\[0.3cm]
+   y puesta en marcha\par}
+
+  \vspace{0.8cm}
+  {\large\color{afoAzulOscuro} Instalación, configuración, uso y despliegue\par}
+
+  \vfill
+  {\large Versión 1.0\par}
+  {\large 26 de noviembre de 2026\par}
+
+  \vspace{0.6cm}
+  {\small\color{afoGris}
+   Documento generado con \LaTeX\ para la Asociación de Fútbol Oruro\par}
+\end{titlepage}
+
+% ============================ ÍNDICE ========================================
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+
+\pagenumbering{arabic}
+
+% ============================ 1. INTRODUCCIÓN ===============================
+\section{Qué es el sistema}
+
+Aplicación web desarrollada con \textbf{Django 6} y \textbf{PostgreSQL/Supabase}
+para administrar:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Clubes afiliados y sus equipos.
+  \item Deportistas (fichajes) y categorías.
+  \item Campeonatos, fixture y partidos.
+  \item Árbitros y designaciones.
+  \item Tesorería y pagos.
+  \item Usuarios, roles, auditoría y accesos.
+  \item Portal público con clubes, canchas, resultados y próximos partidos.
+\end{itemize}
+
+La interfaz usa plantillas Django, Tailwind CSS compilado y JavaScript sin
+frameworks. \textbf{No requiere Node.js} para funcionar.
+
+% ============================ 2. REQUISITOS =================================
+\section{Programas que se deben instalar}
+
+\begin{tabularx}{\textwidth}{@{}l l X c@{}}
+\toprule
+\textbf{Programa} & \textbf{Versión} & \textbf{Para qué sirve} & \textbf{Obligatorio}\\
+\midrule
+Git & 2.40+ & Descargar y actualizar el proyecto & Sí\\
+Python & \textbf{3.13} (mín. 3.12) & Ejecutar Django y el sistema & Sí\\
+Navegador & Actualizado & Abrir la aplicación & Sí\\
+VS Code & Última & Editar el código & Recomendado\\
+Supabase & Cuenta gratuita & Base de datos PostgreSQL & Sí*\\
+PostgreSQL & 16 o 17 & Alternativa local a Supabase & Opcional\\
+Node.js & --- & \textbf{No se necesita} & No\\
+\bottomrule
+\end{tabularx}
+
+\smallskip
+{\small * Salvo que se use PostgreSQL local o SQLite para pruebas.}
+
+\medskip
+El proyecto usa \campo{psycopg[binary]}, que ya incluye el controlador de
+PostgreSQL. No hace falta instalar el cliente de PostgreSQL para ejecutar la
+aplicación, solo para usar \campo{pg\_dump} en respaldos.
+
+% ============================ 3. INSTALACIÓN ================================
+\section{Instalación paso a paso (Windows)}
+
+\subsection{Instalar Git}
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item Descargue Git desde \url{https://git-scm.com/download/win}.
+  \item Ejecute el instalador con las opciones por defecto.
+  \item Abra PowerShell y verifique:
+\end{enumerate}
+
+\begin{lstlisting}
+git --version
+\end{lstlisting}
+
+Debe mostrar algo como \campo{git version 2.4x}.
+
+\subsection{Instalar Python}
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item Descargue Python 3.13 desde
+        \url{https://www.python.org/downloads/windows/}.
+  \item Marque \textbf{Add python.exe to PATH} durante la instalación.
+  \item Verifique:
+\end{enumerate}
+
+\begin{lstlisting}
+python --version
+py --version
+\end{lstlisting}
+
+Debe mostrar \campo{Python 3.13.x} o superior. Si \campo{python} no se reconoce,
+cierre y reabra PowerShell; si persiste, reinstale marcando la opción del PATH.
+
+\subsection{Instalar VS Code (opcional)}
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item Descargue \url{https://code.visualstudio.com/}.
+  \item Instale la extensión \textbf{Python} de Microsoft.
+  \item Abra la carpeta del proyecto con \textbf{Archivo $\rightarrow$ Abrir carpeta}.
+  \item Seleccione el intérprete: \campo{Ctrl + Shift + P} $\rightarrow$
+        \textbf{Python: Select Interpreter} $\rightarrow$
+        \path|.\.venv\Scripts\python.exe|.
+\end{enumerate}
+
+\subsection{Base de datos}
+
+\subsubsection{Opción A --- Supabase (recomendada, sin instalar nada)}
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item Cree una cuenta en \url{https://supabase.com}.
+  \item Cree un proyecto y guarde la contraseña de la base.
+  \item En \textbf{Connect} (o \textbf{Project Settings $\rightarrow$ Database})
+        copie la cadena \textbf{Session pooler} (puerto 5432).
+  \item Reemplace \campo{[YOUR-PASSWORD]} por la contraseña real y asegúrese de
+        que la cadena termine en\\
+        \campo{?sslmode=require}.
+\end{enumerate}
+
+\begin{lstlisting}
+postgresql://postgres.abcdefgh:MI_CLAVE@aws-1-us-east-1.pooler.supabase.com:5432/postgres?sslmode=require
+\end{lstlisting}
+
+Si el servicio web está en Render (Ohio), conviene que Supabase esté en una
+región cercana (por ejemplo \campo{us-east-1}) para reducir la latencia.
+
+\subsubsection{Opción B --- PostgreSQL local}
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item Descargue PostgreSQL 16/17 desde
+        \url{https://www.postgresql.org/download/windows/}.
+  \item Anote usuario, contraseña y puerto (5432).
+  \item Cree una base de datos, por ejemplo \campo{afo}.
+\end{enumerate}
+
+\begin{lstlisting}
+postgresql://postgres:MI_CLAVE@localhost:5432/afo
+\end{lstlisting}
+
+\subsubsection{Opción C --- SQLite (solo pruebas locales)}
+
+No requiere instalar nada. En \campo{.env}:
+
+\begin{lstlisting}
+DATABASE_URL=sqlite:///db.sqlite3
+\end{lstlisting}
+
+Sirve para probar el sistema, pero no se recomienda para producción.
+
+% ============================ 4. PROYECTO ===================================
+\section{Obtener el proyecto}
+
+\begin{lstlisting}
+cd C:\Proyectos
+git clone https://github.com/AxelSRios/Sis_Deportes.git
+cd Sis_Deportes
+\end{lstlisting}
+
+Si el repositorio es privado, Git solicitará iniciar sesión con GitHub.
+
+% ============================ 5. ENTORNO ====================================
+\section{Crear el entorno virtual e instalar dependencias}
+
+\begin{lstlisting}
+# Crear el entorno (una sola vez)
+py -3.13 -m venv .venv
+
+# Permitir scripts locales en PowerShell (una sola vez)
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
+# Activar el entorno
+.\.venv\Scripts\Activate.ps1
+
+# Actualizar pip e instalar dependencias
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+\end{lstlisting}
+
+Si la activación falla, use el Python del entorno directamente:
+
+\begin{lstlisting}
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+\end{lstlisting}
+
+Verifique Django:
+
+\begin{lstlisting}
+python -c "import django; print(django.get_version())"
+\end{lstlisting}
+
+Debe mostrar \campo{6.1.x}.
+
+% ============================ 6. VARIABLES ==================================
+\section{Configurar las variables de entorno}
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item Copie el archivo de ejemplo:
+\end{enumerate}
+
+\begin{lstlisting}
+Copy-Item .env.example .env
+\end{lstlisting}
+
+\begin{enumerate}[leftmargin=1.4em,start=2]
+  \item Abra \campo{.env} y complete:
+\end{enumerate}
+
+\begin{lstlisting}
+SECRET_KEY=una-clave-larga-y-aleatoria
+DEBUG=1
+ALLOWED_HOSTS=localhost,127.0.0.1
+CSRF_TRUSTED_ORIGINS=
+
+DATABASE_URL=postgresql://USUARIO:CLAVE@HOST:5432/postgres?sslmode=require
+\end{lstlisting}
+
+\begin{enumerate}[leftmargin=1.4em,start=3]
+  \item Genere una \campo{SECRET\_KEY} segura:
+\end{enumerate}
+
+\begin{lstlisting}
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+\end{lstlisting}
+
+\subsection{Variables disponibles}
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Variable} & \textbf{Uso}\\
+\midrule
+\campo{SECRET\_KEY} & Firma de sesiones y CSRF. Obligatoria.\\
+\campo{DEBUG} & \campo{1} en desarrollo, \campo{0} en producción.\\
+\campo{ALLOWED\_HOSTS} & Dominios permitidos, separados por coma.\\
+\campo{CSRF\_TRUSTED\_ORIGINS} & Orígenes HTTPS confiables en producción.\\
+\campo{DATABASE\_URL} & Cadena de conexión a PostgreSQL o SQLite.\\
+\campo{AFO\_TRUST\_X\_FORWARDED\_FOR} & \campo{1} detrás de un proxy confiable.\\
+\campo{AFO\_BACKUP\_DIR} & Carpeta de respaldos (opcional).\\
+\campo{AFO\_BACKUP\_RETENTION} & Copias a conservar (opcional).\\
+\bottomrule
+\end{tabularx}
+
+\medskip
+\campo{.env} está en \campo{.gitignore}: \textbf{nunca} lo suba al repositorio
+ni comparta sus valores.
+
+% ============================ 7. BASE =======================================
+\section{Preparar la base de datos}
+
+\begin{lstlisting}
+python manage.py migrate
+python manage.py check
+\end{lstlisting}
+
+\campo{migrate} crea todas las tablas. \campo{check} no debe reportar errores.
+
+% ============================ 8. USUARIOS ===================================
+\section{Crear las cuentas de usuario}
+
+\begin{lstlisting}
+python manage.py crear_usuarios_roles
+\end{lstlisting}
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Usuario} & \textbf{Rol}\\
+\midrule
+\campo{administrador} & Administrador General (superusuario)\\
+\campo{dirigente} & Dirigente de Club Afiliado\\
+\campo{arbitro} & Comisión Técnica / Árbitros\\
+\campo{tesorero} & Tesorero / Finanzas\\
+\bottomrule
+\end{tabularx}
+
+Las contraseñas se guardan fuera del proyecto:
+
+\begin{lstlisting}
+C:\Users\<USUARIO_WINDOWS>\AFO-credenciales.txt
+\end{lstlisting}
+
+(o en \campo{Documents} si esa carpeta existe). Guarde las claves en un gestor de
+contraseñas y elimine el archivo.
+
+Opciones útiles:
+
+\begin{lstlisting}
+# Regenerar contraseñas
+python manage.py crear_usuarios_roles --restablecer
+
+# Guardar credenciales en otra ruta
+python manage.py crear_usuarios_roles --archivo C:\ruta\credenciales.txt
+
+# Eliminar la cuenta antigua "admin" si existiera
+python manage.py crear_usuarios_roles --eliminar-legacy
+\end{lstlisting}
+
+% ============================ 9. DATOS ======================================
+\section{Datos iniciales (opcional)}
+
+Para probar con datos de demostración, ejecute en este orden:
+
+\begin{lstlisting}
+# 1) Categorias base: Primera A y Primera B
+python manage.py cargar_categorias_2026
+
+# 2) 20 clubes afiliados de la gestion 2026
+python manage.py cargar_clubes_2026
+
+# 3) Equipos y nominas (2 por club, 15 a 22 jugadores cada uno)
+#    Puede tardar varios minutos si la base esta en la nube.
+python manage.py cargar_equipos_2026
+
+# 4) Campeonato de Primera A 2026 y su fixture (91 partidos)
+python manage.py cargar_campeonato_2026
+\end{lstlisting}
+
+Los comandos son idempotentes: si se ejecutan otra vez no duplican registros.
+
+\begin{quote}
+\textbf{Importante:} los datos personales generados (nombres, CI, teléfonos) son
+\textbf{ficticios} y sirven solo para demostración y pruebas.
+\end{quote}
+
+Alternativa breve (50 deportistas):
+
+\begin{lstlisting}
+python manage.py cargar_demo_bolivia --cantidad 50
+\end{lstlisting}
+
+% ============================ 10. EJECUTAR ==================================
+\section{Ejecutar el sistema}
+
+\begin{lstlisting}
+python manage.py runserver
+\end{lstlisting}
+
+Abra en el navegador:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Aplicación: \url{http://127.0.0.1:8000/}
+  \item Acceso: \url{http://127.0.0.1:8000/login/}
+  \item Portal público: \url{http://127.0.0.1:8000/clubes-publicos/}
+\end{itemize}
+
+Si el puerto 8000 está ocupado:
+
+\begin{lstlisting}
+python manage.py runserver 8001
+\end{lstlisting}
+
+Para detener el servidor: \campo{Ctrl + C}.
+
+% ============================ 11. USO =======================================
+\section{Uso del sistema}
+
+\subsection{Iniciar sesión}
+
+Ingrese con el usuario y la contraseña del archivo de credenciales. El rol se
+deduce automáticamente de la cuenta; no se elige en el formulario.
+
+\subsection{Roles y permisos}
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Rol} & \textbf{Puede hacer}\\
+\midrule
+Administrador & Todo: clubes, equipos, deportistas, campeonatos, árbitros,
+pagos, usuarios y auditoría.\\
+Dirigente & Equipos, deportistas e inscripciones; consulta general.\\
+Árbitro & Partidos y designaciones arbitrales; consulta general.\\
+Tesorero & Tesorería y pagos; consulta general.\\
+\bottomrule
+\end{tabularx}
+
+Los módulos restringidos (Usuarios, Auditoría, Tesorería) muestran ``Sin
+permiso'' para los roles que no corresponden.
+
+\subsection{Módulos principales}
+
+\begin{xltabular}{\textwidth}{@{}l l X@{}}
+\toprule
+\textbf{Módulo} & \textbf{Ruta} & \textbf{Para qué}\\
+\midrule
+\endhead
+Panel General & \campo{/panel-general/} & Resumen operativo y accesos rápidos.\\
+Clubes & \campo{/clubes/} & Padrón de clubes afiliados.\\
+Equipos & \campo{/equipos/} & Equipos por club, categoría y división.\\
+Deportistas & \campo{/deportistas/} & Fichajes y datos de jugadores.\\
+Categorías & \campo{/categorias/} & Primera A/B, Sub 15, Sub 19, etc.\\
+Campeonatos & \campo{/campeonatos/} & Torneos y fixture.\\
+Partidos & \campo{/partidos/} & Programación y resultados.\\
+Árbitros & \campo{/arbitros/} & Registro de árbitros.\\
+Asignaciones & \campo{/asignaciones/} & Ternas arbitrales.\\
+Sanciones & \campo{/sanciones/} & Amonestaciones, suspensiones y multas.\\
+Tesorería & \campo{/tesoreria/} & Pagos e ingresos.\\
+Reportes & \campo{/reportes/} & Exportaciones PDF/Excel.\\
+Usuarios & \campo{/usuarios/} & Cuentas y roles.\\
+Auditoría & \campo{/auditoria/} & Historial de operaciones.\\
+Accesos & \campo{/accesos/} & Inicios de sesión y bloqueos.\\
+\bottomrule
+\end{xltabular}
+
+\subsection{Tareas frecuentes}
+
+\begin{description}[leftmargin=0pt,style=nextline]
+  \item[Crear un club.] Clubes $\rightarrow$ \textbf{Nuevo club}. Complete solo
+        datos oficiales; no invente NIT, personería ni representantes.
+  \item[Crear un equipo.] Equipos $\rightarrow$ \textbf{Nuevo equipo}. Seleccione
+        club, categoría, división y temporada.
+  \item[Registrar un jugador.] Deportistas $\rightarrow$ \textbf{Nuevo fichaje}.
+        La CI debe ser única y con formato boliviano (por ejemplo
+        \campo{12345678-OR}).
+  \item[Crear un campeonato.] Campeonatos $\rightarrow$
+        \textbf{Nuevo campeonato}. Luego programe partidos desde el fixture o
+        desde \textbf{Partidos $\rightarrow$ Programar partido}.
+  \item[Registrar un pago.] Tesorería $\rightarrow$ \textbf{Registrar pago}
+        (solo Administrador y Tesorero).
+\end{description}
+
+% ============================ 12. MANTENIMIENTO =============================
+\section{Pruebas y mantenimiento}
+
+\subsection{Pruebas automáticas}
+
+\begin{lstlisting}
+python manage.py test
+\end{lstlisting}
+
+Usa una base SQLite en memoria: \textbf{no toca} la base real de Supabase.
+Todas las pruebas deben pasar.
+
+\subsection{Archivos estáticos}
+
+En desarrollo Django los sirve solo. Para producción:
+
+\begin{lstlisting}
+python manage.py collectstatic --noinput
+\end{lstlisting}
+
+\subsection{Estilos (Tailwind)}
+
+El CSS ya está compilado en \campo{static/css/tailwind.css}; no hace falta Node
+para ejecutar el sistema.
+
+Si modifica clases de Tailwind en plantillas, JavaScript o Python:
+
+\begin{lstlisting}
+powershell -ExecutionPolicy Bypass -File scripts\build_tailwind.ps1
+python manage.py collectstatic --noinput
+\end{lstlisting}
+
+El script descarga la herramienta oficial la primera vez (requiere internet).
+
+\subsection{Respaldos}
+
+\begin{lstlisting}
+# Crear respaldo
+python manage.py backup_bd --etiqueta manual
+
+# Verificar que el respaldo se puede restaurar
+python manage.py verificar_respaldo --restaurar
+\end{lstlisting}
+
+Los respaldos se guardan en \campo{backups/} (ignorada por Git). Más detalles en
+\campo{docs/SEGURIDAD.md}.
+
+% ============================ 13. RENDER ====================================
+\section{Publicar en Render (opcional)}
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item Cree una cuenta en \url{https://render.com}.
+  \item \textbf{New $\rightarrow$ Web Service $\rightarrow$ Public Git Repository}
+        y pegue la URL del repositorio.
+  \item Configure:
+\end{enumerate}
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Campo} & \textbf{Valor}\\
+\midrule
+Nombre & \campo{afo-oruro}\\
+Rama & \campo{main}\\
+Runtime & Python 3\\
+Plan & Free\\
+Build Command & \campo{pip install -r requirements.txt \&\& python manage.py collectstatic --noinput \&\& python manage.py migrate}\\
+Start Command & \campo{gunicorn sistema\_deportes.wsgi:application --bind 0.0.0.0:\$PORT --worker-class gthread --workers 1 --threads 4 --timeout 120}\\
+Health Check Path & \campo{/health/}\\
+\bottomrule
+\end{tabularx}
+
+\begin{enumerate}[leftmargin=1.4em,start=4]
+  \item Agregue las variables de entorno:
+\end{enumerate}
+
+\begin{lstlisting}
+SECRET_KEY=<clave-generada>
+DEBUG=0
+ALLOWED_HOSTS=.onrender.com
+CSRF_TRUSTED_ORIGINS=https://*.onrender.com
+DATABASE_URL=<cadena-de-supabase>
+PYTHON_VERSION=3.13.7
+AFO_TRUST_X_FORWARDED_FOR=1
+\end{lstlisting}
+
+\begin{enumerate}[leftmargin=1.4em,start=5]
+  \item Cree el servicio y espere el despliegue.
+  \item Verifique \campo{/}, \campo{/login/} y \campo{/health/}.
+\end{enumerate}
+
+\textbf{Notas:}
+\begin{itemize}[leftmargin=1.4em]
+  \item Con \textbf{Public Git Repository}, Render no despliega automáticamente:
+        cada cambio requiere \textbf{Manual Deploy $\rightarrow$ Deploy latest commit}.
+  \item El plan Free suspende el servicio tras $\sim$15 minutos sin tráfico; la
+        primera visita puede tardar hasta 50 segundos.
+  \item Los archivos subidos a \campo{media/} no son persistentes; use Supabase
+        Storage o S3.
+  \item El repositorio incluye una GitHub Action que consulta \campo{/health/}
+        cada 10 minutos para mantener despierta la instancia.
+\end{itemize}
+
+% ============================ 14. PROBLEMAS =================================
+\section{Solución de problemas}
+
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.26\textwidth}
+                                >{\raggedright\arraybackslash}p{0.26\textwidth}
+                                X@{}}
+\toprule
+\textbf{Síntoma} & \textbf{Causa probable} & \textbf{Solución}\\
+\midrule
+\endhead
+\campo{python} no se reconoce & Python no está en el PATH & Reinstalar marcando
+``Add to PATH'' y reabrir PowerShell.\\
+\campo{Activate.ps1} bloqueado & Política de ejecución & Ejecutar
+\campo{Set-ExecutionPolicy -Scope CurrentUser RemoteSigned}.\\
+\campo{No module named django} & Entorno no activado & Activar \campo{.venv} o
+usar \path|.\.venv\Scripts\python.exe|.\\
+\campo{DisallowedHost} & Dominio no permitido & Agregarlo a
+\campo{ALLOWED\_HOSTS}.\\
+Error CSRF en producción & Origen no confiable & Configurar
+\campo{CSRF\_TRUSTED\_ORIGINS}.\\
+No conecta a la base & Cadena incorrecta o proyecto pausado & Revisar
+\campo{DATABASE\_URL}, \campo{sslmode=require} y Supabase.\\
+Estáticos 404 en producción & Falta \campo{collectstatic} & Ejecutarlo en el
+build.\\
+Estilos viejos o incompletos & CSS sin recompilar & Ejecutar
+\campo{scripts\textbackslash build\_tailwind.ps1} y \campo{collectstatic}.\\
+Puerto ocupado & Otro servidor en 8000 & \campo{runserver 8001}.\\
+Primera visita lenta & Plan Free dormido & Esperar o monitorear
+\campo{/health/}.\\
+Migración falla & Versión de Python incompatible & Usar Python 3.12+
+(recomendado 3.13).\\
+\bottomrule
+\end{xltabular}
+
+% ============================ 15. SEGURIDAD =================================
+\section{Seguridad}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item No subir \campo{.env}, \campo{backups/}, \campo{media/} ni archivos de
+        credenciales al repositorio.
+  \item En producción: \campo{DEBUG=0}, \campo{ALLOWED\_HOSTS} y
+        \campo{CSRF\_TRUSTED\_ORIGINS} correctos.
+  \item Usar contraseñas largas y únicas; cambiarlas después del primer ingreso.
+  \item Guardar \campo{AFO-credenciales.txt} en un gestor de contraseñas y
+        eliminarlo del disco.
+  \item Revisar periódicamente \campo{/accesos/} y \campo{/auditoria/}.
+  \item Mantener respaldos verificados y fuera del equipo principal.
+\end{itemize}
+
+% ============================ 16. ESTRUCTURA ================================
+\section{Estructura del proyecto}
+
+\begin{verbatim}
+Sis_Deportes/
+|-- manage.py
+|-- requirements.txt
+|-- render.yaml
+|-- .env.example
+|-- sistema_deportes/        Configuracion (settings, urls, wsgi)
+|-- core/                    Modelos, vistas, formularios, comandos
+|   |-- management/commands/ Cargas y mantenimiento
+|   |-- migrations/
+|   `-- templatetags/
+|-- templates/               Plantillas Django
+|-- static/                  CSS, JS e imagenes
+|   |-- css/tailwind.css     Tailwind compilado
+|   |-- img/clubes/          Escudos de clubes
+|   `-- img/canchas/         Fotos de escenarios
+|-- assets/css/              Entrada de Tailwind (fuente)
+|-- scripts/                 Compilacion de Tailwind
+|-- docs/                    Manual y documentacion
+`-- backups/                 Respaldos locales (ignorado por Git)
+\end{verbatim}
+
+% ============================ ANEXO =========================================
+\section*{Anexo: comandos rápidos}
+\addcontentsline{toc}{section}{Anexo: comandos rápidos}
+
+\begin{lstlisting}
+# Activar entorno
+.\.venv\Scripts\Activate.ps1
+
+# Instalar dependencias
+python -m pip install -r requirements.txt
+
+# Migrar y comprobar
+python manage.py migrate
+python manage.py check
+
+# Crear cuentas por rol
+python manage.py crear_usuarios_roles
+
+# Cargar datos de demostracion
+python manage.py cargar_categorias_2026
+python manage.py cargar_clubes_2026
+python manage.py cargar_equipos_2026
+python manage.py cargar_campeonato_2026
+
+# Ejecutar
+python manage.py runserver
+
+# Pruebas
+python manage.py test
+
+# Estaticos para produccion
+python manage.py collectstatic --noinput
+\end{lstlisting}
+
+\vfill
+\begin{center}
+\small\color{afoGris}
+Asociación de Fútbol Oruro --- Manual de usuario v1.0
+\end{center}
+
+\end{document}
