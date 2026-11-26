@@ -437,6 +437,12 @@
               <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-fixed">{{ cancha.ciudad|default:"Oruro" }} · {{ cancha.get_tipo_display }}</p>
               <h3 class="mt-1 font-title-md text-lg font-bold">{{ cancha.nombre }}</h3>
               <p class="text-xs text-white/70">{{ cancha.descripcion|default:cancha.direccion|default:"Escenario oficial de la A.F.O." }}</p>
+              {% if cancha.direccion %}
+                <p class="mt-1 inline-flex items-center gap-1 text-[11px] text-white/70">
+                  <span class="material-symbols-outlined text-[13px]">location_on</span>
+                  {{ cancha.direccion }}{% if cancha.ciudad %} · {{ cancha.ciudad }}{% endif %}
+                </p>
+              {% endif %}
               {% if cancha.mapa_url %}
                 <a href="{{ cancha.mapa_url }}" target="_blank" rel="noopener"
                    class="mt-2 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-secondary-fixed transition hover:text-white">
