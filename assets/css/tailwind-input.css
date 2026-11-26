@@ -1,0 +1,7 @@
+/* Punto de entrada para compilar Tailwind en tiempo de construcción.
+   Genera static/css/tailwind.css con:
+   tailwindcss -c tailwind.config.js -i static/css/tailwind-input.css -o static/css/tailwind.css --minify
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

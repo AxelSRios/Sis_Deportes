@@ -9,14 +9,12 @@
   <meta name="theme-color" content="#1D428A"/>
   <meta name="author" content="Asociación de Fútbol Oruro"/>
 
-  <link rel="icon" type="image/png" href="{% static 'img/afo-crest.png' %}"/>
+  <link rel="icon" type="image/png" href="{% static_v 'img/afo-crest.png' %}"/>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="{% static_v 'css/styles.css' %}"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="{% static_v 'js/tailwind-config.js' %}"></script>
   <script>
     /* Evita que el contenido animado quede oculto si JavaScript no está disponible. */
     document.documentElement.classList.remove('no-js');
@@ -193,6 +191,7 @@
   </style>
 
   {% block extra_head %}{% endblock %}
+<link rel="stylesheet" href="{% static_v 'css/tailwind.css' %}"/>
 </head>
 
 <body class="bg-surface text-on-surface antialiased" data-shell="false">
@@ -204,7 +203,7 @@
   <header id="site-header" class="sticky top-0 z-50 border-b border-surface-container/80 bg-surface/90 backdrop-blur-xl transition-shadow">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8 lg:px-12">
       <a href="{% url 'index' %}" class="group flex min-w-0 items-center gap-3" aria-label="A.F.O. Oruro — Asociación de Fútbol — Inicio">
-        <img src="{% static 'img/afo-crest.png' %}"
+        <img src="{% static_v 'img/afo-crest.png' %}"
              alt="Escudo de la Asociación de Fútbol Oruro"
              class="h-11 w-11 shrink-0 rounded-xl bg-white object-contain p-1 shadow-sm ring-1 ring-primary/10 transition-transform group-hover:scale-105"/>
         <span class="min-w-0 leading-tight">
@@ -276,7 +275,7 @@
     <div class="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr] lg:px-12">
       <div>
         <div class="flex items-center gap-3">
-          <img src="{% static 'img/afo-crest.png' %}" alt="" aria-hidden="true"
+          <img src="{% static_v 'img/afo-crest.png' %}" alt="" aria-hidden="true"
                class="h-12 w-12 rounded-xl bg-white object-contain p-1.5 shadow-sm"/>
           <div>
             <p class="font-headline-md text-lg font-bold">A.F.O. Oruro</p>

@@ -29,6 +29,23 @@ capturas de pantalla.
 - Registro de inicios, cierres e intentos fallidos: `/accesos/` (Administración).
 - Pruebas: `.\.venv\Scripts\python.exe manage.py test core`.
 
+## Estilos (Tailwind CSS)
+
+El CSS de utilidades se compila en el repositorio y se sirve como archivo
+estático (`static/css/tailwind.css`). No se usa el CDN de Tailwind en el
+navegador, lo que evita compilar estilos en cada visita.
+
+Si agrega o cambia clases de Tailwind en `templates/`, `static/js/` o
+`core/`, recompile antes de desplegar:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\build_tailwind.ps1
+.\.venv\Scripts\python.exe manage.py collectstatic --noinput
+```
+
+La configuración institucional (paleta y tipografía) está en
+`tailwind.config.js` y `static/js/tailwind-config.js`.
+
 ## Despliegue en Render
 
 El proyecto incluye `render.yaml` para un Web Service gratuito con Gunicorn,

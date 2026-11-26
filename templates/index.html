@@ -11,7 +11,7 @@
   <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"/>
   <meta property="og:title" content="A.F.O. Oruro | Fútbol, campeonatos y clubes"/>
   <meta property="og:description" content="Vive el fútbol orureño: programación oficial, campeonatos, clubes afiliados y resultados."/>
-  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/afo-crest.png' %}"/>
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static_v 'img/afo-crest.png' %}"/>
   <meta name="twitter:card" content="summary_large_image"/>
 {% endblock %}
 
@@ -23,7 +23,7 @@
 
     <!-- Escudo AFO de fondo -->
     <div class="hero-crest" aria-hidden="true">
-      <img src="{% static 'img/afo-crest-transparent@2x.png' %}" alt=""/>
+      <img src="{% static_v 'img/afo-crest-transparent@2x.png' %}" alt=""/>
     </div>
 
     <div class="pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-secondary-fixed/20 blur-3xl"></div>
@@ -676,7 +676,7 @@
   <section class="mx-auto max-w-7xl px-5 pb-20 pt-4 sm:px-8 lg:px-12">
     <div class="reveal relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary via-primary to-primary-container p-8 text-on-primary shadow-2xl sm:p-12">
       <div class="cta-crest" aria-hidden="true">
-        <img src="{% static 'img/afo-crest-transparent@2x.png' %}" alt=""/>
+        <img src="{% static_v 'img/afo-crest-transparent@2x.png' %}" alt=""/>
       </div>
       <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-secondary-fixed/20 blur-3xl"></div>
       <div class="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">

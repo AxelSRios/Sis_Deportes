@@ -164,6 +164,11 @@ STORAGES = {
     },
 }
 
+# Caché de estáticos en el navegador. Los templates agregan ?v=<mtime> con
+# static_v, así que renovar un archivo cambia la URL y nunca queda una copia
+# vieja en caché. Un año evita revalidaciones en cada navegación.
+WHITENOISE_MAX_AGE = 60 * 60 * 24 * 365
+
 # Archivos subidos (imágenes de canchas, escudos, fichas).
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
