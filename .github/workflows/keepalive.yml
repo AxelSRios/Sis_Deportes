@@ -1,0 +1,24 @@
+# Mantiene despierta la instancia gratuita de Render.
+#
+# El plan Free de Render suspende el servicio tras ~15 minutos sin tráfico;
+# la siguiente visita espera hasta 50 segundos. Este flujo consulta la sonda
+# /health/ cada 10 minutos para que el servicio siga activo.
+#
+# GitHub puede retrasar las ejecuciones programadas en horas de alta demanda;
+# el margen de 10 minutos frente al límite de 15 cubre esos retrasos.
+name: Mantener activo Render
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Consultar sonda de salud
+        run: |
+          curl --silent --show-error --fail --max-time 60 \
+            https://afo-oruro.onrender.com/health/

@@ -437,7 +437,7 @@ def _panel_charts(request, anio):
     datos = cache.get(clave)
     if datos is None:
         datos = _panel_charts_calculo(request, anio)
-        cache.set(clave, datos, 300)
+        cache.set(clave, datos, 900)
     return datos
 
 
@@ -1026,7 +1026,7 @@ def panel(request):
         'total_deportistas_opciones': total_deportistas,
     }
 
-    cache.set(clave_panel, contexto, 180)
+    cache.set(clave_panel, contexto, 900)
     return render(request, 'panel_general.html', contexto)
 
 
