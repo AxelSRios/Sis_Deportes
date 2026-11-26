@@ -3,6 +3,13 @@
 Plataforma institucional para clubes, competencias, arbitraje, tesorería y
 administración de la Asociación de Fútbol Oruro.
 
+## Manual completo
+
+Guía paso a paso para instalar Python, Git, la base de datos y abrir el
+proyecto desde cero:
+
+[`docs/MANUAL_USUARIO.md`](docs/MANUAL_USUARIO.md)
+
 ## Configuración local
 
 ```powershell
