@@ -1,7 +1,7 @@
 {% extends 'auth/base_auth.html' %}
 {% load static afo_extras %}
 
-{% block title %}Iniciar sesiÃ³n | A.F.O. Oruro{% endblock %}
+{% block title %}Iniciar sesión | A.F.O. Oruro{% endblock %}
 
 {% block body %}
 <main class="min-h-screen w-full overflow-x-hidden bg-surface">
@@ -22,12 +22,12 @@
           <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 backdrop-blur-md">
             <span class="h-2 w-2 animate-pulse rounded-full bg-secondary-fixed"></span>
             <span class="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary-fixed">
-              Temporada {% now "Y" %} Â· Plataforma oficial
+              Temporada {% now "Y" %} · Plataforma oficial
             </span>
           </div>
           <span class="hidden items-center gap-2 text-xs font-semibold text-white/70 sm:flex">
             <span class="material-symbols-outlined text-base">verified</span>
-            FBF Â· Oruro
+            FBF · Oruro
           </span>
         </div>
 
@@ -37,10 +37,10 @@
             Fundada el 21 de julio de 1921
           </p>
           <h1 class="auth-display mt-3 break-words text-[2.2rem] leading-[0.95] text-white sm:text-[3.4rem] lg:text-[4rem]">
-            AsociaciÃ³n de FÃºtbol Oruro
+            Asociación de Fútbol Oruro
           </h1>
           <p class="mt-5 max-w-xl text-base leading-7 text-primary-fixed sm:text-lg">
-            Sistema integral de gestiÃ³n y competiciones deportivas.
+            Sistema integral de gestión y competiciones deportivas.
           </p>
         </div>
 
@@ -51,7 +51,7 @@
               <span class="text-[11px] font-semibold uppercase tracking-wider text-white/70">Temporada</span>
               <span class="material-symbols-outlined text-lg text-secondary-fixed">calendar_month</span>
             </div>
-            <p class="font-bold text-white">{% now "Y" %} / AdecuaciÃ³n</p>
+            <p class="font-bold text-white">{% now "Y" %} / Adecuación</p>
             <span class="text-xs text-white/60">Torneos oficiales AFO</span>
           </div>
           <div class="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
@@ -67,8 +67,8 @@
               <span class="text-[11px] font-semibold uppercase tracking-wider text-white/70">Sede central</span>
               <span class="material-symbols-outlined text-lg text-secondary-fixed">stadium</span>
             </div>
-            <p class="font-bold text-white">JesÃºs BermÃºdez</p>
-            <span class="text-xs text-white/60">3.735 m.s.n.m. Â· Bolivia</span>
+            <p class="font-bold text-white">Jesús Bermúdez</p>
+            <span class="text-xs text-white/60">3.735 m.s.n.m. · Bolivia</span>
           </div>
         </div>
 
@@ -76,9 +76,9 @@
         <div class="flex flex-col gap-3 border-t border-white/10 pt-5 text-white/60 sm:flex-row sm:items-center sm:justify-between">
           <div class="flex items-center gap-3">
             <span class="material-symbols-outlined text-xl text-secondary-fixed">gavel</span>
-            <span class="text-sm">Tribunal de Justicia Deportiva y ComitÃ© de Ãrbitros en lÃ­nea</span>
+            <span class="text-sm">Tribunal de Justicia Deportiva y Comité de Árbitros en línea</span>
           </div>
-          <span class="text-[11px] font-semibold uppercase tracking-wider text-white/40">AFO Â· Oruro, Bolivia</span>
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-white/40">AFO · Oruro, Bolivia</span>
         </div>
       </div>
     </section>
@@ -89,7 +89,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-2 text-on-surface-variant">
           <span class="material-symbols-outlined text-lg text-primary">shield_lock</span>
-          <span class="text-[11px] font-bold uppercase tracking-[0.16em]">ConexiÃ³n institucional</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.16em]">Conexión institucional</span>
         </div>
         <span class="rounded-full bg-surface-container-high px-2.5 py-1 text-[11px] font-semibold text-primary">
           Portal institucional
@@ -116,7 +116,7 @@
 
           <!-- Usuario -->
           <div class="space-y-1.5">
-            <label class="auth-label" for="usernameInput">Usuario o cÃ³digo institucional</label>
+            <label class="auth-label" for="usernameInput">Usuario o código institucional</label>
             <div class="relative">
               <span class="material-symbols-outlined pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xl text-on-surface-variant">account_circle</span>
               <input class="auth-input" id="usernameInput" name="username" type="text"
@@ -126,42 +126,42 @@
             </div>
           </div>
 
-          <!-- ContraseÃ±a -->
+          <!-- Contraseña -->
           <div class="space-y-1.5">
             <div class="flex items-center justify-between gap-3">
-              <label class="auth-label" for="passwordInput">ContraseÃ±a</label>
+              <label class="auth-label" for="passwordInput">Contraseña</label>
               <a class="text-xs font-semibold text-primary hover:underline" href="{% url 'password_reset' %}">
-                Â¿OlvidÃ³ su contraseÃ±a?
+                ¿Olvidó su contraseña?
               </a>
             </div>
             <div class="relative">
               <span class="material-symbols-outlined pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xl text-on-surface-variant">lock</span>
               <input class="auth-input pr-12" id="passwordInput" name="password" type="password"
-                     placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" autocomplete="current-password" required/>
-              <button type="button" id="togglePasswordBtn" aria-label="Mostrar contraseÃ±a" aria-pressed="false"
+                     placeholder="••••••••" autocomplete="current-password" required/>
+              <button type="button" id="togglePasswordBtn" aria-label="Mostrar contraseña" aria-pressed="false"
                       class="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center p-1 text-on-surface-variant transition hover:text-primary">
                 <span class="material-symbols-outlined text-xl" id="eyeIcon">visibility</span>
               </button>
             </div>
-            <p id="capsHint" class="hidden text-xs font-semibold text-primary">Bloq MayÃºs estÃ¡ activado.</p>
+            <p id="capsHint" class="hidden text-xs font-semibold text-primary">Bloq Mayús está activado.</p>
           </div>
 
-          <!-- SesiÃ³n -->
+          <!-- Sesión -->
           <label class="flex cursor-pointer items-center gap-2.5">
             <input class="h-4 w-4 cursor-pointer rounded border-outline-variant text-primary accent-primary"
                    name="remember" type="checkbox" {% if remember %}checked{% endif %}/>
-            <span class="text-sm text-on-surface-variant">Mantener la sesiÃ³n en este equipo</span>
+            <span class="text-sm text-on-surface-variant">Mantener la sesión en este equipo</span>
           </label>
 
           <!-- Enviar -->
           <button class="auth-btn group" id="submitButton" type="submit">
-            <span>Iniciar sesiÃ³n</span>
+            <span>Iniciar sesión</span>
             <span class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1">login</span>
           </button>
 
           <p class="pt-1 text-center text-sm text-on-surface-variant">
-            Â¿Requiere acreditaciÃ³n federativa?
-            <a class="font-semibold text-primary hover:underline" href="{% url 'index' %}#institucion">Contactar a SecretarÃ­a General</a>
+            ¿Requiere acreditación federativa?
+            <a class="font-semibold text-primary hover:underline" href="{% url 'index' %}#institucion">Contactar a Secretaría General</a>
           </p>
         </form>
       </div>
@@ -172,7 +172,7 @@
           <span class="material-symbols-outlined text-base text-secondary">history_toggle_off</span>
           Registro de accesos activo (usuario e IP).
         </span>
-        <span class="font-semibold uppercase tracking-wider text-on-surface-variant/80">AFO Â· Oruro, Bolivia</span>
+        <span class="font-semibold uppercase tracking-wider text-on-surface-variant/80">AFO · Oruro, Bolivia</span>
       </div>
     </section>
   </div>
@@ -193,7 +193,7 @@
       passwordInput.type = show ? 'text' : 'password';
       eyeIcon.textContent = show ? 'visibility_off' : 'visibility';
       toggleBtn.setAttribute('aria-pressed', show ? 'true' : 'false');
-      toggleBtn.setAttribute('aria-label', show ? 'Ocultar contraseÃ±a' : 'Mostrar contraseÃ±a');
+      toggleBtn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
     }
 
     function updateCapsHint(event) {
@@ -222,7 +222,7 @@
         }
         submitButton.disabled = true;
         submitButton.innerHTML =
-          '<span class="material-symbols-outlined animate-spin text-lg">sync</span><span>Verificandoâ€¦</span>';
+          '<span class="material-symbols-outlined animate-spin text-lg">sync</span><span>Verificando…</span>';
       });
     }
   })();
