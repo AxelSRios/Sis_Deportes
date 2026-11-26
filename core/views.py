@@ -16,7 +16,7 @@ from django.core.cache import cache
 from django.db import transaction
 from django.db.models import Count, Q, Sum
 from django.db.models.functions import TruncMonth
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -108,8 +108,41 @@ def _register_login_audit(user, role, request):
         pass
 
 
+def _pagina_publica(request, clave, ttl, construir):
+    """Sirve HTML cacheado solo a visitantes anónimos.
+
+    El contenido público solo cambia para la sesión en el encabezado
+    (ingresar / panel), así que se cachea únicamente la versión anónima.
+    Cualquier escritura incrementa la versión de caché y descarta esta copia.
+    """
+    if request.method != 'GET' or request.user.is_authenticated:
+        return construir()
+
+    clave_cache = (
+        f'afo:pagina:{version_cache()}:{clave}:'
+        f'{request.get_host()}:{request.get_full_path()}'
+    )
+    html = cache.get(clave_cache)
+    if html is not None:
+        return HttpResponse(html)
+
+    respuesta = construir()
+    if respuesta.status_code == 200 and not respuesta.has_header('Set-Cookie'):
+        cache.set(clave_cache, respuesta.content, ttl)
+    return respuesta
+
+
+def health(request):
+    """Sonda liviana para monitores de disponibilidad y Render."""
+    return HttpResponse('ok', content_type='text/plain; charset=utf-8')
+
+
 def index(request):
     """Portada pública con la actualidad deportiva de la AFO."""
+    return _pagina_publica(request, 'index', 60, lambda: _index(request))
+
+
+def _index(request):
     ahora = timezone.now()
 
     proximos_partidos = list(
@@ -1039,6 +1072,12 @@ def partido_detalle(request, pk):
 
 def clubes_publicos(request):
     """Directorio público de clubes afiliados a la AFO."""
+    return _pagina_publica(
+        request, 'clubes-publicos', 60, lambda: _clubes_publicos(request)
+    )
+
+
+def _clubes_publicos(request):
     clubes_registrados = (
         Club.objects.annotate(
             total_equipos=Count('equipo', distinct=True),

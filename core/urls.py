@@ -14,6 +14,7 @@ from . import views_crud as crud
 urlpatterns = [
     # ---------------------------------------------------------------- Público
     path('', views.index, name='index'),
+    path('health/', views.health, name='health'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('clubes-publicos/', views.clubes_publicos, name='clubes_publicos'),

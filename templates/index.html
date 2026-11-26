@@ -1,16 +1,16 @@
 {% extends 'public_base.html' %}
 {% load static afo_extras %}
 
-{% block title %}A.F.O. Oruro | Fútbol, campeonatos y clubes{% endblock %}
-{% block meta_description %}Portal público de la Asociación de Fútbol Oruro. Consulta próximos partidos, campeonatos, clubes afiliados, resultados y noticias oficiales de la temporada {{ temporada_actual }}.{% endblock %}
+{% block title %}A.F.O. Oruro | FÃºtbol, campeonatos y clubes{% endblock %}
+{% block meta_description %}Portal pÃºblico de la AsociaciÃ³n de FÃºtbol Oruro. Consulta prÃ³ximos partidos, campeonatos, clubes afiliados, resultados y noticias oficiales de la temporada {{ temporada_actual }}.{% endblock %}
 
 {% block extra_head %}
   <meta name="robots" content="index,follow"/>
   <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"/>
-  <meta property="og:title" content="A.F.O. Oruro | Fútbol, campeonatos y clubes"/>
-  <meta property="og:description" content="Vive el fútbol orureño: programación oficial, campeonatos, clubes afiliados y resultados."/>
+  <meta property="og:title" content="A.F.O. Oruro | FÃºtbol, campeonatos y clubes"/>
+  <meta property="og:description" content="Vive el fÃºtbol orureÃ±o: programaciÃ³n oficial, campeonatos, clubes afiliados y resultados."/>
   <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static_v 'img/afo-crest.png' %}"/>
   <meta name="twitter:card" content="summary_large_image"/>
 {% endblock %}
@@ -23,7 +23,7 @@
 
     <!-- Escudo AFO de fondo -->
     <div class="hero-crest" aria-hidden="true">
-      <img src="{% static_v 'img/afo-crest-transparent@2x.png' %}" alt=""/>
+      <img src="{% static_v 'img/afo-crest-transparent@2x.webp' %}" alt=""/>
     </div>
 
     <div class="pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-secondary-fixed/20 blur-3xl"></div>
@@ -34,27 +34,27 @@
         <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 backdrop-blur-md">
           <span class="h-2 w-2 animate-pulse rounded-full bg-secondary-fixed"></span>
           <span class="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary-fixed">
-            Temporada {{ temporada_actual }} · Plataforma oficial
+            Temporada {{ temporada_actual }} Â· Plataforma oficial
           </span>
         </div>
 
         <h1 class="title-glow mt-6 max-w-4xl font-display text-[2.9rem] leading-[0.98] text-white sm:text-[4.6rem] lg:text-[5.5rem]">
           <span class="word-mask"><span class="hero-word" style="animation-delay:.05s">Vive</span></span>
           <span class="word-mask"><span class="hero-word" style="animation-delay:.13s">el</span></span>
-          <span class="word-mask"><span class="hero-word" style="animation-delay:.21s">fútbol</span></span>
+          <span class="word-mask"><span class="hero-word" style="animation-delay:.21s">fÃºtbol</span></span>
           <span class="word-mask"><span class="hero-word" style="animation-delay:.29s">de</span></span>
           <span class="word-mask"><span class="hero-word hero-highlight" style="animation-delay:.37s">Oruro.</span></span>
         </h1>
         <p class="mt-6 max-w-2xl text-base leading-7 text-primary-fixed sm:text-lg">
-          Toda la emoción del fútbol orureño en un solo lugar: programación oficial,
-          campeonatos, clubes afiliados y resultados de la Asociación de Fútbol Oruro.
+          Toda la emociÃ³n del fÃºtbol orureÃ±o en un solo lugar: programaciÃ³n oficial,
+          campeonatos, clubes afiliados y resultados de la AsociaciÃ³n de FÃºtbol Oruro.
         </p>
 
         <div class="mt-8 flex flex-wrap gap-3">
           <a href="#partidos"
              class="inline-flex items-center gap-2 rounded-full bg-secondary-fixed px-6 py-3 text-sm font-bold text-on-secondary-fixed shadow-lg shadow-black/10 transition hover:-translate-y-0.5 hover:bg-white">
             <span class="material-symbols-outlined text-[20px]">sports_soccer</span>
-            Ver próximos partidos
+            Ver prÃ³ximos partidos
           </a>
           <a href="{% url 'clubes_publicos' %}"
              class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/15">
@@ -66,7 +66,7 @@
         <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-medium text-primary-fixed/80">
           <span class="inline-flex items-center gap-1.5">
             <span class="material-symbols-outlined text-[17px] text-secondary-fixed">verified</span>
-            Información oficial de la AFO
+            InformaciÃ³n oficial de la AFO
           </span>
           <span class="inline-flex items-center gap-1.5">
             <span class="material-symbols-outlined text-[17px] text-secondary-fixed">update</span>
@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <!-- Próximo partido destacado -->
+      <!-- PrÃ³ximo partido destacado -->
       <aside class="reveal">
         {% if proximo_partido %}
           <div class="relative overflow-hidden rounded-[1.75rem] border border-white/15 bg-white/10 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
@@ -84,7 +84,7 @@
             <div class="relative flex items-center justify-between gap-3">
               <span class="inline-flex items-center gap-1.5 rounded-full bg-secondary-fixed px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-on-secondary-fixed">
                 <span class="h-1.5 w-1.5 rounded-full bg-on-secondary-fixed"></span>
-                Próximo partido
+                PrÃ³ximo partido
               </span>
               <span class="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80">
                 {{ proximo_partido.campeonato.categoria.nombre|default:"Partido oficial" }}
@@ -92,7 +92,7 @@
             </div>
 
             <p class="relative mt-5 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-fixed/80">
-              {{ proximo_partido.campeonato.nombre|default:"Programación oficial" }}
+              {{ proximo_partido.campeonato.nombre|default:"ProgramaciÃ³n oficial" }}
             </p>
 
             <div class="relative mt-4 flex items-center justify-center gap-4 sm:gap-6">
@@ -145,16 +145,16 @@
             {% endif %}
 
             <a href="#partidos" class="relative mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-white/15">
-              Ver toda la programación
+              Ver toda la programaciÃ³n
               <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
             </a>
           </div>
         {% else %}
           <div class="rounded-[1.75rem] border border-white/15 bg-white/10 p-8 text-center shadow-2xl backdrop-blur-xl">
             <span class="material-symbols-outlined text-4xl text-secondary-fixed">event_upcoming</span>
-            <h2 class="mt-4 font-headline-md text-xl font-bold">Programación en preparación</h2>
+            <h2 class="mt-4 font-headline-md text-xl font-bold">ProgramaciÃ³n en preparaciÃ³n</h2>
             <p class="mt-2 text-sm leading-6 text-primary-fixed/80">
-              La próxima fecha se publicará aquí cuando el Consejo Directivo
+              La prÃ³xima fecha se publicarÃ¡ aquÃ­ cuando el Consejo Directivo
               apruebe el calendario oficial.
             </p>
           </div>
@@ -163,7 +163,7 @@
     </div>
   </section>
 
-  <!-- ===================== MÉTRICAS ===================== -->
+  <!-- ===================== MÃ‰TRICAS ===================== -->
   <div class="relative z-10 mx-auto -mt-14 max-w-7xl px-5 sm:px-8 lg:px-12">
     <div class="grid grid-cols-2 gap-3 rounded-2xl border border-surface-container bg-surface-container-lowest p-4 shadow-xl sm:grid-cols-4 sm:p-5">
       <div class="rounded-xl bg-surface-container-low p-4">
@@ -197,12 +197,12 @@
     </div>
   </div>
 
-  <!-- ===================== PRÓXIMOS PARTIDOS ===================== -->
+  <!-- ===================== PRÃ“XIMOS PARTIDOS ===================== -->
   <section id="partidos" class="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12">
     <div class="reveal flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">02 · Programación</span>
-        <h2 class="mt-2 section-title font-display text-4xl text-primary sm:text-5xl">Próximos partidos</h2>
+        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">02 Â· ProgramaciÃ³n</span>
+        <h2 class="mt-2 section-title font-display text-4xl text-primary sm:text-5xl">PrÃ³ximos partidos</h2>
         <p class="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">
           Fechas, horarios y escenarios de los encuentros oficiales aprobados por el
           Consejo Directivo de la A.F.O.
@@ -224,7 +224,7 @@
               </span>
               <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-outline">
                 <span class="material-symbols-outlined text-[16px] text-secondary">event</span>
-                {{ partido.fecha|date:"D d M" }} · {{ partido.fecha|time:"H:i" }}
+                {{ partido.fecha|date:"D d M" }} Â· {{ partido.fecha|time:"H:i" }}
               </span>
             </div>
 
@@ -274,10 +274,10 @@
     {% else %}
       <div class="reveal mt-8 rounded-2xl border border-dashed border-surface-container-highest bg-surface-container-low p-10 text-center">
         <span class="material-symbols-outlined text-4xl text-outline">event_busy</span>
-        <h3 class="mt-3 font-headline-sm text-lg font-bold text-on-surface">Aún no hay partidos programados</h3>
+        <h3 class="mt-3 font-headline-sm text-lg font-bold text-on-surface">AÃºn no hay partidos programados</h3>
         <p class="mx-auto mt-2 max-w-xl text-sm leading-6 text-on-surface-variant">
-          La programación oficial se publicará en esta sección cuando el Consejo
-          Directivo apruebe la próxima fecha.
+          La programaciÃ³n oficial se publicarÃ¡ en esta secciÃ³n cuando el Consejo
+          Directivo apruebe la prÃ³xima fecha.
         </p>
       </div>
     {% endif %}
@@ -288,11 +288,11 @@
     <div class="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
       <div class="reveal flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">03 · Competiciones</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">03 Â· Competiciones</span>
           <h2 class="mt-2 section-title font-display text-4xl text-primary sm:text-5xl">Campeonatos oficiales</h2>
           <p class="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">
-            Torneos organizados por la Asociación de Fútbol Oruro en sus distintas
-            categorías y disciplinas.
+            Torneos organizados por la AsociaciÃ³n de FÃºtbol Oruro en sus distintas
+            categorÃ­as y disciplinas.
           </p>
         </div>
         <span class="inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-primary shadow-sm">
@@ -317,13 +317,13 @@
               <h3 class="mt-4 font-headline-sm text-lg font-bold text-primary" title="{{ campeonato.nombre }}">
                 {{ campeonato.nombre|short_name:30 }}
               </h3>
-              <p class="mt-1 text-xs font-medium text-on-surface-variant">{{ campeonato.disciplina|default:"Fútbol" }}</p>
+              <p class="mt-1 text-xs font-medium text-on-surface-variant">{{ campeonato.disciplina|default:"FÃºtbol" }}</p>
 
               <div class="mt-5 space-y-2 text-[11px] text-on-surface-variant">
                 <p class="flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-[16px] text-secondary">calendar_month</span>
                   {{ campeonato.fecha_inicio|date:"d M Y"|default:"Por definir" }}
-                  <span class="text-outline">—</span>
+                  <span class="text-outline">â€”</span>
                   {{ campeonato.fecha_conclusion|date:"d M Y"|default:"Por definir" }}
                 </p>
                 <p class="flex items-center gap-1.5">
@@ -333,7 +333,7 @@
               </div>
 
               <a href="#partidos" class="mt-auto inline-flex items-center gap-1.5 pt-5 text-xs font-bold text-primary transition group-hover:gap-2.5">
-                Ver programación
+                Ver programaciÃ³n
                 <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
               </a>
             </article>
@@ -342,7 +342,7 @@
       {% else %}
         <div class="reveal mt-8 rounded-2xl border border-dashed border-surface-container-highest bg-surface-container-lowest p-10 text-center">
           <span class="material-symbols-outlined text-4xl text-outline">emoji_events</span>
-          <p class="mt-2 text-sm text-on-surface-variant">Todavía no hay campeonatos publicados.</p>
+          <p class="mt-2 text-sm text-on-surface-variant">TodavÃ­a no hay campeonatos publicados.</p>
         </div>
       {% endif %}
     </div>
@@ -352,11 +352,11 @@
   <section id="clubes" class="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12">
     <div class="reveal flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">04 · Afiliados</span>
+        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">04 Â· Afiliados</span>
         <h2 class="mt-2 section-title font-display text-4xl text-primary sm:text-5xl">Clubes afiliados</h2>
         <p class="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">
-          Instituciones que forman parte de la familia del fútbol orureño. Consulta
-          su categoría, equipos y deportistas registrados.
+          Instituciones que forman parte de la familia del fÃºtbol orureÃ±o. Consulta
+          su categorÃ­a, equipos y deportistas registrados.
         </p>
       </div>
       <a href="{% url 'clubes_publicos' %}"
@@ -399,7 +399,7 @@
     {% else %}
       <div class="reveal mt-8 rounded-2xl border border-dashed border-surface-container-highest bg-surface-container-low p-10 text-center">
         <span class="material-symbols-outlined text-4xl text-outline">shield</span>
-        <p class="mt-2 text-sm text-on-surface-variant">Aún no hay clubes registrados.</p>
+        <p class="mt-2 text-sm text-on-surface-variant">AÃºn no hay clubes registrados.</p>
       </div>
     {% endif %}
   </section>
@@ -408,8 +408,8 @@
   <section class="bg-surface-container-low py-16">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
       <div class="reveal">
-        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">05 · Escenarios</span>
-        <h2 class="mt-2 section-title font-display text-4xl text-primary sm:text-5xl">Donde late el fútbol orureño</h2>
+        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">05 Â· Escenarios</span>
+        <h2 class="mt-2 section-title font-display text-4xl text-primary sm:text-5xl">Donde late el fÃºtbol orureÃ±o</h2>
         <p class="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">
           Estadios y complejos deportivos que reciben las competencias oficiales de la A.F.O.
         </p>
@@ -429,14 +429,14 @@
               </div>
             {% endif %}
             <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-4 text-white">
-              <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-fixed">{{ cancha.ciudad|default:"Oruro" }} · {{ cancha.get_tipo_display }}</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-fixed">{{ cancha.ciudad|default:"Oruro" }} Â· {{ cancha.get_tipo_display }}</p>
               <h3 class="mt-1 font-title-md text-lg font-bold">{{ cancha.nombre }}</h3>
               <p class="text-xs text-white/70">{{ cancha.descripcion|default:cancha.direccion|default:"Escenario oficial de la A.F.O." }}</p>
               {% if cancha.mapa_url %}
                 <a href="{{ cancha.mapa_url }}" target="_blank" rel="noopener"
                    class="mt-2 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-secondary-fixed transition hover:text-white">
                   <span class="material-symbols-outlined text-[15px]">map</span>
-                  Cómo llegar
+                  CÃ³mo llegar
                 </a>
               {% endif %}
             </figcaption>
@@ -444,9 +444,9 @@
         {% empty %}
           <div class="reveal rounded-2xl border border-dashed border-primary/20 bg-primary/5 px-6 py-14 text-center sm:col-span-3">
             <span class="material-symbols-outlined text-5xl text-primary/40">stadium</span>
-            <h3 class="mt-3 font-title-md text-lg font-bold text-on-surface">Aún no hay escenarios cargados</h3>
+            <h3 class="mt-3 font-title-md text-lg font-bold text-on-surface">AÃºn no hay escenarios cargados</h3>
             <p class="mx-auto mt-1 max-w-md text-sm leading-6 text-on-surface-variant">
-              Cuando la A.F.O. registre las canchas oficiales, aparecerán aquí con su fotografía y ubicación.
+              Cuando la A.F.O. registre las canchas oficiales, aparecerÃ¡n aquÃ­ con su fotografÃ­a y ubicaciÃ³n.
             </p>
           </div>
         {% endfor %}
@@ -460,15 +460,15 @@
     <div class="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
       <div class="reveal flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary-fixed">06 · Marcadores</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary-fixed">06 Â· Marcadores</span>
           <h2 class="mt-2 section-title font-display text-4xl text-white sm:text-5xl">Resultados oficiales</h2>
           <p class="mt-2 max-w-2xl text-sm leading-6 text-primary-fixed/80">
-            Actas y marcadores homologados por la Comisión Técnica de la Asociación.
+            Actas y marcadores homologados por la ComisiÃ³n TÃ©cnica de la AsociaciÃ³n.
           </p>
         </div>
         <span class="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white/80">
           <span class="material-symbols-outlined text-[16px] text-secondary-fixed">verified</span>
-          Información oficial
+          InformaciÃ³n oficial
         </span>
       </div>
 
@@ -499,14 +499,14 @@
       {% else %}
         <div class="reveal mt-8 rounded-2xl border border-dashed border-white/20 bg-white/5 p-10 text-center backdrop-blur-sm">
           <span class="material-symbols-outlined text-4xl text-secondary-fixed">scoreboard</span>
-          <h3 class="mt-3 font-headline-sm text-lg font-bold">Aún no hay resultados publicados</h3>
+          <h3 class="mt-3 font-headline-sm text-lg font-bold">AÃºn no hay resultados publicados</h3>
           <p class="mx-auto mt-2 max-w-xl text-sm leading-6 text-primary-fixed/75">
-            Cuando la Comisión Técnica registre las actas oficiales, los marcadores
-            aparecerán automáticamente en esta sección.
+            Cuando la ComisiÃ³n TÃ©cnica registre las actas oficiales, los marcadores
+            aparecerÃ¡n automÃ¡ticamente en esta secciÃ³n.
           </p>
           <a href="{% url 'login' %}?next={% url 'panel' %}" class="mt-5 inline-flex items-center gap-2 rounded-full bg-secondary-fixed px-5 py-2.5 text-xs font-bold text-on-secondary-fixed transition hover:bg-white">
             <span class="material-symbols-outlined text-[16px]">lock_open</span>
-            Iniciar sesión
+            Iniciar sesiÃ³n
           </a>
         </div>
       {% endif %}
@@ -517,27 +517,27 @@
   <section id="institucion" class="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12">
     <div class="grid gap-10 lg:grid-cols-[.95fr_1.05fr] lg:items-start">
       <div class="reveal">
-        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">01 · Identidad institucional</span>
+        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">01 Â· Identidad institucional</span>
         <h2 class="text-balance mt-2 section-title font-display text-4xl text-primary sm:text-5xl">
-          Más de un siglo impulsando el fútbol orureño
+          MÃ¡s de un siglo impulsando el fÃºtbol orureÃ±o
         </h2>
         <p class="mt-4 text-sm leading-7 text-on-surface-variant">
-          La Asociación de Fútbol Oruro es la entidad rectora del fútbol departamental.
-          Organiza, dirige y promueve la práctica del deporte en sus distintas
-          disciplinas y categorías, reuniendo a clubes afiliados, equipos, deportistas,
-          cuerpos técnicos y árbitros.
+          La AsociaciÃ³n de FÃºtbol Oruro es la entidad rectora del fÃºtbol departamental.
+          Organiza, dirige y promueve la prÃ¡ctica del deporte en sus distintas
+          disciplinas y categorÃ­as, reuniendo a clubes afiliados, equipos, deportistas,
+          cuerpos tÃ©cnicos y Ã¡rbitros.
         </p>
         <p class="mt-3 text-sm leading-7 text-on-surface-variant">
-          Su historia se remonta a 1921, cuando un grupo de deportistas impulsó la
-          creación de una organización encargada de coordinar y regular las
-          actividades futbolísticas en Oruro.
+          Su historia se remonta a 1921, cuando un grupo de deportistas impulsÃ³ la
+          creaciÃ³n de una organizaciÃ³n encargada de coordinar y regular las
+          actividades futbolÃ­sticas en Oruro.
         </p>
 
         <div class="mt-7 grid grid-cols-2 gap-3">
           <div class="rounded-2xl bg-primary/5 p-4">
             <span class="material-symbols-outlined text-2xl text-primary">calendar_month</span>
             <p class="mt-2 font-display text-3xl text-primary">1921</p>
-            <p class="text-[11px] text-on-surface-variant">Año de fundación de la A.F.O.</p>
+            <p class="text-[11px] text-on-surface-variant">AÃ±o de fundaciÃ³n de la A.F.O.</p>
           </div>
           <div class="rounded-2xl bg-primary/5 p-4">
             <span class="material-symbols-outlined text-2xl text-primary">groups</span>
@@ -559,7 +559,7 @@
         <div class="mt-7 flex items-start gap-3 rounded-2xl border border-surface-container bg-surface-container-low p-4">
           <span class="material-symbols-outlined text-2xl text-primary">location_on</span>
           <div>
-            <p class="text-sm font-semibold text-on-surface">Calle Sucre N.º 754</p>
+            <p class="text-sm font-semibold text-on-surface">Calle Sucre N.Âº 754</p>
             <p class="mt-1 text-xs leading-5 text-on-surface-variant">
               Entre La Plata y Presidente Montes, Oruro, Bolivia.
             </p>
@@ -573,13 +573,13 @@
             <span class="grid h-10 w-10 place-items-center rounded-xl bg-primary/5 text-primary">
               <span class="material-symbols-outlined">flag</span>
             </span>
-            <h3 class="font-headline-sm text-lg font-bold text-primary">Misión</h3>
+            <h3 class="font-headline-sm text-lg font-bold text-primary">MisiÃ³n</h3>
           </div>
           <p class="mt-3 text-sm leading-7 text-on-surface-variant">
-            Promover, organizar y dirigir el fútbol en el departamento de Oruro,
+            Promover, organizar y dirigir el fÃºtbol en el departamento de Oruro,
             fomentando la competitividad, el respeto, la solidaridad y el juego limpio,
-            con una administración eficiente y transparente que contribuya a la
-            formación integral de los deportistas.
+            con una administraciÃ³n eficiente y transparente que contribuya a la
+            formaciÃ³n integral de los deportistas.
           </p>
         </div>
 
@@ -588,12 +588,12 @@
             <span class="grid h-10 w-10 place-items-center rounded-xl bg-primary/5 text-primary">
               <span class="material-symbols-outlined">visibility</span>
             </span>
-            <h3 class="font-headline-sm text-lg font-bold text-primary">Visión</h3>
+            <h3 class="font-headline-sm text-lg font-bold text-primary">VisiÃ³n</h3>
           </div>
           <p class="mt-3 text-sm leading-7 text-on-surface-variant">
             Ser la entidad deportiva referente a nivel departamental y nacional en la
-            gestión, masificación y desarrollo del fútbol, proyectando una institución
-            moderna y tecnológicamente integrada que impulse el talento local hacia la
+            gestiÃ³n, masificaciÃ³n y desarrollo del fÃºtbol, proyectando una instituciÃ³n
+            moderna y tecnolÃ³gicamente integrada que impulse el talento local hacia la
             excelencia competitiva.
           </p>
         </div>
@@ -606,9 +606,9 @@
             <h3 class="font-headline-sm text-lg font-bold">Compromiso</h3>
           </div>
           <p class="mt-3 text-sm leading-7 text-primary-fixed/80">
-            Transparencia, orden administrativo y pasión por el fútbol orureño.
+            Transparencia, orden administrativo y pasiÃ³n por el fÃºtbol orureÃ±o.
             Trabajamos para que cada club, deportista y aficionado encuentre en la
-            A.F.O. una institución cercana y confiable.
+            A.F.O. una instituciÃ³n cercana y confiable.
           </p>
         </div>
       </div>
@@ -620,35 +620,35 @@
     <div class="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
       <div class="reveal flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">07 · Actualidad</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary">07 Â· Actualidad</span>
           <h2 class="mt-2 section-title font-display text-4xl text-primary sm:text-5xl">Noticias y comunicados</h2>
           <p class="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">
-            Información útil para clubes, deportistas, árbitros y aficionados.
+            InformaciÃ³n Ãºtil para clubes, deportistas, Ã¡rbitros y aficionados.
           </p>
         </div>
       </div>
 
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         <article class="reveal flex flex-col rounded-2xl bg-surface-container-lowest p-6 shadow-sm ring-1 ring-surface-container transition hover:-translate-y-1 hover:shadow-xl">
-          <span class="w-fit rounded-full bg-primary/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-primary">Programación</span>
+          <span class="w-fit rounded-full bg-primary/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-primary">ProgramaciÃ³n</span>
           <h3 class="mt-4 font-headline-sm text-lg font-bold text-primary">Calendario oficial {{ temporada_actual }}</h3>
           <p class="mt-2 flex-1 text-sm leading-6 text-on-surface-variant">
             Consulta los {{ total_partidos_programados }} partidos programados y la
-            información de cada encuentro: fecha, hora, escenario y terna arbitral.
+            informaciÃ³n de cada encuentro: fecha, hora, escenario y terna arbitral.
           </p>
           <a href="#partidos" class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-primary transition hover:gap-2.5">
-            Ver programación
+            Ver programaciÃ³n
             <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
           </a>
         </article>
 
         <article class="reveal flex flex-col rounded-2xl bg-surface-container-lowest p-6 shadow-sm ring-1 ring-surface-container transition hover:-translate-y-1 hover:shadow-xl">
           <span class="w-fit rounded-full bg-secondary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-secondary">Afiliados</span>
-          <h3 class="mt-4 font-headline-sm text-lg font-bold text-primary">Padrón de clubes y equipos</h3>
+          <h3 class="mt-4 font-headline-sm text-lg font-bold text-primary">PadrÃ³n de clubes y equipos</h3>
           <p class="mt-2 flex-1 text-sm leading-6 text-on-surface-variant">
             {{ total_clubes }} clubes, {{ total_equipos }} equipos y
             {{ total_deportistas }} deportistas forman parte del registro oficial
-            de la Asociación.
+            de la AsociaciÃ³n.
           </p>
           <a href="{% url 'clubes_publicos' %}" class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-primary transition hover:gap-2.5">
             Explorar clubes
@@ -658,13 +658,13 @@
 
         <article class="reveal flex flex-col rounded-2xl bg-surface-container-lowest p-6 shadow-sm ring-1 ring-surface-container transition hover:-translate-y-1 hover:shadow-xl">
           <span class="w-fit rounded-full bg-tertiary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-tertiary">Institucional</span>
-          <h3 class="mt-4 font-headline-sm text-lg font-bold text-primary">Acceso para clubes y árbitros</h3>
+          <h3 class="mt-4 font-headline-sm text-lg font-bold text-primary">Acceso para clubes y Ã¡rbitros</h3>
           <p class="mt-2 flex-1 text-sm leading-6 text-on-surface-variant">
             El sistema institucional permite gestionar clubes, fichajes, campeonatos,
             designaciones y pagos de forma centralizada.
           </p>
           <a href="{% url 'login' %}?next={% url 'panel' %}" class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-primary transition hover:gap-2.5">
-            Iniciar sesión
+            Iniciar sesiÃ³n
             <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
           </a>
         </article>
@@ -676,24 +676,24 @@
   <section class="mx-auto max-w-7xl px-5 pb-20 pt-4 sm:px-8 lg:px-12">
     <div class="reveal relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary via-primary to-primary-container p-8 text-on-primary shadow-2xl sm:p-12">
       <div class="cta-crest" aria-hidden="true">
-        <img src="{% static_v 'img/afo-crest-transparent@2x.png' %}" alt=""/>
+        <img src="{% static_v 'img/afo-crest-transparent@2x.webp' %}" alt=""/>
       </div>
       <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-secondary-fixed/20 blur-3xl"></div>
       <div class="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div class="max-w-2xl">
           <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary-fixed">Sistema institucional</span>
           <h2 class="text-balance mt-3 section-title font-display text-4xl text-white sm:text-5xl">
-            ¿Formas parte de un club afiliado?
+            Â¿Formas parte de un club afiliado?
           </h2>
           <p class="mt-3 text-sm leading-7 text-primary-fixed/80">
-            Accede al panel de gestión para administrar el padrón, la programación,
-            las designaciones arbitrales y la información de tu institución.
+            Accede al panel de gestiÃ³n para administrar el padrÃ³n, la programaciÃ³n,
+            las designaciones arbitrales y la informaciÃ³n de tu instituciÃ³n.
           </p>
         </div>
         <div class="flex flex-wrap gap-3">
           <a href="{% url 'login' %}?next={% url 'panel' %}" class="inline-flex items-center gap-2 rounded-full bg-secondary-fixed px-6 py-3 text-sm font-bold text-on-secondary-fixed shadow-lg transition hover:-translate-y-0.5 hover:bg-white">
             <span class="material-symbols-outlined text-[20px]">login</span>
-            Iniciar sesión
+            Iniciar sesiÃ³n
           </a>
           <a href="{% url 'clubes_publicos' %}" class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/15">
             <span class="material-symbols-outlined text-[20px]">shield</span>
