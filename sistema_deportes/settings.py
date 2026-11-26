@@ -93,11 +93,15 @@ WSGI_APPLICATION = 'sistema_deportes.wsgi.application'
 
 import dj_database_url
 
+# SSL obligatorio solo para PostgreSQL/Supabase; SQLite local no lo admite.
+_DATABASE_URL = os.getenv('DATABASE_URL', '')
+_ES_POSTGRES = _DATABASE_URL.startswith(('postgres://', 'postgresql://'))
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
+        default=_DATABASE_URL,
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=_ES_POSTGRES
     )
 }
 
