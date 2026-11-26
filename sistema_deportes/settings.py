@@ -19,8 +19,9 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# La configuración sensible vive en .env (ignorado por Git).
-load_dotenv(BASE_DIR / '.env', override=True)
+# La configuración sensible vive en .env. En producción (Render) las
+# variables del panel tienen prioridad sobre el archivo local.
+load_dotenv(BASE_DIR / '.env', override=False)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -38,6 +39,12 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    origen.strip()
+    for origen in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+    if origen.strip()
+]
+
 
 # Application definition
 
@@ -53,6 +60,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -144,6 +152,17 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise sirve los estáticos en producción (Render) sin depender de DEBUG.
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+    },
+}
 
 # Archivos subidos (imágenes de canchas, escudos, fichas).
 MEDIA_URL = 'media/'
@@ -152,6 +171,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'panel'
 LOGOUT_REDIRECT_URL = 'index'
+
+# Render termina SSL en su proxy.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 
 # Email
