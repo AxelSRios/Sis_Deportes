@@ -20,7 +20,7 @@ from core.cache_utils import invalidar_cache
 from core.roles import resolver_rol
 
 CARACTERES = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%&*?'
-LARGO_CLAVE = 16
+LARGO_CLAVE = 12
 
 USUARIOS = [
     {
