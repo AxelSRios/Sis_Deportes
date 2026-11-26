@@ -97,9 +97,15 @@
 
             <div class="relative mt-4 flex items-center justify-center gap-4 sm:gap-6">
               <div class="min-w-0 flex-1 text-center">
-                <div class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-white text-base font-bold text-primary shadow-lg">
-                  {{ proximo_partido.equipo_local.nombre|initials }}
-                </div>
+                {% if proximo_partido.equipo_local.club.logo_url %}
+                  <img src="{{ proximo_partido.equipo_local.club.logo_url }}"
+                       alt="Escudo de {{ proximo_partido.equipo_local.club.nombre }}"
+                       class="mx-auto h-14 w-14 rounded-2xl border border-white/20 bg-white object-contain p-1.5 shadow-lg"/>
+                {% else %}
+                  <div class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-white text-base font-bold text-primary shadow-lg">
+                    {{ proximo_partido.equipo_local.nombre|initials }}
+                  </div>
+                {% endif %}
                 <p class="mt-2 truncate text-sm font-semibold" title="{{ proximo_partido.equipo_local.nombre }}">
                   {{ proximo_partido.equipo_local.nombre|default:"Por definir"|short_name:20 }}
                 </p>
@@ -111,9 +117,15 @@
               </div>
 
               <div class="min-w-0 flex-1 text-center">
-                <div class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-secondary text-base font-bold text-on-secondary shadow-lg">
-                  {{ proximo_partido.equipo_visitante.nombre|initials }}
-                </div>
+                {% if proximo_partido.equipo_visitante.club.logo_url %}
+                  <img src="{{ proximo_partido.equipo_visitante.club.logo_url }}"
+                       alt="Escudo de {{ proximo_partido.equipo_visitante.club.nombre }}"
+                       class="mx-auto h-14 w-14 rounded-2xl border border-white/20 bg-white object-contain p-1.5 shadow-lg"/>
+                {% else %}
+                  <div class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-secondary text-base font-bold text-on-secondary shadow-lg">
+                    {{ proximo_partido.equipo_visitante.nombre|initials }}
+                  </div>
+                {% endif %}
                 <p class="mt-2 truncate text-sm font-semibold" title="{{ proximo_partido.equipo_visitante.nombre }}">
                   {{ proximo_partido.equipo_visitante.nombre|default:"Por definir"|short_name:20 }}
                 </p>
@@ -230,9 +242,15 @@
 
             <div class="mt-5 flex items-center justify-between gap-3">
               <div class="flex min-w-0 items-center gap-3">
-                <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary text-xs font-bold text-on-primary shadow-sm">
-                  {{ partido.equipo_local.nombre|initials }}
-                </span>
+                {% if partido.equipo_local.club.logo_url %}
+                  <img src="{{ partido.equipo_local.club.logo_url }}"
+                       alt="Escudo de {{ partido.equipo_local.club.nombre }}"
+                       class="h-12 w-12 shrink-0 rounded-xl border border-surface-container bg-surface-container-lowest object-contain p-1 shadow-sm"/>
+                {% else %}
+                  <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary text-xs font-bold text-on-primary shadow-sm">
+                    {{ partido.equipo_local.nombre|initials }}
+                  </span>
+                {% endif %}
                 <div class="min-w-0">
                   <p class="truncate font-title-md text-sm font-bold text-on-surface" title="{{ partido.equipo_local.nombre }}">
                     {{ partido.equipo_local.nombre|default:"Por definir"|short_name:22 }}
@@ -250,9 +268,15 @@
                   </p>
                   <p class="truncate text-[11px] text-on-surface-variant">{{ partido.equipo_visitante.club.nombre|default:"Equipo visitante"|short_name:24 }}</p>
                 </div>
-                <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-secondary text-xs font-bold text-on-secondary shadow-sm">
-                  {{ partido.equipo_visitante.nombre|initials }}
-                </span>
+                {% if partido.equipo_visitante.club.logo_url %}
+                  <img src="{{ partido.equipo_visitante.club.logo_url }}"
+                       alt="Escudo de {{ partido.equipo_visitante.club.nombre }}"
+                       class="h-12 w-12 shrink-0 rounded-xl border border-surface-container bg-surface-container-lowest object-contain p-1 shadow-sm"/>
+                {% else %}
+                  <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-secondary text-xs font-bold text-on-secondary shadow-sm">
+                    {{ partido.equipo_visitante.nombre|initials }}
+                  </span>
+                {% endif %}
               </div>
             </div>
 
@@ -493,7 +517,13 @@
               </div>
               <div class="mt-4 flex items-center justify-between gap-3">
                 <div class="flex min-w-0 items-center gap-2">
-                  <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-[11px] font-bold text-primary">{{ partido.equipo_local.nombre|initials }}</span>
+                  {% if partido.equipo_local.club.logo_url %}
+                    <img src="{{ partido.equipo_local.club.logo_url }}"
+                         alt="Escudo de {{ partido.equipo_local.club.nombre }}"
+                         class="h-10 w-10 shrink-0 rounded-xl border border-white/20 bg-white object-contain p-1"/>
+                  {% else %}
+                    <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-[11px] font-bold text-primary">{{ partido.equipo_local.nombre|initials }}</span>
+                  {% endif %}
                   <span class="truncate text-sm font-semibold" title="{{ partido.equipo_local.nombre }}">{{ partido.equipo_local.nombre|default:"Por definir"|short_name:20 }}</span>
                 </div>
                 <span class="shrink-0 rounded-lg bg-white/10 px-3 py-1 text-center font-headline-md text-lg font-bold text-secondary-fixed" title="{{ partido.resultado }}">
@@ -501,7 +531,13 @@
                 </span>
                 <div class="flex min-w-0 items-center justify-end gap-2 text-right">
                   <span class="truncate text-sm font-semibold" title="{{ partido.equipo_visitante.nombre }}">{{ partido.equipo_visitante.nombre|default:"Por definir"|short_name:20 }}</span>
-                  <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-secondary text-[11px] font-bold text-on-secondary">{{ partido.equipo_visitante.nombre|initials }}</span>
+                  {% if partido.equipo_visitante.club.logo_url %}
+                    <img src="{{ partido.equipo_visitante.club.logo_url }}"
+                         alt="Escudo de {{ partido.equipo_visitante.club.nombre }}"
+                         class="h-10 w-10 shrink-0 rounded-xl border border-white/20 bg-white object-contain p-1"/>
+                  {% else %}
+                    <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-secondary text-[11px] font-bold text-on-secondary">{{ partido.equipo_visitante.nombre|initials }}</span>
+                  {% endif %}
                 </div>
               </div>
             </article>
