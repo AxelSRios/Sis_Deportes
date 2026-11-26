@@ -3468,6 +3468,8 @@ main form label {
   outline: none;
   box-shadow: var(--afo-focus);
 }
+.afo-form-error-summary,
+.afo-form-card .afo-field { scroll-margin-top: 92px; }
 .afo-form-error-summary .material-symbols-outlined { font-size: 19px; color: var(--afo-ink); }
 .afo-form-error-summary strong { display: block; margin-bottom: 2px; font-size: 13px; }
 .afo-form-error-summary ul { margin: 4px 0 0; padding-left: 16px; list-style: disc; }
@@ -3574,6 +3576,9 @@ main .afo-flash.is-hiding { opacity: 0; transform: translateY(-4px); }
 
 /* ---------- Diálogos ---------- */
 dialog {
+  max-height: 90vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   border-radius: var(--afo-radius-lg) !important;
   border: 1px solid rgba(255, 255, 255, .7) !important;
   box-shadow: 0 30px 70px -30px rgba(15, 38, 84, .55), 0 2px 0 rgba(255, 255, 255, .6) inset !important;
@@ -3656,7 +3661,13 @@ body .afo-kpi-go { font-weight: 700; }
   color: #fff;
 }
 
+@media (max-width: 360px) {
+  body .app-topbar-title strong { font-size: 15px; }
+}
+
 @media (max-width: 639px) {
+  .afo-card-head { flex-wrap: wrap; }
+  .afo-card-head > form { flex: 1 1 100%; }
   .afo-page-number:not(.is-current),
   .afo-page-gap { display: none; }
   main nav[aria-label="Paginación"] { width: 100%; justify-content: space-between; }
