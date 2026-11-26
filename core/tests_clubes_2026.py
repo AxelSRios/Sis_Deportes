@@ -10,19 +10,19 @@ class CargaClubes2026Tests(TestCase):
     def _cargar(self):
         call_command('cargar_clubes_2026', stdout=StringIO())
 
-    def test_carga_las_dos_categorias(self):
+    def test_carga_los_veinte_clubes(self):
         self._cargar()
 
         self.assertEqual(Club.objects.count(), 20)
-        self.assertEqual(
-            Club.objects.filter(categoria_ingreso='Primera A').count(), 14
-        )
-        self.assertEqual(
-            Club.objects.filter(categoria_ingreso='Primera B').count(), 6
-        )
         self.assertEqual(Club.objects.filter(estado='ACTIVO').count(), 20)
         self.assertEqual(
             Club.objects.filter(observaciones__icontains='2026').count(), 20
+        )
+        self.assertFalse(
+            Club.objects.exclude(categoria_ingreso__isnull=True)
+            .exclude(categoria_ingreso='')
+            .exists(),
+            'El club no debe tener categoría: la categoría pertenece al equipo.',
         )
 
     def test_no_duplica_al_ejecutar_dos_veces(self):

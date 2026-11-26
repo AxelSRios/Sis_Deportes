@@ -95,7 +95,6 @@ def _confirmar(request, objeto, titulo, descripcion, cancelar, bloqueo=''):
 def clubes(request):
     busqueda = normalizar_busqueda(request)
     estado = (request.GET.get('estado') or '').strip()
-    categoria = (request.GET.get('categoria') or '').strip()
     consulta = Club.objects.annotate(
         total_equipos=Count('equipo', distinct=True),
         total_deportistas=Count('deportista', distinct=True),
@@ -103,15 +102,6 @@ def clubes(request):
     consulta = buscar(consulta, busqueda, ['nombre', 'presidente', 'nit_personeria'])
     if estado:
         consulta = consulta.filter(estado=estado)
-    if categoria:
-        consulta = consulta.filter(categoria_ingreso=categoria)
-    categorias = list(
-        Club.objects.exclude(categoria_ingreso__isnull=True)
-        .exclude(categoria_ingreso='')
-        .values_list('categoria_ingreso', flat=True)
-        .distinct()
-        .order_by('categoria_ingreso')
-    )
     consulta, orden_actual = _orden(
         request,
         consulta,
@@ -134,8 +124,6 @@ def clubes(request):
             busqueda=busqueda,
             estado_actual=estado,
             estados=Club.ESTADOS,
-            categoria_actual=categoria,
-            categorias=categorias,
             orden_actual=orden_actual,
             opciones_orden=_opciones_orden(
                 {

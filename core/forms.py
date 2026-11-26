@@ -99,7 +99,7 @@ class ClubForm(EstiloFormMixin, FechaFormMixin, forms.ModelForm):
         model = Club
         fields = [
             'nombre', 'logo_url', 'fundacion', 'presidente', 'telefono',
-            'email', 'direccion', 'categoria_ingreso', 'nit_personeria',
+            'email', 'direccion', 'nit_personeria',
             'estado_juridico', 'estado', 'observaciones',
         ]
         widgets = {

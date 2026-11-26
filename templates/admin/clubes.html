@@ -28,7 +28,7 @@
     </span>
   </div>
 
-  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-6">
+  <form method="get" class="grid grid-cols-1 gap-3 border-b border-surface-container bg-surface-container-low/40 p-4 sm:grid-cols-2 lg:grid-cols-5">
     <div class="lg:col-span-2">
       <label for="buscar" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Buscar</label>
       <div class="flex h-10 items-center gap-2 rounded-lg border border-surface-container bg-surface-container-lowest px-3">
@@ -43,15 +43,6 @@
         <option value="">Todos</option>
         {% for valor, etiqueta in estados %}
           <option value="{{ valor }}" {% if estado_actual == valor %}selected{% endif %}>{{ etiqueta }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div>
-      <label for="categoria" class="mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-outline">Categoría</label>
-      <select id="categoria" name="categoria" class="h-10 w-full rounded-lg border border-surface-container bg-surface-container-lowest px-2 text-sm text-on-surface outline-none focus:border-primary/50">
-        <option value="">Todas</option>
-        {% for opcion_categoria in categorias %}
-          <option value="{{ opcion_categoria }}" {% if categoria_actual == opcion_categoria %}selected{% endif %}>{{ opcion_categoria }}</option>
         {% endfor %}
       </select>
     </div>
@@ -82,7 +73,6 @@
         <thead>
           <tr class="border-b border-surface-container text-[10px] font-bold uppercase tracking-[0.1em] text-outline">
             <th scope="col" class="px-4 py-2.5">Club</th>
-            <th scope="col" class="px-3 py-2.5">Categoría</th>
             <th scope="col" class="px-3 py-2.5">Fundación</th>
             <th scope="col" class="px-3 py-2.5">Contacto</th>
             <th scope="col" class="px-3 py-2.5 text-center">Equipos</th>
@@ -106,9 +96,6 @@
                     <p class="truncate text-[11px] text-on-surface-variant">{{ club.presidente|default:"Presidente por definir" }}</p>
                   </div>
                 </div>
-              </td>
-              <td class="whitespace-nowrap px-3 py-3">
-                <span class="inline-flex whitespace-nowrap rounded-md bg-primary-container px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] text-on-primary">{{ club.categoria_ingreso|default:"—" }}</span>
               </td>
               <td class="whitespace-nowrap px-3 py-3 text-xs text-on-surface-variant">{{ club.fundacion|date:"d/m/Y"|default:"—" }}</td>
               <td class="px-3 py-3 text-xs text-on-surface-variant">

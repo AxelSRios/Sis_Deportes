@@ -126,7 +126,6 @@ class Command(BaseCommand):
                         email=f'club{indice:02d}@example.bo',
                         fundacion=date.fromisoformat(fundacion),
                         presidente=presidente,
-                        categoria_ingreso='Primera',
                         nit_personeria=f'NIT-DEMO-{indice:03d}',
                         estado_juridico='Personería jurídica vigente',
                         estado='ACTIVO',
