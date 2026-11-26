@@ -3665,6 +3665,10 @@ body .afo-kpi-go { font-weight: 700; }
   body .app-topbar-title strong { font-size: 15px; }
 }
 
+@media (max-width: 339px) {
+  body .app-topbar-title span { display: none; }
+}
+
 @media (max-width: 639px) {
   .afo-card-head { flex-wrap: wrap; }
   .afo-card-head > form { flex: 1 1 100%; }
