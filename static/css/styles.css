@@ -2334,7 +2334,7 @@ main form select {
 /* ---------- Panel: hero de estadio ---------- */
 .afo-panel-hero {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   border-bottom: 0 !important;
   background: #0B1E43;
   color: #ffffff;
@@ -2345,7 +2345,6 @@ main form select {
   inset: 0;
   background:
     linear-gradient(96deg, rgba(11, 30, 67, .97) 0%, rgba(11, 30, 67, .90) 46%, rgba(11, 30, 67, .58) 100%);
-  transform: scale(1.02);
 }
 .afo-panel-hero::after {
   content: "";
@@ -2406,6 +2405,24 @@ main form select {
   color: #ffffff !important;
 }
 .afo-panel-hero .border-surface-container:hover { background: rgba(255, 255, 255, .18) !important; }
+
+/* Menú "Crear": fondo sólido y texto legible sobre el encabezado azul. */
+.afo-panel-hero .afo-create-menu,
+.afo-panel-hero .afo-create-menu:hover {
+  background: #FFFFFF !important;
+  border-color: #D5DCE5 !important;
+  color: #0F2654 !important;
+}
+.afo-panel-hero .afo-create-menu a {
+  color: #64748B !important;
+}
+.afo-panel-hero .afo-create-menu a:hover {
+  background: #F4F6F9 !important;
+  color: #1D428A !important;
+}
+.afo-panel-hero .afo-create-menu a .material-symbols-outlined {
+  color: #2F5BB4 !important;
+}
 .afo-panel-hero-glow {
   position: absolute;
   right: -80px;

@@ -25,9 +25,11 @@
 <div class="flex w-full flex-col pb-10">
 
   <!-- ===================== CABECERA ===================== -->
-  <header class="afo-panel-hero relative overflow-hidden border-b border-surface-container">
-    <span class="afo-panel-hero-glow" aria-hidden="true"></span>
-    <span class="afo-panel-hero-field" aria-hidden="true"></span>
+  <header class="afo-panel-hero relative border-b border-surface-container">
+    <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <span class="afo-panel-hero-glow"></span>
+      <span class="afo-panel-hero-field"></span>
+    </div>
 
     <div class="relative mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-5 py-7 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
 
@@ -104,7 +106,7 @@
             <span class="material-symbols-outlined text-[16px] text-outline transition group-open:rotate-180">expand_more</span>
           </summary>
 
-          <div class="absolute right-0 z-20 mt-2 w-60 overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest p-1.5 shadow-xl">
+          <div class="afo-create-menu absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-xl border border-surface-container bg-surface-container-lowest p-1.5 shadow-xl">
             {% if rol == 'ADMIN' or rol == 'ARBITRO' %}
               <a href="{% url 'partido_crear' %}" class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-on-surface-variant transition hover:bg-surface-container-low hover:text-primary">
                 <span class="material-symbols-outlined text-[18px] text-secondary">calendar_add_on</span>
